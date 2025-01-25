@@ -7,4 +7,4 @@ ChatHaven is a communication application. It has direct messaging and text chann
 - Darcy McCoy – 40234556 
 - Matthew Lucas Santiago – 40284787 
 - Marwa Hammani – 40289362
-- Justyne Phan –  
+- Justyne Phan – 40278509
