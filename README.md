@@ -1,8 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Apple Pie Club Soen341 Project 2025
+
+This is purely a university project: ChatHaven is a communication application. It has direct messaging and text channels features. This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Team Members
+
+- Hugo Moslener – 40241091
+- Mohamed Ahmed – 40229758
+- Darcy McCoy – 40234556 
+- Matthew Lucas Santiago – 40284787 
+- Marwa Hammani – 40289362
+- Justyne Phan – 40278509
 
 ## Getting Started
 
-First, run the development server:
+First, run the development server
 
 ```bash
 npm run dev
