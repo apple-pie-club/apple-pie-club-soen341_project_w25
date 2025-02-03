@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { setAuthToken } from "@/utils/auth";
+import "./styles/LoginForm.css";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -36,9 +37,11 @@ export default function LoginForm() {
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form id="loginForm" onSubmit={handleSubmit}>
+        <p id="loginText">LOGIN</p>
         <input
+          class="textInput"
+          id="emailInput"
           type="email"
           placeholder="Email"
           value={email}
@@ -46,13 +49,14 @@ export default function LoginForm() {
           required
         />
         <input
+          class="textInput"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
+        <button id="loginButton" type="submit">Login</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
