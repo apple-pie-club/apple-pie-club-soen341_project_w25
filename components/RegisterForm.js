@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./styles/RegisterForm.css"
 
 export default function RegisterForm({ onRegister }) {
   const [email, setEmail] = useState("");
@@ -35,9 +36,11 @@ export default function RegisterForm({ onRegister }) {
 
   return (
     <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form id="registerForm" onSubmit={handleSubmit}>
+        <p id="registerText">SIGN UP</p>
         <input
+          id="emailInput"
+          class="textInput"
           type="email"
           placeholder="Email"
           value={email}
@@ -45,13 +48,14 @@ export default function RegisterForm({ onRegister }) {
           required
         />
         <input
+          class="textInput"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
+        <button id="registerButton" type="submit">Register</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
