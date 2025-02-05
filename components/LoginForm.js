@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { setAuthToken } from "@/utils/auth";
 import "./styles/LoginForm.css";
 
 export default function LoginForm() {
@@ -20,14 +19,13 @@ export default function LoginForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include", // Important for sending cookies
       });
 
-      const data = await res.json();
-
       if (res.ok) {
-        setAuthToken(data.token); // Store token
         router.push("/dashboard"); // Redirect after login
       } else {
+        const data = await res.json();
         setError(data.message);
       }
     } catch (err) {
