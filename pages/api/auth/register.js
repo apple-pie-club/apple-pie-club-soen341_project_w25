@@ -10,10 +10,10 @@ export default async function handler(req, res) {
 
   // Trying to connect to the database
   try {
-    await connectToDatabase(); // This should establish a MongoDB connection
+    await connectToDatabase();
     console.log("Connected to database");
 
-    const { email, password } = req.body;
+    const { firstname, lastname, email, password, requestGlobalAdmin } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ email, password: hashedPassword });
+    const newUser = new User({ firstname, lastname, email, password: hashedPassword, requestGlobalAdmin });
     await newUser.save();
 
     console.log("User registered successfully");

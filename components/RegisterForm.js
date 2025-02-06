@@ -1,11 +1,16 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import "./styles/RegisterForm.css"
 
-export default function RegisterForm({ onRegister }) {
+export default function RegisterForm() {
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,14 +23,14 @@ export default function RegisterForm({ onRegister }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ firstname, lastname, email, password, requestGlobalAdmin }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
         setSuccess("Registration successful! You can now log in.");
-        setTimeout(() => onRegister(), 2000); //Call a function to redirect to login after 2000ms
+        setTimeout(() => router.push("/login"), 2000);
       } else {
         setError(data.message);
       }
@@ -38,6 +43,22 @@ export default function RegisterForm({ onRegister }) {
     <div>
       <form id="registerForm" onSubmit={handleSubmit}>
         <p class="title text">SIGN UP</p>
+        <input
+          class="textInput"
+          type="text"
+          placeholder="First Name"
+          value={firstname}
+          onChange={(e) => setFirstname(e.target.value)}
+          required
+        />
+        <input
+          class="textInput"
+          type="text"
+          placeholder="Last Name"
+          value={lastname}
+          onChange={(e) => setLastname(e.target.value)}
+          required
+        />
         <input
           id="emailInput"
           class="textInput"
@@ -55,6 +76,14 @@ export default function RegisterForm({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <label class="checkboxLabel">
+          <input
+            type="checkbox"
+            checked={requestGlobalAdmin}
+            onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
+          />
+          Request Global Admin Status
+        </label>
         <button id="registerButton" type="submit">Register</button>
         <p class="text">Already have an account? <a href="/login">Login here</a></p>
       </form>
