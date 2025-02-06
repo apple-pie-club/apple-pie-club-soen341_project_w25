@@ -37,7 +37,7 @@ export default function RegisterForm({ onRegister }) {
   return (
     <div>
       <form id="registerForm" onSubmit={handleSubmit}>
-        <p id="registerText">SIGN UP</p>
+        <p class="title text">SIGN UP</p>
         <input
           id="emailInput"
           class="textInput"
@@ -56,6 +56,7 @@ export default function RegisterForm({ onRegister }) {
           required
         />
         <button id="registerButton" type="submit">Register</button>
+        <p class="text">Already have an account? <a href="/login">Login here</a></p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
