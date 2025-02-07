@@ -28,7 +28,7 @@ export default function RegisterForm({ onRegister }) {
 
       if (res.ok) {
         setSuccess("Registration successful! You can now log in.");
-        setTimeout(() => onRegister(), 2000);
+        setTimeout(() => onRegister(), 2000); // Call a function to redirect to login after 2000ms
       } else {
         setError(data.message);
       }
@@ -74,13 +74,13 @@ export default function RegisterForm({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label class="checkboxLabel">
+        <label class="checkboxLabel text">
           <input
             type="checkbox"
             checked={requestGlobalAdmin}
             onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
           />
-          <p class="text">Request Global Admin Status</p>
+          <p>Request Global Admin Status</p>
         </label>
         <button id="registerButton" type="submit">Register</button>
         <p class="text">Already have an account? <a href="/login">Login here</a></p>
