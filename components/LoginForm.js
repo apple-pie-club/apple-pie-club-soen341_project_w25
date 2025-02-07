@@ -36,7 +36,7 @@ export default function LoginForm() {
   return (
     <div>
       <form id="loginForm" onSubmit={handleSubmit}>
-        <p class="text title">LOGIN</p>
+        <p id="loginText">LOGIN</p>
         <input
           class="textInput"
           id="emailInput"

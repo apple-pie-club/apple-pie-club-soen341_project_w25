@@ -1,0 +1,166 @@
+@font-face{
+    font-family:'Comfortaa';
+    src:local('Comfortaa'), url(./fonts/Comfortaa-Regular.ttf) format('truetype');
+}
+
+@font-face{
+    font-family:'Panton';
+    src:local('Panton'), url(./fonts/Panton-Trial-Black.ttf) format('truetype');
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+#dashboardContainer{
+    display:flex;
+    height:100vh;
+}
+#sidebar{
+    background-color:#124559;
+    list-style-type:none;
+    width:200px;
+    margin:0;
+    padding:0;
+    position:fixed;
+    top:0;
+    height:100vh;
+    left:0;
+    overflow-y:auto;
+}
+
+#channelList{
+    margin:0;
+    padding:0;
+    width:100%;
+}
+
+#channelHeader{
+    font-family:'Panton';
+    background-color:#124559;
+    font-size:20px;
+    display:block;
+    padding:10px;
+    color:white;
+    position:sticky;
+    z-index:10;
+    top:0;
+    box-shadow: 0 4px 8px 0 #ffffff13;
+}
+
+#addChannel{
+    font-size:15px;
+    font-family:'Comfortaa';
+    margin-top:10px;
+}
+
+#addChannel:hover{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.channelName{
+    font-family:'Comfortaa';
+    display:block;
+    padding:10px;
+    color:white;
+    border-radius:10px;
+    text-indent:10px;
+    margin:5px;
+}
+
+.channelName:hover{
+    background-color:#668a97;
+    cursor:pointer;
+    transition:0.20s ease;
+}
+
+#sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: #668a97;
+    border-radius: 4px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover{
+    cursor:pointer;
+    
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background: #124559;
+}
+
+#messageBar {
+    position: fixed;
+    bottom: 0;
+    left: 200px; 
+    width: calc(100% - 200px);
+    height:50px;
+    background-color: #f1f1f1;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border:none;
+}
+
+#messageBar input {
+    font-family:'Comfortaa';
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+#messageBar button {
+    font-family:'Comfortaa';
+    margin-left: 10px;
+    padding: 9px 15px;
+    background-color: #21647f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#messageBar button:hover {
+    background-color: #668a97;
+    transition:0.20s ease;
+}
+
+#messagesArea{
+    margin-left:200px;
+    margin-bottom:50px;
+    width:calc(100vw - 150px);
+    height: calc(100vh - 50px);
+    background-color:#f1f1f1;
+    padding:0px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+}
+
+.receivedMessage{
+    margin:10px;
+    padding:10px;
+    width:40%;
+    background-color:white;
+    border-radius:10px;
+    border-bottom-left-radius: 0;
+    align-self:flex-start;
+}
+
+.sentMessage{
+    margin:10px;
+    padding:10px;
+    width:40%;
+    background-color:#598291;
+    color:white;
+    border-radius:10px;
+    border-bottom-right-radius:0;
+    align-self:flex-end;
+}
