@@ -48,16 +48,6 @@ body{
 #emailInput{
     margin-top:60px;
 }
-.textInput{
-    border:none;
-    font-family:'Comfortaa';
-    color:white;
-    display:block;
-    background-color:transparent;
-    margin:15px auto 10px auto;
-    width: 50%;
-    border-bottom:2px solid#598392;
-}
 
 .textInput::placeholder{
     color:white;
@@ -86,4 +76,24 @@ body{
     background-color:#668a97;
     transition:all 0.35s ease;
     box-shadow: 0 4px 8px 0 #00000039;
+}
+
+.textInput{
+    border:none;
+    font-family:'Comfortaa' !important;
+    color:white;
+    display:block;
+    background-color:transparent !important;
+    margin:15px auto 10px auto;
+    width: 50%;
+    border-bottom:2px solid#598392;
+}
+
+.textInput:-webkit-autofill,
+.textInput:-webkit-autofill:hover,
+.textInput:-webkit-autofill:focus,
+.textInput:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #124559 inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
