@@ -16,7 +16,7 @@ body{
     margin: auto;
     margin-top:120px;
     width: 300px;
-    height: 420px;
+    height: 400px;
     padding: 10px;
     border-radius:50px;
     box-shadow: 0 4px 8px 0 #00000033, 0 6px 20px 0 #00000030;
@@ -44,19 +44,82 @@ body{
     }
 }
 
-.title{
-    font-size:22px;
+.checkboxLabel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    font-family: "Comfortaa";
+    color: white;
+    font-size: 12px;
+    user-select: none;
+}
+
+.checkboxLabel input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
+
+.checkmark {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: 2px solid #598392;
+    margin-right: 8px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.checkboxLabel input:checked + .checkmark {
+    background-color: #598392;
+    border: 2px solid #ffffff;
+}
+
+.checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.checkboxLabel input:checked + .checkmark::after {
+    display: block;
+}
+
+.checkboxLabel:hover .checkmark {
+    background-color: #496a74;
 }
 
 .textInput{
     border:none;
-    font-family:'Comfortaa';
+    font-family:'Comfortaa' !important;
     color:white;
     display:block;
-    background-color:transparent;
+    background-color:transparent !important;
     margin:15px auto 10px auto;
     width: 50%;
     border-bottom:2px solid#598392;
+}
+
+.textInput:-webkit-autofill,
+.textInput:-webkit-autofill:hover,
+.textInput:-webkit-autofill:focus,
+.textInput:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #124559 inset !important;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .textInput::placeholder{

@@ -74,13 +74,14 @@ export default function RegisterForm({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label class="checkboxLabel text">
+        <label class="checkboxLabel">
           <input
             type="checkbox"
             checked={requestGlobalAdmin}
             onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
           />
-          <p>Request Global Admin Status</p>
+          <span class="checkmark"></span>
+          <p class="text">Request Global Admin Status</p>
         </label>
         <button id="registerButton" type="submit">Register</button>
         <p class="text">Already have an account? <a href="/login">Login here</a></p>
