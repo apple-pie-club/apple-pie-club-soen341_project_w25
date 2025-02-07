@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+
 import "./styles/RegisterForm.css"
 
-export default function RegisterForm() {
+export default function RegisterForm({ onRegister }) {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -10,7 +10,7 @@ export default function RegisterForm() {
   const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const router = useRouter();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +30,7 @@ export default function RegisterForm() {
 
       if (res.ok) {
         setSuccess("Registration successful! You can now log in.");
-        setTimeout(() => router.push("/login"), 2000);
+        setTimeout(() => onRegister(), 2000);
       } else {
         setError(data.message);
       }
@@ -47,6 +47,7 @@ export default function RegisterForm() {
           class="textInput"
           type="text"
           placeholder="First Name"
+          name="name"
           value={firstname}
           onChange={(e) => setFirstname(e.target.value)}
           required
@@ -60,7 +61,6 @@ export default function RegisterForm() {
           required
         />
         <input
-          id="emailInput"
           class="textInput"
           type="email"
           placeholder="Email"
@@ -82,7 +82,7 @@ export default function RegisterForm() {
             checked={requestGlobalAdmin}
             onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
           />
-          Request Global Admin Status
+          <p class="text">Request Global Admin Status</p>
         </label>
         <button id="registerButton" type="submit">Register</button>
         <p class="text">Already have an account? <a href="/login">Login here</a></p>
