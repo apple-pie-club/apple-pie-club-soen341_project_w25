@@ -9,7 +9,7 @@
 }
 
 body{
-    background-color:#d5e9f0;
+    background-color:white;
 }
 #registerForm{
     background-color: #124559;
@@ -22,16 +22,22 @@ body{
     box-shadow: 0 4px 8px 0 #00000033, 0 6px 20px 0 #00000030;
 }
 
+#loginText{
+    font-family:'Panton';
+    color:white;
+    text-align:center;
+    font-size:22px;
+}
 .text{
-    font-family:"Panton";
-    color:#eff6e0;
+    font-family:"Comfortaa";
+    color:white;
     text-align:center;
     font-size:12px;
     a{
         color: #598392;
     }
     a:hover {
-        color: #eff6e0;
+        color: white;
     }
     a:active {
         color: #0a2e3b;
@@ -45,26 +51,26 @@ body{
 .textInput{
     border:none;
     font-family:'Comfortaa';
-    color:#eff6e0;
+    color:white;
     display:block;
     background-color:transparent;
     margin:15px auto 10px auto;
     width: 50%;
-    border-bottom:2px solid#aec3b0;
+    border-bottom:2px solid#598392;
 }
 
 .textInput::placeholder{
-    color:#eff6e0;
+    color:white;
 }
 
 .textInput:focus{
     outline:none;
-    border-bottom:3px solid #aec3b0;
+    border-bottom:3px solid #598392;
 }
 #registerButton{
     font-family:'Comfortaa';
     background-color:#598392;
-    color:#eff6e0;
+    color:white;
     margin: auto;
     margin-top:30px;
     width: 100px;

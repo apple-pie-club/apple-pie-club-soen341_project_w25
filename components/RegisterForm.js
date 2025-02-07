@@ -40,7 +40,7 @@ export default function RegisterForm({ onRegister }) {
   return (
     <div>
       <form id="registerForm" onSubmit={handleSubmit}>
-        <p class="title text">SIGN UP</p>
+        <p id="loginText">SIGN UP</p>
         <input
           class="textInput"
           type="text"
