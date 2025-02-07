@@ -9,7 +9,6 @@ export default function RegisterForm({ onRegister }) {
   const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
