@@ -2,14 +2,13 @@ import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+const cookie = require("cookie");
 
-// Defining the API route handler which processes HTTP requests and ensures only POST requests are handled
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  // Trying to connect to the database
   try {
     await connectToDatabase();
     const { email, password } = req.body;
@@ -26,17 +25,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // Generate a JWT for authentication which reduces the need for repeated password checks
+    // Generate JWT token
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
+      { expiresIn: "7d" } // Token valid for 7 days
     );
 
-    // Return the token
-    return res.status(200).json({ message: "Login successful", token });
+    // Set HTTP-only cookie
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize("authToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      })
+    )
+
+    return res.status(200).json({ message: "Login successful" });
   } catch (error) {
     return res
       .status(500)

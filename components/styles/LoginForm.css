@@ -1,0 +1,86 @@
+@font-face{
+    font-family:'Comfortaa';
+    src:local('Comfortaa'), url(./fonts/Comfortaa-Regular.ttf) format('truetype');
+}
+
+@font-face{
+    font-family:'Panton';
+    src:local('Panton'), url(./fonts/Panton-Trial-Black.ttf) format('truetype');
+}
+
+body{
+    background-color:#d5e9f0;
+}
+#loginForm{
+    background-color: #124559;
+    margin: auto;
+    margin-top:180px;
+    width: 300px;
+    height: 300px;
+    padding: 10px;
+    border-radius:50px;
+    box-shadow: 0 4px 8px 0 #00000033, 0 6px 20px 0 #00000030;
+}
+
+.text{
+    font-family:"Panton";
+    color:#eff6e0;
+    text-align:center;
+    font-size:12px;
+    a{
+        color: #598392;
+    }
+    a:hover {
+        color: #eff6e0;
+    }
+    a:active {
+        color: #0a2e3b;
+    }
+}
+
+.title{
+    font-size:22px;
+}
+
+#emailInput{
+    margin-top:60px;
+}
+.textInput{
+    border:none;
+    font-family:'Comfortaa';
+    color:#eff6e0;
+    display:block;
+    background-color:transparent;
+    margin:15px auto 10px auto;
+    width: 50%;
+    border-bottom:2px solid#aec3b0;
+}
+
+.textInput::placeholder{
+    color:#eff6e0;
+}
+
+.textInput:focus{
+    outline:none;
+    border-bottom:3px solid #aec3b0;
+}
+#loginButton{
+    font-family:'Comfortaa';
+    background-color:#598392;
+    color:#eff6e0;
+    margin: auto;
+    margin-top:30px;
+    width: 100px;
+    padding: 10px;
+    display:block;
+    border-radius:55px;
+    border:none;
+    box-shadow: 0 4px 8px 0 #00000017;
+}
+
+#loginButton:hover{
+    cursor:pointer;
+    background-color:#668a97;
+    transition:all 0.35s ease;
+    box-shadow: 0 4px 8px 0 #00000039;
+}
