@@ -164,3 +164,25 @@
     border-bottom-right-radius:0;
     align-self:flex-end;
 }
+
+#logoutButtonArea{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background-color:#124559;
+    box-shadow: 0 -4px 8px 0 #ffffff13;
+    padding:10px;
+}
+
+#logoutButton{
+    background-color:transparent;
+    font-family:'Comfortaa';
+    border:none;
+    color:white;
+    font-size:15px;
+}
+
+#logoutButton:hover{
+    cursor:pointer;
+
+}

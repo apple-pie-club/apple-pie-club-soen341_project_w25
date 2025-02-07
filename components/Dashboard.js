@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import "./styles/Dashboard.css"
+import LogoutButton from "@/components/LogoutButton"
 
 export default function DashboardPage() {
     // need to call an api endpoint to get the channels
@@ -55,6 +56,7 @@ return (
             <li class="channelName">Channel</li>
             <li class="channelName">Channel</li>
         </ul>
+        <div id="logoutButtonArea"><LogoutButton /></div>
         </div>
 
         <div id="messagesArea">
