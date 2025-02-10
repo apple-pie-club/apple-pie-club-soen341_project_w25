@@ -29,15 +29,21 @@
     height:100vh;
     left:0;
     overflow-y:auto;
+    transition: width 0.3s ease-in-out;
 }
 
-#channelList{
+#sidebar.closed{
+    width:0;
+    overflow:hidden;
+}
+
+#teamList{
     margin:0;
     padding:0;
     width:100%;
 }
 
-#channelHeader{
+#teamHeader{
     font-family:'Panton';
     background-color:#124559;
     font-size:20px;
@@ -50,17 +56,17 @@
     box-shadow: 0 4px 8px 0 #ffffff13;
 }
 
-#addChannel{
+#createTeam{
     font-size:15px;
     font-family:'Comfortaa';
     margin-top:10px;
 }
 
-#addChannel:hover{
+#createTeam:hover{
     text-decoration:underline;
     cursor:pointer;
 }
-.channelName{
+.teamName{
     font-family:'Comfortaa';
     display:block;
     padding:10px;
@@ -70,7 +76,7 @@
     margin:5px;
 }
 
-.channelName:hover{
+.teamName:hover{
     background-color:#668a97;
     cursor:pointer;
     transition:0.20s ease;
@@ -105,6 +111,12 @@
     align-items: center;
     padding: 10px;
     border:none;
+    transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+#messageBar.fullWidth {
+    left: 0;
+    width: 100%;
 }
 
 #messageBar input {
@@ -142,6 +154,12 @@
     overflow-y:auto;
     display:flex;
     flex-direction:column;
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+#messagesArea.fullWidth {
+    margin-left: 0;
+    width: 100vw;
 }
 
 .receivedMessage{
@@ -184,5 +202,48 @@
 
 #logoutButton:hover{
     cursor:pointer;
+    text-decoration:underline;
+}
 
+.menuOverlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0, 0, 0, 0.499);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.menuContent{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.121);
+    width:400px;
+    text-align:center;
+}
+
+#toggleSidebarButton{
+    position:absolute;
+    left:200px;
+    z-index:10;
+    border:none;
+    background-color:#124559;
+    padding:10px;
+    color:white;
+    border-bottom-right-radius: 10px;
+    transition: left 0.3s ease-in-out;
+}
+
+#toggleSidebarButton:hover{
+    cursor:pointer;
+    background-color:#17556d;
+}
+
+#toggleSidebarButton.closed {
+    left: 0;
 }
