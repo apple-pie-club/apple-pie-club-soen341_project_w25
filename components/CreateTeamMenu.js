@@ -55,27 +55,31 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) =>{
     return (
         <div className="menuOverlay">
             <div className="menuContent">
-                <h2>Create a Team</h2>
-                <input 
+                <p id="createTeamHeader">CREATE A TEAM</p>
+                <input
+                    id="teamNameInput"
                     type="text"
-                    placeholder="Team Name"
+                    placeholder="Enter a team name..."
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
                 />
+                <p id="selectMembersText">Select team members: </p>
+                <p id="noteText">You will automatically be a member of this team</p>
                 <div className="userList">
                     {users.map((user)=>(
-                        <div key={user._id}>
+                        <div className="user" key={user._id}>
                             <input
+                                className="checkbox"
                                 type="checkbox"
                                 checked={selectedUsers.includes(user._id)}
                                 onChange={() => handleUserSelection(user._id)}
                             />
-                            {user.firstname} {user.lastname} <span id="email">{user.email}</span>
+                            <span id="name">{user.firstname} {user.lastname}</span> <span id="email">{user.email}</span>
                         </div>
                     ))}
                 </div>
-                <button onClick={handleSubmit}>Create Team</button>
-                <button onClick={onClose}>Cancel</button>
+                <button id="createTeamButton" className="button" onClick={handleSubmit}>Create Team</button>
+                <button id="cancelButton" className="button" onClick={onClose}>Cancel</button>
             </div>
         </div>
     );

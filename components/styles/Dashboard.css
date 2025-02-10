@@ -206,6 +206,7 @@
 }
 
 .menuOverlay{
+    font-family:'Comfortaa';
     position:fixed;
     top:0;
     left:0;
@@ -219,12 +220,116 @@
 }
 
 .menuContent{
-    background:white;
+    background:#124559;
     padding:20px;
     border-radius:10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.121);
     width:400px;
     text-align:center;
+}
+
+#createTeamHeader{
+    font-family:"Panton";
+    color:white;
+    font-size:25px;
+    margin-bottom:15px;
+}
+
+#teamNameInput{
+    line-height:25px;
+    caret-color:white;
+    color:white;
+    border:none;
+    font-family:'Comfortaa';
+    background-color:transparent;
+    border-bottom:2px solid #598392;
+}
+
+#teamNameInput::placeholder{
+    color:white;
+}
+
+#teamNameInput:focus{
+    outline:none;
+}
+
+#selectMembersText{
+    color:white;
+    text-align:left;
+    margin-top:15px;
+}
+
+#noteText{
+    color:white;
+    font-size:13px;
+    background-color:#165169;
+    padding:5px;
+    border-radius:15px;
+    margin-top:10px;
+}
+
+.userList{
+    height:300px;
+    overflow-y:auto;
+    text-align:left;
+    margin-top:10px;
+    color:rgb(29, 28, 28);
+    background-color:white;
+    padding:10px;
+    border-radius:10px;
+}
+
+.userList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.userList::-webkit-scrollbar-thumb {
+    background: #668a97;
+    border-radius: 4px;
+}
+
+.userList::-webkit-scrollbar-thumb:hover{
+    cursor:pointer;
+    
+}
+
+.userList::-webkit-scrollbar-track {
+    background: #165169;
+    border-top-right-radius:20px;
+    border-bottom-right-radius:20px;
+}
+
+.user{
+    margin-top:10px;
+}
+
+#name{
+    font-family:"Panton";
+    font-size:20px;
+    margin-left:5px;
+}
+
+#email{
+    color:rgb(58, 58, 58);
+}
+.checkbox{
+    width:20px;
+}
+
+.button{
+    font-family:"Comfortaa";
+    border-radius:10px;
+    margin:10px;
+    padding:10px;
+    margin-top:20px;
+    border:none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.21);
+}
+
+.button:hover{
+    background-color:rgb(181, 181, 181);
+    cursor:pointer;
+    transition:0.3s ease;
 }
 
 #toggleSidebarButton{

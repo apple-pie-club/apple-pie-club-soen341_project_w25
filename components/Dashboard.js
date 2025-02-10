@@ -11,7 +11,10 @@ export default function DashboardPage() {
     const[teams, setTeams] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     useEffect(() =>{
-        fetch("/api/teams")
+        fetch("/api/teams", {
+          method: "GET",
+          credentials: "include",
+        })
         .then((res) => res.json())
         .then((data) => {
             setTeams(data);
