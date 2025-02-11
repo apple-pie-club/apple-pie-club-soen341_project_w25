@@ -23,7 +23,7 @@ export default function RegisterForm({ onRegister }) {
         },
         body: JSON.stringify({ firstname, lastname, email, password, requestGlobalAdmin }),
       });
-
+      
       const data = await res.json();
 
       if (res.ok) {
