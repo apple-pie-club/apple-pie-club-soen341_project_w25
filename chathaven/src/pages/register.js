@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/RegisterForm";
+import RegisterForm from "@/src/components/RegisterForm";
 import { useRouter } from "next/router";
 
 export default function RegisterPage() {

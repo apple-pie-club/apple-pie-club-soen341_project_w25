@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
-import "./styles/Dashboard.css"
-import LogoutButton from "@/components/LogoutButton"
-import CreateTeamMenu from "@/components/CreateTeamMenu";
+import "./styles/Dashboard.css";
+import LogoutButton from "@/src/components/LogoutButton";
+import CreateTeamMenu from "@/src/components/CreateTeamMenu";
 
 export default function DashboardPage() {
     const [isMenuOpen, setIsMenuOpen]= useState(false);

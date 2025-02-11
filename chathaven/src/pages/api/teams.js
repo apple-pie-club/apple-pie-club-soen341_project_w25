@@ -1,4 +1,4 @@
-import connectToDatabase from "@/lib/mongodb";
+import connectToDatabase from "@/src/lib/mongodb";
 import Team from "../../models/Team";
 import jwt from "jsonwebtoken";
 

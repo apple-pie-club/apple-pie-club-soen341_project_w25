@@ -1,5 +1,5 @@
-import connectToDatabase from "@/lib/mongodb";
-import User from "@/models/User";
+import connectToDatabase from "@/src/lib/mongodb";
+import User from "@/src/models/User";
 import bcrypt from "bcryptjs";
 
 // Defining the API route handler which processes HTTP requests and ensures only POST requests are handled
@@ -23,7 +23,13 @@ export default async function handler(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ firstname, lastname, email, password: hashedPassword, requestGlobalAdmin });
+    const newUser = new User({ 
+      firstname, 
+      lastname, 
+      email, 
+      password: hashedPassword, 
+      requestGlobalAdmin,
+    });
     await newUser.save();
 
     console.log("User registered successfully");
