@@ -1,4 +1,4 @@
-import connectToDatabase from "@/lib/mongodb";
+import connectToDatabase from "@/src/lib/mongodb";
 import User from "../../models/User";
 
 export default async function handler(req, res){
