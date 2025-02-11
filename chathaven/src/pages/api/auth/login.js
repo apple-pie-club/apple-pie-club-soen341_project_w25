@@ -11,11 +11,13 @@ export default async function handler(req, res) {
 
   try {
     await connectToDatabase();
+    console.log("Database connected successfully");
     const { email, password } = req.body;
 
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log("User not found");
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
@@ -46,6 +48,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ message: "Login successful" });
   } catch (error) {
+    console.error("Server Error: ", error);
     return res
       .status(500)
       .json({ message: "Server Error", error: error.message });
