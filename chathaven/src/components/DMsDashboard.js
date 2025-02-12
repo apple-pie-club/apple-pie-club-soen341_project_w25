@@ -14,8 +14,7 @@ export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [message, setMessage] = useState("");
-  const [dms, setDms] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [participants, setParticipants] = useState([]);
 
   const handleSendMessage = () => {
     //logic to send message
@@ -36,23 +35,11 @@ export default function DMsPage() {
   // Fetch existing DMs on component mount
   useEffect(() => {
     const fetchDms = async () => {
-      const storedToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("authToken="))
-        ?.split("=")[1];
-
-      if (!storedToken) {
-        console.error("No auth token found");
-        return;
-      }
-
       try {
         const response = await fetch("/api/dms", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
+          credentials: "include", // Ensures cookies are sent
+          headers: { "Content-Type": "application/json" },
         });
 
         if (!response.ok) {
@@ -60,11 +47,7 @@ export default function DMsPage() {
         }
 
         const data = await response.json();
-        setDms(data); // Save DMs
-
-        // Get the logged-in user's ID from the token
-        const decodedToken = JSON.parse(atob(storedToken.split(".")[1]));
-        setUserId(decodedToken.userId);
+        setParticipants(data); // Store users from API response
       } catch (error) {
         console.error("Error fetching DMs:", error);
       }
@@ -72,15 +55,6 @@ export default function DMsPage() {
 
     fetchDms();
   }, []);
-
-  // Function to get the other participant's email
-  const getOtherUserEmail = (dm) => {
-    if (!userId) return "Unknown User";
-    const otherUser = dm.participants.find(
-      (participant) => participant._id !== userId
-    );
-    return otherUser ? otherUser.email : "Unknown User";
-  };
 
   return (
     <div id="DMsContainer">
@@ -93,15 +67,14 @@ export default function DMsPage() {
               <FaPlus /> Create DM
             </div>
           </li>
-          {dms.length > 0 ? (
-            dms.map((dm) => (
-              <li key={dm._id} className="dmItem">
-                {getOtherUserEmail(dm)}
+          {participants.length > 0 ? (
+            participants.map((user) => (
+              <li key={user._id} className="dmItem">
+                {user.email} {/* Display the other user's email */}
               </li>
             ))
           ) : (
-            /*if there are no direct messages, nothing is displayed*/
-            <li></li>
+            <li className="noDms">No DMs yet</li>
           )}
         </ul>
 
