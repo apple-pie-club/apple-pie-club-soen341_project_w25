@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-#dashboardContainer {
+#DMsContainer {
   display: flex;
   height: 100vh;
 }
@@ -43,7 +43,7 @@
   width: 100%;
 }
 
-#teamHeader {
+#DMsHeader {
   font-family: "Panton";
   background-color: #124559;
   font-size: 20px;
@@ -56,7 +56,7 @@
   box-shadow: 0 4px 8px 0 #ffffff13;
 }
 
-#createTeam {
+#createDM {
   font-size: 15px;
   font-family: "Comfortaa";
   margin-top: 10px;
@@ -182,7 +182,7 @@
   align-self: flex-end;
 }
 
-#directMessagesArea {
+#channelArea {
   position: absolute;
   bottom: 40px;
   width: 100%;
@@ -191,7 +191,7 @@
   padding: 10px;
 }
 
-#directMessagesButton {
+#channelButton {
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
