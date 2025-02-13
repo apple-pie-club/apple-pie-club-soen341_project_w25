@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: chathaven/package-lock.json
 
       - name: Install npm@latest
         run: npm i -g npm@latest
@@ -48,6 +49,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: chathaven/package-lock.json
 
       - name: Install npm@latest
         run: npm i -g npm@latest
