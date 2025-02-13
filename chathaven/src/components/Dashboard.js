@@ -1,14 +1,19 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
-import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
+import {
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+} from "react-icons/md";
 import "./styles/Dashboard.css";
 import LogoutButton from "@/src/components/LogoutButton";
+import DirectMessagesButton from "@/src/components/DirectMessagesButton";
 import CreateTeamMenu from "@/src/components/CreateTeamMenu";
 import { FiInfo } from "react-icons/fi";
 import CreateChannelMenu from "@/src/components/CreateChannelMenu";
 
 export default function DashboardPage() {
+
     const [isMenuOpen, setIsMenuOpen]= useState(false);
     const[teams, setTeams] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -68,15 +73,23 @@ export default function DashboardPage() {
         .catch((error) => console.error("Error creating channel:", error));
     };
 
-    const [message, setMessage] = useState("");
-    const handleSendMessage = () => {
-        //logic to send message
-        setMessage(""); // Clear input after sending
-    };
 
-    const handleToggleSidebar = () =>{
-      setSidebarOpen(prevState => !prevState);
+  const [message, setMessage] = useState("");
+  const handleSendMessage = () => {
+    //logic to send message
+    setMessage(""); // Clear input after sending
+  };
+
+  const handleToggleSidebar = () => {
+    setSidebarOpen((prevState) => !prevState);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
+  };
 
     const handleToggleChannelSidebar = () =>{
       setChannelSidebarOpen(prevState => !prevState);
@@ -113,9 +126,12 @@ return (
             {teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
             ))}
+            
         </ul>
-        <div id="logoutButtonArea"><LogoutButton /></div>
+        <div id="directMessagesArea">
+          <DirectMessagesButton />
         </div>
+
         <button id="toggleSidebarButton" onClick={handleToggleSidebar} className={sidebarOpen ? "open" : "closed"}>
           {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
         </button>
@@ -154,6 +170,7 @@ return (
           teamMembers={selectedTeam ? selectedTeam?.members : []} 
           onCreateChannel={handleCreateChannel}
           teamId={selectedTeam ? selectedTeam._id : ""}
+
         />
       )}
     </div>

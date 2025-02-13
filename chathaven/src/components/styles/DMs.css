@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 
-#dashboardContainer {
+#DMsContainer {
   display: flex;
   height: 100vh;
 }
@@ -43,7 +43,7 @@
   width: 100%;
 }
 
-#teamHeader {
+#DMsHeader {
   font-family: "Panton";
   background-color: #124559;
   font-size: 20px;
@@ -56,34 +56,47 @@
   box-shadow: 0 4px 8px 0 #ffffff13;
 }
 
-#createTeam {
+#createDM {
   font-size: 15px;
   font-family: "Comfortaa";
   margin-top: 10px;
+}
+
+.dmItem {
+  background-color: transparent;
+  font-family: "Comfortaa";
+  border: none;
+  color: white;
+  font-size: 15px;
+  width: 100%;
+  background-color: #124559;
+  box-shadow: 0 -4px 8px 0 #ffffff13;
+  padding: 10px;
+}
+
+.dmItem.active {
+  background-color: #1b9aaa; /* Highlighted color for selected DM */
+  font-weight: bold;
 }
 
 #createTeam:hover {
   text-decoration: underline;
   cursor: pointer;
 }
-
-.teamName, .channelName{
-    font-family:'Comfortaa';
-    display:block;
-    padding:10px;
-    color:white;
-    border-radius:10px;
-    margin:5px;
-    word-wrap: break-work;
-    overflow-wrap:break-word;
-    white-space: normal;
+.teamName {
+  font-family: "Comfortaa";
+  display: block;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  text-indent: 10px;
+  margin: 5px;
 }
 
-.teamName:hover, .channelName:hover{
-    background-color:#668a97;
-    cursor:pointer;
-    transition:0.20s ease;
-
+.teamName:hover {
+  background-color: #668a97;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 #sidebar::-webkit-scrollbar {
@@ -104,36 +117,17 @@
 }
 
 #messageBar {
-
-    position: fixed;
-    bottom: 0;
-    left: 200px; 
-    right:200px;
-    width: calc(100% - 400px);
-    height:50px;
-    background-color: #f1f1f1;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border:none;
-    transition: left 0.3s ease-in-out, right 0.3s ease-in-out, width 0.3s ease-in-out;
-}
-
-#messageBar.leftClosed{
-    left:0;
-    width: calc(100% - 200px);
-}
-
-#messageBar.rightClosed{
-    right:0;
-    width: calc(100% - 200px);
-}
-
-#messageBar.bothClosed{
-    left:0;
-    right:0;
-    width:100%;
-
+  position: fixed;
+  bottom: 0;
+  left: 200px;
+  width: calc(100% - 200px);
+  height: 50px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: none;
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 #messageBar.fullWidth {
@@ -166,34 +160,23 @@
   transition: 0.2s ease;
 }
 
-#messagesArea{
-    margin-left:200px;
-    margin-bottom:50px;
-    margin-right:200px;
-    width:calc(100vw - 400px);
-    height: calc(100vh - 50px);
-    background-color:#f1f1f1;
-    padding:0px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out, width 0.3s ease-in-out;
+#messagesArea {
+  margin-left: 200px;
+  margin-bottom: 50px;
+  width: calc(100vw - 150px);
+  height: calc(100vh - 50px);
+  background-color: #f1f1f1;
+  padding: 0px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-#messagesArea.leftClosed{
-    margin-left:0;
-    width: calc(100vw - 200px);
+#messagesArea.fullWidth {
+  margin-left: 0;
+  width: 100vw;
 }
-
-#messagesArea.rightClosed{
-    margin-right:0;
-    width:calc(100vw - 200px);
-}
-
-#messagesArea.bothClosed{
-    margin-left:0;
-    margin-right:0;
-    width:100vw;
 
 .receivedMessage {
   margin: 10px;
@@ -216,7 +199,7 @@
   align-self: flex-end;
 }
 
-#directMessagesArea {
+#channelArea {
   position: absolute;
   bottom: 40px;
   width: 100%;
@@ -225,7 +208,7 @@
   padding: 10px;
 }
 
-#directMessagesButton {
+#channelButton {
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
@@ -303,11 +286,10 @@
   outline: none;
 }
 
-.selectMembersText{
-    color:white;
-    text-align:left;
-    margin-top:15px;
-
+#selectMembersText {
+  color: white;
+  text-align: left;
+  margin-top: 15px;
 }
 
 #noteText {
@@ -353,16 +335,14 @@
   margin-top: 10px;
 }
 
-
-.name{
-    font-family:"Panton";
-    font-size:20px;
-    margin-left:5px;
+#name {
+  font-family: "Panton";
+  font-size: 20px;
+  margin-left: 5px;
 }
 
-.email{
-    color:rgb(58, 58, 58);
-
+#email {
+  color: rgb(58, 58, 58);
 }
 .checkbox {
   width: 20px;
@@ -384,138 +364,23 @@
   transition: 0.3s ease;
 }
 
-#toggleSidebarButton{
-    position:absolute;
-    left:200px;
-    z-index:10;
-    border:none;
-    background-color:#124559;
-    padding:5px;
-    color:white;
-    border-bottom-right-radius: 10px;
-    transition: left 0.3s ease-in-out;
+#toggleSidebarButton {
+  position: absolute;
+  left: 200px;
+  z-index: 10;
+  border: none;
+  background-color: #124559;
+  padding: 10px;
+  color: white;
+  border-bottom-right-radius: 10px;
+  transition: left 0.3s ease-in-out;
 }
 
-#toggleSidebarButton:hover{
-    cursor:pointer;
-    background-color:#17556d;
-    transition:0.3s ease;
+#toggleSidebarButton:hover {
+  cursor: pointer;
+  background-color: #17556d;
 }
 
 #toggleSidebarButton.closed {
-    left: 0;
+  left: 0;
 }
-
-#channelSidebar{
-    background-color:#124559;
-    list-style-type:none;
-    width:200px;
-    margin:0;
-    padding:0;
-    position:fixed;
-    top:0;
-    height:100vh;
-    right:0;
-    overflow-y:auto;
-    transition: width 0.3s ease-in-out;
-}
-
-#channelSidebar.closed{
-    width:0;
-    overflow:hidden;
-}
-#toggleChannelSidebarButton{
-    position:absolute;
-    right:200px;
-    z-index:11;
-    border:none;
-    background-color:#124559;
-    padding:5px;
-    color:white;
-    border-bottom-left-radius: 10px;
-    transition: right 0.3s ease-in-out;
-}
-
-#toggleChannelSidebarButton:hover{
-    cursor:pointer;
-    background-color:#17556d;
-    transition:0.3s ease;
-}
-
-#toggleChannelSidebarButton.closed {
-    right: 0;
-}
-
-#channelList{
-    margin:0;
-    padding:0;
-    width:100%;
-}
-
-#channelHeader{
-    font-family:'Panton';
-    background-color:#124559;
-    font-size:20px;
-    display:block;
-    padding:10px;
-    color:white;
-    position:sticky;
-    z-index:10;
-    top:0;
-    box-shadow: 0 4px 8px 0 #ffffff13;
-    word-wrap: break-work;
-    overflow-wrap:break-word;
-    white-space: normal;
-}
-
-#selectedTeamText{
-    font-family:'Comfortaa';
-    font-size:15px;
-}
-
-#createChannel{
-    font-size:15px;
-    font-family:'Comfortaa';
-    margin-top:10px;
-}
-
-#createChannel:hover{
-    text-decoration:underline;
-    cursor:pointer;
-}
-
-#createChannel.teamNotSelected{
-    display:none;
-}
-
-#createChannelHeader{
-    font-family:"Panton";
-    color:white;
-    font-size:25px;
-    margin-bottom:15px;
-}
-
-#channelNameInput{
-    line-height:25px;
-    caret-color:white;
-    color:white;
-    border:none;
-    font-family:'Comfortaa';
-    background-color:transparent;
-    border-bottom:2px solid #598392;
-}
-
-#channelNameInput::placeholder{
-    color:white;
-}
-
-#channelNameInput:focus{
-    outline:none;
-}
-
-.selectMembersText{
-    color:white;
-    text-align:left;
-    margin-top:15px;
-}
-
