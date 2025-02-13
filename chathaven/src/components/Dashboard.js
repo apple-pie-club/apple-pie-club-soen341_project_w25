@@ -14,28 +14,38 @@ export default function DashboardPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [teams, setTeams] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false); // Store admin status
+
   useEffect(() => {
+    // Fetch teams from API
     fetch("/api/teams", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
-      .then((data) => {
-        setTeams(data);
+      .then((data) => setTeams(data))
+      .catch((error) => console.error("Error fetching teams:", error));
+
+    // Fetch user info to check admin status
+    fetch("/api/auth/me", {
+      method: "GET",
+      credentials: "include", // Required to send cookies
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
       })
-      .catch((error) => console.error("error fetching teams:", error));
+      .then((userData) => {
+        if (userData?.isGlobalAdmin) {
+          setIsAdmin(true);
+        }
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
   }, []);
-  // need to call an api endpoint to get the channels
-  // get json file with list of channels
-  // use .map() to list the channels on the sidebar
-
-  // need to call an api endpoint to get the messages to display
-
-  // need logic to add channel
 
   const [message, setMessage] = useState("");
   const handleSendMessage = () => {
-    //logic to send message
+    // Logic to send message
     setMessage(""); // Clear input after sending
   };
 
@@ -57,12 +67,16 @@ export default function DashboardPage() {
           <li id="teamHeader">
             TEAMS
             <br />
-            <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
-              <FaPlus /> Create Team
-            </div>
+            {isAdmin && ( // Only show if the user is an admin
+              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
+                <FaPlus /> Create Team
+              </div>
+            )}
           </li>
           {teams.map((team) => (
-            <li className="teamName">{team.teamName}</li>
+            <li key={team.id || team.teamName} className="teamName">
+              {team.teamName}
+            </li>
           ))}
         </ul>
         <div id="directMessagesArea">
@@ -77,18 +91,11 @@ export default function DashboardPage() {
         onClick={handleToggleSidebar}
         className={sidebarOpen ? "open" : "closed"}
       >
-        {sidebarOpen ? (
-          <MdKeyboardDoubleArrowLeft />
-        ) : (
-          <MdKeyboardDoubleArrowRight />
-        )}{" "}
+        {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
       </button>
 
       <div id="messagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
-        <div className="sentMessage">
-          message 1 message 1 message 1 message 1message 1 message 1 message 1
-          message 1message 1{" "}
-        </div>
+        <div className="sentMessage">message 1 message 1 message 1 message 1</div>
         <div className="receivedMessage">message 2</div>
       </div>
       <div id="messageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
@@ -103,6 +110,7 @@ export default function DashboardPage() {
           <FaArrowUp />
         </button>
       </div>
+
       {isMenuOpen && (
         <CreateTeamMenu
           isOpen={isMenuOpen}
