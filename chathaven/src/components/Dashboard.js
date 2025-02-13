@@ -84,13 +84,6 @@ export default function DashboardPage() {
     setSidebarOpen((prevState) => !prevState);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
     const handleToggleChannelSidebar = () =>{
       setChannelSidebarOpen(prevState => !prevState);
     }
@@ -126,10 +119,11 @@ return (
             {teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
             ))}
-            
         </ul>
-        <div id="directMessagesArea">
-          <DirectMessagesButton />
+            <div id="logoutButtonArea">
+              <LogoutButton />
+              <DirectMessagesButton />
+            </div>
         </div>
 
         <button id="toggleSidebarButton" onClick={handleToggleSidebar} className={sidebarOpen ? "open" : "closed"}>
