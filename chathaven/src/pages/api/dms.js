@@ -1,19 +1,20 @@
 import connectToDatabase from "@/src/lib/mongodb";
-import DM from "../../models/DMs";
+import DM from "@/src/models/DMs";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   await connectToDatabase();
 
-  if (req.method === "GET") {
-    const token = req.cookies.authToken;
-    if (!token) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+  const token = req.cookies.authToken;
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
-    // Decode token to get the logged-in user's ID
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+  // Decode token to get the logged-in user's ID
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const userId = decoded.userId;
+
+  if (req.method === "GET") {
     try {
       // Fetch all DMs where the logged-in user is a participant
       const userDMs = await DM.find({ participants: userId }).populate(
@@ -41,6 +42,10 @@ export default async function handler(req, res) {
     try {
       // Extract selected user from request body
       const { selectedUserId } = req.body;
+      console.log(
+        "The selected user from the request body is ",
+        selectedUserId
+      );
       if (!selectedUserId) {
         return res.status(400).json({ error: "Recipient user ID is required" });
       }
@@ -52,6 +57,10 @@ export default async function handler(req, res) {
 
       // If the DM does not exist, it's created
       if (!existingDM) {
+        console.log(
+          "It was found that there was no existing DM with ",
+          selectedUserId
+        );
         existingDM = await DM.create({
           participants: [userId, selectedUserId],
         });
@@ -64,7 +73,7 @@ export default async function handler(req, res) {
       res.status(500).json({ error: "Failed to fetch or create DM." });
     }
   } else {
-    res.setHeader("Allow", ["POST"]);
+    res.setHeader("Allow", ["GET", "POST"]);
     res.status(405).json({ error: `Method ${req.method} not allowed.` });
   }
 }

@@ -6,11 +6,25 @@ const CreateDMMenu = ({ isOpen, onClose, onCreateDM }) => {
 
   // Fetch users when the menu is opened
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/api/users");
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch users: ${response.status} ${response.statusText}`
+          );
+        }
+
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
     if (isOpen) {
-      fetch("/api/users")
-        .then((res) => res.json())
-        .then((data) => setUsers(data))
-        .catch((error) => console.error("Error fetching users:", error));
+      fetchUsers();
     }
   }, [isOpen]);
 

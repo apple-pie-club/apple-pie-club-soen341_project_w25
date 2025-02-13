@@ -9,12 +9,14 @@ import "./styles/DMs.css";
 import LogoutButton from "@/src/components/LogoutButton";
 import ChannelButton from "@/src/components/ChannelButton";
 import CreateDMMenu from "@/src/components/CreateDMMenu";
+import DMsWindow from "@/src/components/DMsWindow";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [message, setMessage] = useState("");
   const [participants, setParticipants] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleSendMessage = () => {
     //logic to send message
@@ -34,26 +36,17 @@ export default function DMsPage() {
 
   // Fetch existing DMs on component mount
   useEffect(() => {
-    const fetchDms = async () => {
-      try {
-        const response = await fetch("/api/dms", {
-          method: "GET",
-          credentials: "include", // Ensures cookies are sent
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch DMs");
-        }
-
-        const data = await response.json();
-        setParticipants(data); // Store users from API response
-      } catch (error) {
-        console.error("Error fetching DMs:", error);
-      }
-    };
-
-    fetchDms();
+    fetch("/api/dms", {
+      method: "GET",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Participants fetched:", data); // Debug
+        setParticipants(data);
+      })
+      .catch((error) => console.error(" Error fetching DMs:", error));
   }, []);
 
   return (
@@ -69,8 +62,17 @@ export default function DMsPage() {
           </li>
           {participants.length > 0 ? (
             participants.map((user) => (
-              <li key={user._id} className="dmItem">
-                {user.email} {/* Display the other user's email */}
+              <li
+                key={user._id}
+                className={`dmItem ${
+                  selectedUser?._id === user._id ? "active" : ""
+                }`}
+                onClick={() => {
+                  console.log("the selected user is ", user);
+                  setSelectedUser(user);
+                }}
+              >
+                {user.email}
               </li>
             ))
           ) : (
@@ -97,7 +99,9 @@ export default function DMsPage() {
         )}{" "}
       </button>
 
-      <div id="messagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
+      <DMsWindow selectedUser={selectedUser} />
+
+      {/* <div id="messagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
         <div className="sentMessage">
           message 1 message 1 message 1 message 1message 1 message 1 message 1
           message 1message 1{" "}
@@ -115,7 +119,8 @@ export default function DMsPage() {
         <button onClick={handleSendMessage}>
           <FaArrowUp />
         </button>
-      </div>
+      </div> */}
+
       {isMenuOpen && (
         <CreateDMMenu
           isOpen={isMenuOpen}
