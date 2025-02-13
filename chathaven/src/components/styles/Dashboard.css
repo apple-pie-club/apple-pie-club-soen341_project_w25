@@ -66,17 +66,19 @@
     text-decoration:underline;
     cursor:pointer;
 }
-.teamName{
+.teamName, .channelName{
     font-family:'Comfortaa';
     display:block;
     padding:10px;
     color:white;
     border-radius:10px;
-    text-indent:10px;
     margin:5px;
+    word-wrap: break-work;
+    overflow-wrap:break-word;
+    white-space: normal;
 }
 
-.teamName:hover{
+.teamName:hover, .channelName:hover{
     background-color:#668a97;
     cursor:pointer;
     transition:0.20s ease;
@@ -376,6 +378,7 @@
 #toggleSidebarButton:hover{
     cursor:pointer;
     background-color:#17556d;
+    transition:0.3s ease;
 }
 
 #toggleSidebarButton.closed {
@@ -415,6 +418,7 @@
 #toggleChannelSidebarButton:hover{
     cursor:pointer;
     background-color:#17556d;
+    transition:0.3s ease;
 }
 
 #toggleChannelSidebarButton.closed {
@@ -438,6 +442,9 @@
     z-index:10;
     top:0;
     box-shadow: 0 4px 8px 0 #ffffff13;
+    word-wrap: break-work;
+    overflow-wrap:break-word;
+    white-space: normal;
 }
 
 #selectedTeamText{
@@ -458,15 +465,6 @@
 
 #createChannel.teamNotSelected{
     display:none;
-}
-
-#infoButton{
-    color:white;
-}
-
-#infoButton:hover{
-    color:black;
-    cursor:pointer;
 }
 
 #createChannelHeader{

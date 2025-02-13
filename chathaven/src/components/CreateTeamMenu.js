@@ -63,7 +63,7 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) =>{
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
                 />
-                <p class="selectMembersText">Select team members: </p>
+                <p className="selectMembersText">Select team members: </p>
                 <p id="noteText">You will automatically be a member of this team</p>
                 <div className="userList">
                     {users.map((user)=>(

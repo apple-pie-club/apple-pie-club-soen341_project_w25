@@ -48,7 +48,7 @@ export default async function handler(req, res){
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 const userId = decoded.userId;
 
-                const teams = await Team.find({ members: userId }).populate("members", "firstName lastName _id");
+                const teams = await Team.find({ members: userId }).populate("members", "firstname lastname email _id");
                 console.log(teams)
                 res.status(200).json(teams);
             } catch(error){

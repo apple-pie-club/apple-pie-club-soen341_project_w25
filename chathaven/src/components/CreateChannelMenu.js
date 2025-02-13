@@ -46,7 +46,7 @@ export default function CreateChannelMenu({ isOpen, onClose, teamMembers, onCrea
               onChange={(e) => setChannelName(e.target.value)}
               placeholder="Enter channel name"
             />
-              <p class="selectMembersText">Select channel members:</p>
+              <p className="selectMembersText">Select channel members:</p>
               <p id="noteText">You will automatically be admin of this channel</p>
               <div className="userList">
                 {teamMembers.map((member) => (

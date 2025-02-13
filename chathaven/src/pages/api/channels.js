@@ -1,6 +1,6 @@
 import connectToDatabase from "@/src/lib/mongodb";
 import Channel from "../../models/Channel";
-
+import Team from "../../models/Team";
 export default async function handler(req, res){
     await connectToDatabase();
     if(req.method === "GET"){
@@ -10,7 +10,7 @@ export default async function handler(req, res){
         }
 
         try{
-            const channels = await Channel.find({ team: teamId });
+            const channels = await Channel.find({ teamId: teamId });
             res.status(200).json(channels || []);
         }   catch (error){
             res.status(500).json({ error: "Error fetching channels"});
@@ -19,14 +19,17 @@ export default async function handler(req, res){
     }
 
     else if(req.method === "POST"){
-        const { channelName, teamId, members } = req.body;
+        const { name, teamId, members } = req.body;
 
-        if(!channelName || !teamId){
+        console.log("received channel creation request:", req.body);
+
+        if(!name || !teamId){
             return res.status(400).json({ error: "Name and Team ID are required" });
         }
 
         try{
-            const newChannel = new Channel ({ name: channelName, team: teamId, members });
+            const newChannel = new Channel ({ name, teamId, members });
+            console.log("New channel object: ", newChannel);
             await newChannel.save();
 
             const team = await Team.findById(teamId);
@@ -36,7 +39,9 @@ export default async function handler(req, res){
 
             await Team.findByIdAndUpdate(teamId, {
                 $push: { channels: newChannel._id }
-            });    
+            });
+
+            console.log("Channel successfully created: ", newChannel);
           res.status(201).json(newChannel);
         } catch (error) {
             console.error("Error creating channel:", error);

@@ -42,7 +42,7 @@ export default function RegisterForm({ onRegister }) {
       <form id="registerForm" onSubmit={handleSubmit}>
         <p id="loginText">SIGN UP</p>
         <input
-          class="textInput"
+          className="textInput"
           type="text"
           placeholder="First Name"
           name="name"
@@ -51,7 +51,7 @@ export default function RegisterForm({ onRegister }) {
           required
         />
         <input
-          class="textInput"
+          className="textInput"
           type="text"
           placeholder="Last Name"
           value={lastname}
@@ -59,7 +59,7 @@ export default function RegisterForm({ onRegister }) {
           required
         />
         <input
-          class="textInput"
+          className="textInput"
           type="email"
           placeholder="Email"
           value={email}
@@ -67,24 +67,24 @@ export default function RegisterForm({ onRegister }) {
           required
         />
         <input
-          class="textInput"
+          className="textInput"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label class="checkboxLabel">
+        <label className="checkboxLabel">
           <input
             type="checkbox"
             checked={requestGlobalAdmin}
             onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
           />
-          <span class="checkmark"></span>
-          <p class="text">Request Global Admin Status</p>
+          <span className="checkmark"></span>
+          <p className="text">Request Global Admin Status</p>
         </label>
         <button id="registerButton" type="submit">Register</button>
-        <p class="text">Already have an account? <a href="/login">Login here</a></p>
+        <p className="text">Already have an account? <a href="/login">Login here</a></p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}

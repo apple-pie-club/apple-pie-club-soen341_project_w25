@@ -38,6 +38,7 @@ export default function DashboardPage() {
         })
           .then((res) => res.json())
           .then((data) => {
+            console.log("fetched channels:", data);
             setChannels(data);
           })
           .catch((error) => console.error("Error fetching channels:", error));
@@ -47,7 +48,10 @@ export default function DashboardPage() {
     const handleCreateChannel = (newChannel) => {
       fetch("/api/channels", {
         method: "POST",
-        body: JSON.stringify(newChannel),
+        body: JSON.stringify({name: newChannel.channelName,
+          teamId: newChannel.teamId,
+          members: newChannel.members,
+      }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -55,7 +59,11 @@ export default function DashboardPage() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Channel created:", data);
+          if(data.error){
+            console.error("Error creating channel:", data.error);
+          } else{
+            setChannels((prevChannels) => [...prevChannels,data]);
+          }
         })
         .catch((error) => console.error("Error creating channel:", error));
     };
@@ -100,7 +108,7 @@ return (
     <div id="dashboardContainer">
         <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="teamList">
-            <li id="teamHeader">TEAMS <span id="infoButton"><FiInfo /></span><br/>
+            <li id="teamHeader">TEAMS <br/>
             <div id="createTeam" onClick={() => setIsMenuOpen(true)}><FaPlus /> Create Team</div></li>
             {teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
@@ -132,9 +140,9 @@ return (
           <ul id="channelList">
               <li id="channelHeader">{selectedTeam ? "Channels for:" : "Select a team to view channels" }<br/>
               <span id="selectedTeamText">{selectedTeam ? selectedTeam.teamName : ""}</span><br/>
-              <div id="createChannel" class={selectedTeam ? "" : "teamNotSelected"} onClick={() => setIsCreateChannelModalOpen(true)}><FaPlus /> Create Channel</div></li>
+              <div id="createChannel" className={selectedTeam ? "" : "teamNotSelected"} onClick={() => setIsCreateChannelModalOpen(true)}><FaPlus /> Create Channel</div></li>
               {channels.map((channel) => (
-                <li key={channel._id} className="channelName">{channel.channelName}</li>
+                <li key={channel._id} className="channelName">{channel.name}</li>
               ))}
           </ul>
         </div>
