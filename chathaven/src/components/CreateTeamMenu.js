@@ -63,7 +63,7 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) =>{
                     value={teamName}
                     onChange={(e) => setTeamName(e.target.value)}
                 />
-                <p id="selectMembersText">Select team members: </p>
+                <p class="selectMembersText">Select team members: </p>
                 <p id="noteText">You will automatically be a member of this team</p>
                 <div className="userList">
                     {users.map((user)=>(
@@ -74,7 +74,7 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) =>{
                                 checked={selectedUsers.includes(user._id)}
                                 onChange={() => handleUserSelection(user._id)}
                             />
-                            <span id="name">{user.firstname} {user.lastname}</span> <span id="email">{user.email}</span>
+                            <span className="name">{user.firstname} {user.lastname}</span> <span className="email">{user.email}</span>
                         </div>
                     ))}
                 </div>
