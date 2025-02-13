@@ -38,7 +38,7 @@ export default function LoginForm() {
       <form id="loginForm" onSubmit={handleSubmit}>
         <p id="loginText">LOGIN</p>
         <input
-          class="textInput"
+          className="textInput"
           id="emailInput"
           type="email"
           placeholder="Email"
@@ -47,7 +47,7 @@ export default function LoginForm() {
           required
         />
         <input
-          class="textInput"
+          className="textInput"
           type="password"
           placeholder="Password"
           value={password}
@@ -55,7 +55,7 @@ export default function LoginForm() {
           required
         />
         <button id="loginButton" type="submit">Login</button>
-        <p class="text">Want to make an account? <a href="/register">Register one here</a></p>
+        <p className="text">Want to make an account? <a href="/register">Register one here</a></p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
