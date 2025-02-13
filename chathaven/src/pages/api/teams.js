@@ -39,24 +39,26 @@ export default async function handler(req, res) {
     }
   }
 
-  if (req.method === "GET") {
-    try {
-      const token = req.cookies.authToken;
+    if(req.method === "GET"){
+            try{
+                const token = req.cookies.authToken;
 
-      if (!token) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+                if(!token){
+                    return res.status(401).json({ error: "Unauthorized" });
+                }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.userId;
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+                const userId = decoded.userId;
 
-      const teams = await Team.find({ members: userId }, "teamName");
-      res.status(200).json(teams);
-    } catch (error) {
-      res.status(500).json({ error: "Error fetching teams" });
-    }
-  }
-
-  res.setHeader("Allow", ["GET", "POST"]);
-  res.status(405).json({ error: `Method ${req.method} not allowed` });
+                const teams = await Team.find({ members: userId }).populate("members", "firstname lastname email _id");
+                console.log(teams)
+                res.status(200).json(teams);
+            } catch(error){
+                res.status(500).json({ error: "Error fetching teams" });
+            }
+        }
+    
+        res.setHeader("Allow", ["GET", "POST"]);
+        res.status(405).json({ error: `Method ${req.method} not allowed` });
+        
 }
