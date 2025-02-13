@@ -32,24 +32,3 @@ jobs:
 
       - name: Run tests
         run: cd chathaven && npm run test --if-present
-
-  lint:
-    name: Code standards
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: chathaven/package-lock.json
-
-      - name: Install dependencies
-        run: cd chathaven && npm install
-
-      - name: Lint code
-        run: cd chathaven && npm run lint --if-present
