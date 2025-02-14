@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
-// import "./styles/DMsWindow.css";
+import "./styles/DMs.css";
 
-export default function DMsWindow({ selectedUser }) {
+export default function DMsWindow({ selectedUser , sidebarOpen}) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -80,10 +80,9 @@ export default function DMsWindow({ selectedUser }) {
   };
 
   return (
-    <div id="messageWindow">
-      <h2>{selectedUser ? selectedUser.email : "Select a user"}</h2>
+    <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
-      <div id="messagesArea">
+      <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -98,7 +97,7 @@ export default function DMsWindow({ selectedUser }) {
         ))}
       </div>
 
-      <div id="messageBar">
+      <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
         <input
           type="text"
           placeholder="Type a message..."

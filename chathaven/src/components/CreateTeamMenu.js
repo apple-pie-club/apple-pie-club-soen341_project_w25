@@ -7,7 +7,7 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) => {
 
   useEffect(() => {
     if (isOpen) {
-      fetch("api/users")
+      fetch("/api/users")
         .then((res) => res.json())
         .then((data) => setUsers(data))
         .catch((error) => console.error("Error fetching users:", error));
@@ -47,7 +47,7 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) => {
         alert(`Error: ${result.error}`);
       }
     } catch (error) {
-      console.error("Error crating team:", error);
+      console.error("Error creating team:", error);
       alert("An error occurred. Please try again.");
     }
   };
@@ -82,16 +82,6 @@ const CreateTeamMenu = ({ isOpen, onClose, onCreateTeam }) => {
                 </div>
                 <button id="createTeamButton" className="button" onClick={handleSubmit}>Create Team</button>
                 <button id="cancelButton" className="button" onClick={onClose}>Cancel</button>
-
-            </div>
-          ))}
-        </div>
-        <button id="createTeamButton" className="button" onClick={handleSubmit}>
-          Create Team
-        </button>
-        <button id="cancelButton" className="button" onClick={onClose}>
-          Cancel
-        </button>
       </div>
     </div>
   );

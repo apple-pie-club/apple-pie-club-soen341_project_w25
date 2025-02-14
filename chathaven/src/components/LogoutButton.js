@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import "./styles/Dashboard.css";
 import { CiLogout } from "react-icons/ci";
 

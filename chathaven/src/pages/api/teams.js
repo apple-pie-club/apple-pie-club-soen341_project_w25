@@ -1,5 +1,6 @@
 import connectToDatabase from "@/src/lib/mongodb";
 import Team from "../../models/Team";
+import User from "../../models/User";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
@@ -41,17 +42,37 @@ export default async function handler(req, res) {
 
     if(req.method === "GET"){
             try{
+              
                 const token = req.cookies.authToken;
-
                 if(!token){
                     return res.status(401).json({ error: "Unauthorized" });
                 }
+                
 
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
                 const userId = decoded.userId;
+                
 
-                const teams = await Team.find({ members: userId }).populate("members", "firstname lastname email _id");
-                console.log(teams)
+                const user = await User.findById(userId);
+                
+                if (!user) {
+                  
+                  return res.status(404).json({ error: "User not found" });
+                }
+                
+                console.log("Checking User in DB:", user);
+                console.log("isGlobalAdmin:", user.isGlobalAdmin);
+
+                let teams;
+                if (user.isGlobalAdmin) {
+                  // Global Admins see all teams
+                  console.log("User is a Global Admin. Fetching ALL teams...");
+                  teams = await Team.find({}).populate("members", "firstname lastname email _id");
+                 } else {
+                  console.log("User is NOT a Global Admin. Fetching only assigned teams...");
+                  teams = await Team.find({ members: userId }).populate("members", "firstname lastname email _id");
+                 }
+                 console.log("Teams Fetched:", teams);
                 res.status(200).json(teams);
             } catch(error){
                 res.status(500).json({ error: "Error fetching teams" });
