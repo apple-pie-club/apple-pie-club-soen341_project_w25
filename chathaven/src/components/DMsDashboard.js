@@ -97,9 +97,9 @@ export default function DMsPage() {
         )}{" "}
       </button>
 
-      <DMsWindow selectedUser={selectedUser} />
+      <DMsWindow selectedUser={selectedUser} sidebarOpen={sidebarOpen}/>
 
-      {/* <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
+       {/*<div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
         <div className="sentMessage">
           message 1 message 1 message 1 message 1message 1 message 1 message 1
           message 1message 1{" "}
