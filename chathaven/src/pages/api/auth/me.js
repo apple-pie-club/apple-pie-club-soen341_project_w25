@@ -1,7 +1,7 @@
-import connectToDatabase from "@/src/lib/mongodb";
-import User from "@/src/models/User";
+import connectToDatabase from "../../../lib/mongodb";
+import User from "../../../models/User";
 import jwt from "jsonwebtoken";
-import * as cookie from "cookie"; // Ensure correct import
+import * as cookie from "cookie";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {

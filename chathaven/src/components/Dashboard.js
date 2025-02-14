@@ -6,12 +6,12 @@ import {
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 import "./styles/Dashboard.css";
-import LogoutButton from "@/src/components/LogoutButton";
-import DirectMessagesButton from "@/src/components/DirectMessagesButton";
-import CreateTeamMenu from "@/src/components/CreateTeamMenu";
+import LogoutButton from "./LogoutButton";
+import DirectMessagesButton from "./DirectMessagesButton";
+import CreateTeamMenu from "./CreateTeamMenu";
 import { FiInfo } from "react-icons/fi";
-import CreateChannelMenu from "@/src/components/CreateChannelMenu";
-import CMsWindow from "@/src/components/CMsWindow";
+import CreateChannelMenu from "./CreateChannelMenu";
+import CMsWindow from "./CMsWindow";
 
 export default function DashboardPage() {
 

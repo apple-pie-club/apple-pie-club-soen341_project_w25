@@ -1,4 +1,4 @@
-import connectToDatabase from "@/src/lib/mongodb";
+import connectToDatabase from "../../lib/mongodb";
 import Channel from "../../models/Channel";
 import Team from "../../models/Team";
 import User from "../../models/User";
