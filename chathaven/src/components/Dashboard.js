@@ -84,12 +84,17 @@ export default function DashboardPage() {
     setSidebarOpen((prevState) => !prevState);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
+
+    const handleToggleChannelSidebar = () =>{
+      setChannelSidebarOpen(prevState => !prevState);
     }
-  };
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          handleSendMessage();
+        }
+      };
+
     
     const getMessageAreaClass = () => {
       if (!sidebarOpen && !channelSidebarOpen) return 'bothClosed';
@@ -111,23 +116,20 @@ return (
     <div id="dashboardContainer">
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="teamList">
-          <li id="teamHeader">
-            TEAMS
-            <br />
-            {isAdmin && ( // Only show if the user is an admin
-              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
-                <FaPlus /> Create Team
-              </div>
-            )}
-          </li>
-          {teams.map((team) => (
-            <li key={team.id || team.teamName} className="teamName">
-              {team.teamName}
-            </li>
-          ))}
+
+
+                  
+   <li id="teamHeader">TEAMS <br/>
+            <div id="createTeam" onClick={() => setIsMenuOpen(true)}><FaPlus /> Create Team</div></li>
+            {teams.map((team)=>(
+                <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
+            ))}
+
         </ul>
-        <div id="directMessagesArea">
-          <DirectMessagesButton />
+            <div id="logoutButtonArea">
+              <LogoutButton />
+              <DirectMessagesButton />
+            </div>
         </div>
         <div id="logoutButtonArea">
           <LogoutButton />

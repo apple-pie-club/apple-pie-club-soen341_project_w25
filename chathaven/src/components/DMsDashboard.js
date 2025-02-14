@@ -80,11 +80,9 @@ export default function DMsPage() {
           )}
         </ul>
 
-        <div id="channelArea">
-          <ChannelButton />
-        </div>
         <div id="logoutButtonArea">
           <LogoutButton />
+          <ChannelButton />
         </div>
       </div>
       <button
@@ -99,16 +97,16 @@ export default function DMsPage() {
         )}{" "}
       </button>
 
-      <DMsWindow selectedUser={selectedUser} />
+      <DMsWindow selectedUser={selectedUser} sidebarOpen={sidebarOpen}/>
 
-      {/* <div id="messagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
+       {/*<div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
         <div className="sentMessage">
           message 1 message 1 message 1 message 1message 1 message 1 message 1
           message 1message 1{" "}
         </div>
         <div className="receivedMessage">message 2</div>
       </div>
-      <div id="messageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
+      <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
         <input
           type="text"
           placeholder="Type a message..."
