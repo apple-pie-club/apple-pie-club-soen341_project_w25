@@ -11,6 +11,7 @@ import DirectMessagesButton from "@/src/components/DirectMessagesButton";
 import CreateTeamMenu from "@/src/components/CreateTeamMenu";
 import { FiInfo } from "react-icons/fi";
 import CreateChannelMenu from "@/src/components/CreateChannelMenu";
+import CMsWindow from "@/src/components/CMsWindow";
 
 export default function DashboardPage() {
 
@@ -21,6 +22,7 @@ export default function DashboardPage() {
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState(false);
     const [channels, setChannels] = useState([]);
+    const [selectedChannel, setSelectedChannel] = useState(null);
 
     useEffect(() =>{
         fetch("/api/teams", {
@@ -116,21 +118,25 @@ return (
     <div id="dashboardContainer">
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="teamList">
-
-
-                  
-   <li id="teamHeader">TEAMS <br/>
-            <div id="createTeam" onClick={() => setIsMenuOpen(true)}><FaPlus /> Create Team</div></li>
-            {teams.map((team)=>(
+            <li id="teamHeader">TEAMS <br/>
+              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
+                <FaPlus /> Create Team</div>
+                </li>
+            {teams.length > 0 ? ( 
+              teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
-            ))}
-
+            ))) : ( 
+              <li className="noTeams">No teams yet</li>
+            )}
         </ul>
             <div id="logoutButtonArea">
               <LogoutButton />
               <DirectMessagesButton />
             </div>
         </div>
+        
+        <CMsWindow selectedChannel={selectedChannel}/>
+
         <div id="logoutButtonArea">
           <LogoutButton />
         </div>
@@ -143,30 +149,37 @@ return (
         {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
       </button>
 
-        <div id="messagesArea" className={getMessageAreaClass()}>
-            <div className="sentMessage">message 1 message 1 message 1 message 1message 1 message 1 message 1 message 1message 1 </div>
-            <div className="receivedMessage">message 2</div>
-        </div>
-        <div id="messageBar" className={getMessageAreaClass()}>
-                <input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                />
-                <button onClick={handleSendMessage}><FaArrowUp /></button>
-        </div>
         <button id="toggleChannelSidebarButton" onClick={handleToggleChannelSidebar} className={channelSidebarOpen ? "open" : "closed"}>
           {channelSidebarOpen ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />} </button>
         <div id="channelSidebar" className={channelSidebarOpen ? "open" : "closed"}>
           <ul id="channelList">
-              <li id="channelHeader">{selectedTeam ? "Channels for:" : "Select a team to view channels" }<br/>
-              <span id="selectedTeamText">{selectedTeam ? selectedTeam.teamName : ""}</span><br/>
-              <div id="createChannel" className={selectedTeam ? "" : "teamNotSelected"} onClick={() => setIsCreateChannelModalOpen(true)}><FaPlus /> Create Channel</div></li>
-              {channels.map((channel) => (
-                <li key={channel._id} className="channelName">{channel.name}</li>
-              ))}
+              <li id="channelHeader">
+                {selectedTeam ? "Channels for:" : "Select a team to view channels" }
+                <br/>
+                <span id="selectedTeamText">{selectedTeam ? selectedTeam.teamName : ""}</span>
+                <br/>
+                <div id="createChannel" className={selectedTeam ? "" : "teamNotSelected"} onClick={() => setIsCreateChannelModalOpen(true)}>
+                  <FaPlus /> Create Channel
+                </div>
+              </li>
+              {channels.length > 0 ? (
+                channels.map((channel) => (
+                  <li 
+                  key={channel._id} 
+                  className={`channelName ${
+                    selectedChannel?._id === channel._id ? "active" : ""
+                  }`}
+                  onClick={() => {
+                    console.log("the selected channel is ", channel);
+                    setSelectedChannel(channel);
+                  }}
+                  >
+                  {channel.name}
+                  </li>
+                ))
+              ) : (
+                <li className="noChannels"> No channels yet</li>
+              )}
           </ul>
         </div>
         {isMenuOpen && <CreateTeamMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onCreateTeam={(newTeam) => setTeams((prevTeams) => [...prevTeams, newTeam])} />}
