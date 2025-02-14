@@ -136,7 +136,7 @@ return (
             </div>
       </div>
         
-      <CMsWindow selectedChannel={selectedChannel}/>
+      <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()}/>
 
       <button
         id="toggleSidebarButton"

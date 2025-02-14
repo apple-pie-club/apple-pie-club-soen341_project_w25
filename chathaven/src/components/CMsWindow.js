@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp } from "react-icons/fa";
-
-export default function CMsWindow({ selectedChannel }) {
+import "./styles/Dashboard.css";
+export default function CMsWindow({ selectedChannel, messageAreaClass }) {
 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
@@ -138,11 +138,8 @@ export default function CMsWindow({ selectedChannel }) {
 
     return (
         <div id="messageWindow">
-            <h2>
-                {selectedChannel ? selectedChannel.name : "Select a channel"}
-            </h2>
 
-            <div id="messagesArea">
+            <div id="messagesArea" className={messageAreaClass}>
             {messages.map((msg, index) => {
                     const senderName = users[msg.sender] || "Unknown User";
                     
@@ -154,7 +151,7 @@ export default function CMsWindow({ selectedChannel }) {
                 })}
             </div>
 
-            <div id="messageBar">
+            <div id="messageBar" className={messageAreaClass}>
                 <input
                 type = "text"
                 placeholder="Type a message..."
