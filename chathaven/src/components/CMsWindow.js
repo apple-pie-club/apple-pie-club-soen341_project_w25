@@ -60,9 +60,10 @@ export default function CMsWindow({ selectedChannel }) {
                 headers: {"Content-Type" : "application/json"},
                 body: JSON.stringify({channelId, text: message}), //send channelId in body
             });
+            
 
-            const result = await response.json();
-
+            const result = await response.json(); // takes a response stream
+            console.log(result); // error in this ^
             if(!response.ok){
                 console.error(` Error sending message: ${result.error}`);
                 alert(`Error: ${result.error}`);
