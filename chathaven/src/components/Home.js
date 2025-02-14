@@ -13,7 +13,7 @@ export default function HomePage() {
           ChatHaven
         </h1>
         <div>
-          <p id="text"><br/>Welcome to ChatHaven! <br/>You are logged in. Access your dashboard below:</p>
+          <p id="text"><br />Welcome to ChatHaven! <br />You are logged in:</p>
         </div>
         <div id="centered">
           <button
@@ -22,9 +22,15 @@ export default function HomePage() {
           >
             Dashboard
           </button>
+          <button
+            onClick={() => router.push('/dms')}
+            id="button"
+          >
+            DMs
+          </button>
         </div>
         <div>
-          <p id="text"><br/>Or register a new account:</p>
+          <p id="text"><br />Or register a new account:</p>
         </div>
         <div id="centered">
           <button
