@@ -13,4 +13,4 @@ Replace this with the changes in this PR
 > [!CAUTION]
 > Merging anything into main will redeploy production.
 - To see the deployment visit [chathaven.onrender.com](https://chathaven.onrender.com)
-- For the deployment configuratin or logs visit the [render dashboard](https://dashboard.render.com)
+- For the deployment configuration or logs visit the [render dashboard](https://dashboard.render.com)
