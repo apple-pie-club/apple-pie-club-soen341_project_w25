@@ -14,10 +14,15 @@
   box-sizing: border-box;
 }
 
+body{
+  overflow: hidden;
+}
 #DMsContainer {
   display: flex;
   height: 100vh;
+  transition:all 0.3s ease-in-out;
 }
+
 #sidebar {
   background-color: #124559;
   list-style-type: none;
@@ -62,16 +67,36 @@
   margin-top: 10px;
 }
 
+#createDM:hover{
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+#createDMHeader{
+  font-family:"Panton";
+  color:white;
+  font-size:20px;
+}
+
 .dmItem {
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
   color: white;
   font-size: 15px;
-  width: 100%;
+  border-radius:10px;
   background-color: #124559;
-  box-shadow: 0 -4px 8px 0 #ffffff13;
   padding: 10px;
+  margin:5px;
+  word-wrap: break-work;
+    overflow-wrap:break-word;
+    white-space: normal;
+}
+
+.dmItem:hover{
+  background-color:#668a97;
+  cursor:pointer;
+  transition:0.20s ease;
 }
 
 .dmItem.active {
@@ -160,21 +185,22 @@
 }
 
 #DmMessagesArea {
-  margin-left: 200px;
+  position: absolute;
+  left: 200px;
   margin-bottom: 50px;
-  width: calc(100vw - 150px);
-  height: calc(100vh - 50px);
+  width: calc(100% - 200px);
+  height: calc(100% - 50px);
   background-color: #f1f1f1;
-  padding: 0px;
+  padding: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
 #DmMessagesArea.fullWidth {
-  margin-left: 0;
-  width: 100vw;
+  left: 0;
+  width: 100%;
 }
 
 .receivedMessage {
@@ -380,5 +406,16 @@
 
 #toggleSidebarButton.closed {
   left: 0;
+}
+
+
+#messageWindow.fullWidth {
+  width: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+
+#messageWindow.shifted {
+  width: calc(100% - 200px); 
 }
 

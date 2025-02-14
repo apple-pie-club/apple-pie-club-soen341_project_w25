@@ -1,43 +1,48 @@
-import connectToDatabase from "@/src/lib/mongodb";
-import User from "@/src/models/User";
+import connectToDatabase from "@/src/lib/mongodb"; 
+import User from "../../../models/User"; // Corrected import path
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-// Defining the API route handler which processes HTTP requests and ensures only POST requests are handled
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
+  if (req.method !== "POST") return res.status(405).json({ message: "Method not allowed" });
 
-  // Trying to connect to the database
   try {
     await connectToDatabase();
-    console.log("Connected to database");
-
     const { firstname, lastname, email, password, requestGlobalAdmin } = req.body;
 
+    // Check if email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("User already exists");
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "Email is already in use" });
     }
 
+    // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ 
-      firstname, 
-      lastname, 
-      email, 
-      password: hashedPassword, 
-      requestGlobalAdmin,
+    // Assign admin status based on checkbox selection
+    const newUser = new User({
+      firstname,
+      lastname,
+      email,
+      password: hashedPassword,
+      isGlobalAdmin: requestGlobalAdmin || false, 
     });
+
     await newUser.save();
 
-    console.log("User registered successfully");
-    return res.status(201).json({ message: "User registered successfully" });
+    // Generate JWT Token
+    const token = jwt.sign(
+      { id: newUser._id, isGlobalAdmin: newUser.isGlobalAdmin },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      isGlobalAdmin: newUser.isGlobalAdmin,
+    });
   } catch (error) {
-    console.error("ERROR in /api/auth/register:", error);
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error", error: error.message });
+    res.status(500).json({ message: "Something went wrong" });
   }
 }

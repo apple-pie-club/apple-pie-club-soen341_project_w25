@@ -78,13 +78,14 @@ export default function DashboardPage() {
 
   const [message, setMessage] = useState("");
   const handleSendMessage = () => {
-    //logic to send message
+    // Logic to send message
     setMessage(""); // Clear input after sending
   };
 
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
+
 
     const handleToggleChannelSidebar = () =>{
       setChannelSidebarOpen(prevState => !prevState);
@@ -95,6 +96,7 @@ export default function DashboardPage() {
           handleSendMessage();
         }
       };
+
     
     const getMessageAreaClass = () => {
       if (!sidebarOpen && !channelSidebarOpen) return 'bothClosed';
@@ -114,7 +116,7 @@ export default function DashboardPage() {
 
 return (
     <div id="dashboardContainer">
-        <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
+      <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="teamList">
             <li id="teamHeader">TEAMS <br/>
               <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
@@ -132,12 +134,20 @@ return (
               <DirectMessagesButton />
             </div>
         </div>
-
-        <button id="toggleSidebarButton" onClick={handleToggleSidebar} className={sidebarOpen ? "open" : "closed"}>
-          {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
-        </button>
         
         <CMsWindow selectedChannel={selectedChannel}/>
+
+        <div id="logoutButtonArea">
+          <LogoutButton />
+        </div>
+      </div>
+      <button
+        id="toggleSidebarButton"
+        onClick={handleToggleSidebar}
+        className={sidebarOpen ? "open" : "closed"}
+      >
+        {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
+      </button>
 
         <button id="toggleChannelSidebarButton" onClick={handleToggleChannelSidebar} className={channelSidebarOpen ? "open" : "closed"}>
           {channelSidebarOpen ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />} </button>
