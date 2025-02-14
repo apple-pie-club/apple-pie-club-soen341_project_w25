@@ -89,7 +89,6 @@
   padding: 10px;
   color: white;
   border-radius: 10px;
-  text-indent: 10px;
   margin: 5px;
 }
 
@@ -116,7 +115,7 @@
   background: #124559;
 }
 
-#messageBar {
+#DmMessageBar {
   position: fixed;
   bottom: 0;
   left: 200px;
@@ -130,12 +129,12 @@
   transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-#messageBar.fullWidth {
+#DmMessageBar.fullWidth {
   left: 0;
   width: 100%;
 }
 
-#messageBar input {
+#DmMessageBar input {
   font-family: "Comfortaa";
   flex: 1;
   padding: 10px;
@@ -144,7 +143,7 @@
   outline: none;
 }
 
-#messageBar button {
+#DmMessageBar button {
   font-family: "Comfortaa";
   margin-left: 10px;
   padding: 9px 15px;
@@ -155,12 +154,12 @@
   cursor: pointer;
 }
 
-#messageBar button:hover {
+#DmMessageBar button:hover {
   background-color: #668a97;
   transition: 0.2s ease;
 }
 
-#messagesArea {
+#DmMessagesArea {
   margin-left: 200px;
   margin-bottom: 50px;
   width: calc(100vw - 150px);
@@ -173,7 +172,7 @@
   transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-#messagesArea.fullWidth {
+#DmMessagesArea.fullWidth {
   margin-left: 0;
   width: 100vw;
 }
@@ -199,21 +198,18 @@
   align-self: flex-end;
 }
 
-#channelArea {
-  position: absolute;
-  bottom: 40px;
-  width: 100%;
-  background-color: #124559;
-  box-shadow: 0 -4px 8px 0 #ffffff13;
-  padding: 10px;
-}
-
 #channelButton {
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
   color: white;
   font-size: 15px;
+  margin-left:85px;
+}
+
+#channelButton:hover{
+  color:rgb(29, 29, 29);
+    cursor:pointer;
 }
 
 #logoutButtonArea {
@@ -364,23 +360,25 @@
   transition: 0.3s ease;
 }
 
-#toggleSidebarButton {
-  position: absolute;
-  left: 200px;
-  z-index: 10;
-  border: none;
-  background-color: #124559;
-  padding: 10px;
-  color: white;
+#toggleSidebarButton{
+  position:absolute;
+  left:200px;
+  z-index:10;
+  border:none;
+  background-color:#124559;
+  padding:5px;
+  color:white;
   border-bottom-right-radius: 10px;
   transition: left 0.3s ease-in-out;
 }
 
-#toggleSidebarButton:hover {
-  cursor: pointer;
-  background-color: #17556d;
+#toggleSidebarButton:hover{
+  cursor:pointer;
+  background-color:#17556d;
+  transition:0.3s ease;
 }
 
 #toggleSidebarButton.closed {
   left: 0;
 }
+

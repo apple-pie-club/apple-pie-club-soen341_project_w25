@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import "./styles/Dashboard.css";
-
+import { FaInbox } from "react-icons/fa6";
 export default function DirectMessagesButton() {
   const router = useRouter();
 
@@ -11,7 +11,7 @@ export default function DirectMessagesButton() {
 
   return (
     <button id="directMessagesButton" onClick={handleRedirect}>
-      Go to Direct Messages
+      <FaInbox />
     </button>
   );
 }

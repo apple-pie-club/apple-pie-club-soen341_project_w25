@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import "./styles/DMs.css";
-
+import { PiKeyReturnFill } from "react-icons/pi";
 export default function ChannelButton() {
   const router = useRouter();
 
@@ -11,7 +11,7 @@ export default function ChannelButton() {
 
   return (
     <button id="channelButton" onClick={handleRedirect}>
-      Go to Channels
+      <PiKeyReturnFill />
     </button>
   );
 }
