@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import "./styles/DMs.css"
 const CreateDMMenu = ({ isOpen, onClose, onCreateDM }) => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
