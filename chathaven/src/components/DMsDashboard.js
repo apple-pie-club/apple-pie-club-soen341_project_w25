@@ -6,10 +6,10 @@ import {
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 import "./styles/DMs.css";
-import LogoutButton from "@/src/components/LogoutButton";
-import ChannelButton from "@/src/components/ChannelButton";
-import CreateDMMenu from "@/src/components/CreateDMMenu";
-import DMsWindow from "@/src/components/DMsWindow";
+import LogoutButton from "./LogoutButton";
+import ChannelButton from "./ChannelButton";
+import CreateDMMenu from "./CreateDMMenu";
+import DMsWindow from "./DMsWindow";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

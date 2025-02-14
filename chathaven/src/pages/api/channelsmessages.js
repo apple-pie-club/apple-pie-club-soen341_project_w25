@@ -1,5 +1,5 @@
-import connectToDatabase from "@/src/lib/mongodb";
-import Channel from "@/src/models/Channel";
+import connectToDatabase from "../../lib/mongodb";
+import Channel from "../../models/Channel";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
