@@ -5,7 +5,7 @@ const UserSchema = new mongoose.Schema({
   lastname: String,
   email: String,
   password: String,
-  isGlobalAdmin: Boolean, // ✅ Admin field
+  isGlobalAdmin: Boolean,
 }, { timestamps: true });
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);
