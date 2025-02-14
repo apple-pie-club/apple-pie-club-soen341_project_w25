@@ -76,13 +76,14 @@ export default function DashboardPage() {
 
   const [message, setMessage] = useState("");
   const handleSendMessage = () => {
-    //logic to send message
+    // Logic to send message
     setMessage(""); // Clear input after sending
   };
 
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
+
 
     const handleToggleChannelSidebar = () =>{
       setChannelSidebarOpen(prevState => !prevState);
@@ -93,6 +94,7 @@ export default function DashboardPage() {
           handleSendMessage();
         }
       };
+
     
     const getMessageAreaClass = () => {
       if (!sidebarOpen && !channelSidebarOpen) return 'bothClosed';
@@ -112,23 +114,34 @@ export default function DashboardPage() {
 
 return (
     <div id="dashboardContainer">
-        <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
+      <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="teamList">
-            <li id="teamHeader">TEAMS <br/>
+
+
+                  
+   <li id="teamHeader">TEAMS <br/>
             <div id="createTeam" onClick={() => setIsMenuOpen(true)}><FaPlus /> Create Team</div></li>
             {teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
             ))}
+
         </ul>
             <div id="logoutButtonArea">
               <LogoutButton />
               <DirectMessagesButton />
             </div>
         </div>
-
-        <button id="toggleSidebarButton" onClick={handleToggleSidebar} className={sidebarOpen ? "open" : "closed"}>
-          {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
-        </button>
+        <div id="logoutButtonArea">
+          <LogoutButton />
+        </div>
+      </div>
+      <button
+        id="toggleSidebarButton"
+        onClick={handleToggleSidebar}
+        className={sidebarOpen ? "open" : "closed"}
+      >
+        {sidebarOpen ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
+      </button>
 
         <div id="messagesArea" className={getMessageAreaClass()}>
             <div className="sentMessage">message 1 message 1 message 1 message 1message 1 message 1 message 1 message 1message 1 </div>
