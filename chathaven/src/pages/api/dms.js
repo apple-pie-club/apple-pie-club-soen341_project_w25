@@ -1,5 +1,5 @@
-import connectToDatabase from "@/src/lib/mongodb";
-import DM from "@/src/models/DMs";
+import connectToDatabase from "../../lib/mongodb";
+import DM from "../../models/DMs";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {

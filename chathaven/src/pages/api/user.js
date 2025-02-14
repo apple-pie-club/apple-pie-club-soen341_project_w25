@@ -1,7 +1,7 @@
-import connectToDatabase from "@/src/lib/mongodb";
+import connectToDatabase from "../../lib/mongodb";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-import User from "@/src/models/User"; // ✅ Import User model
+import User from "../../models/User"; // ✅ Import User model
 
 export default async function handler(req, res) {
     await connectToDatabase(); // ✅ Now it returns a Mongoose connection

@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import LogoutButton from "@/src/components/LogoutButton";
+import LogoutButton from "./LogoutButton";
 import "./styles/Dashboard.css";
 import "./styles/Home.css";
 
