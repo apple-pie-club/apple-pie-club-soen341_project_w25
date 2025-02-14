@@ -1,0 +1,16 @@
+good.formataddress@gmail.com, TestPass1
+bad.formataddress@gamil.com, TestPass2
+bad.formataddress@gmailcom, TestPass3
+bad.formataddress@com.gmail, TestPass4
+g_format@live.concordia.ca, TestPass5
+good.formataddress@outlook.com, TestPass6
+good.formataddress472@gmail.com, TestPass7
+bad.format@header@gmail.com, TestPass8
+!#$%&'*+-/=?^_`{|}~@gmail.com, TestPass9
+0123456789@gmail.com, TestPass10
+hugo..moslener@gmail.com, TestPass11
+".John.Doe"@example.com, TestPass12
+"John.Doe."@example.com, TestPass13
+"John..Doe"@example.com, TestPass14
+john.smith(comment)@example.com, TestPass15
+(comment)john.smith@example.com, TestPass16

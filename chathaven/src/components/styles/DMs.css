@@ -1,0 +1,421 @@
+@font-face {
+  font-family: "Comfortaa";
+  src: local("Comfortaa"), url(./fonts/Comfortaa-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Panton";
+  src: local("Panton"), url(./fonts/Panton-Trial-Black.ttf) format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  overflow: hidden;
+}
+#DMsContainer {
+  display: flex;
+  height: 100vh;
+  transition:all 0.3s ease-in-out;
+}
+
+#sidebar {
+  background-color: #124559;
+  list-style-type: none;
+  width: 200px;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  left: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease-in-out;
+}
+
+#sidebar.closed {
+  width: 0;
+  overflow: hidden;
+}
+
+#teamList {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#DMsHeader {
+  font-family: "Panton";
+  background-color: #124559;
+  font-size: 20px;
+  display: block;
+  padding: 10px;
+  color: white;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  box-shadow: 0 4px 8px 0 #ffffff13;
+}
+
+#createDM {
+  font-size: 15px;
+  font-family: "Comfortaa";
+  margin-top: 10px;
+}
+
+#createDM:hover{
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+#createDMHeader{
+  font-family:"Panton";
+  color:white;
+  font-size:20px;
+}
+
+.dmItem {
+  background-color: transparent;
+  font-family: "Comfortaa";
+  border: none;
+  color: white;
+  font-size: 15px;
+  border-radius:10px;
+  background-color: #124559;
+  padding: 10px;
+  margin:5px;
+  word-wrap: break-work;
+    overflow-wrap:break-word;
+    white-space: normal;
+}
+
+.dmItem:hover{
+  background-color:#668a97;
+  cursor:pointer;
+  transition:0.20s ease;
+}
+
+.dmItem.active {
+  background-color: #1b9aaa; /* Highlighted color for selected DM */
+  font-weight: bold;
+}
+
+#createTeam:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.teamName {
+  font-family: "Comfortaa";
+  display: block;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.teamName:hover {
+  background-color: #668a97;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: #668a97;
+  border-radius: 4px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: #124559;
+}
+
+#DmMessageBar {
+  position: fixed;
+  bottom: 0;
+  left: 200px;
+  width: calc(100% - 200px);
+  height: 50px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: none;
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+#DmMessageBar.fullWidth {
+  left: 0;
+  width: 100%;
+}
+
+#DmMessageBar input {
+  font-family: "Comfortaa";
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+}
+
+#DmMessageBar button {
+  font-family: "Comfortaa";
+  margin-left: 10px;
+  padding: 9px 15px;
+  background-color: #21647f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#DmMessageBar button:hover {
+  background-color: #668a97;
+  transition: 0.2s ease;
+}
+
+#DmMessagesArea {
+  position: absolute;
+  left: 200px;
+  margin-bottom: 50px;
+  width: calc(100% - 200px);
+  height: calc(100% - 50px);
+  background-color: #f1f1f1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+#DmMessagesArea.fullWidth {
+  left: 0;
+  width: 100%;
+}
+
+.receivedMessage {
+  margin: 10px;
+  padding: 10px;
+  width: 40%;
+  background-color: white;
+  border-radius: 10px;
+  border-bottom-left-radius: 0;
+  align-self: flex-start;
+}
+
+.sentMessage {
+  margin: 10px;
+  padding: 10px;
+  width: 40%;
+  background-color: #598291;
+  color: white;
+  border-radius: 10px;
+  border-bottom-right-radius: 0;
+  align-self: flex-end;
+}
+
+#channelButton {
+  background-color: transparent;
+  font-family: "Comfortaa";
+  border: none;
+  color: white;
+  font-size: 15px;
+  margin-left:85px;
+}
+
+#channelButton:hover{
+  color:rgb(29, 29, 29);
+    cursor:pointer;
+}
+
+#logoutButtonArea {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #124559;
+  box-shadow: 0 -4px 8px 0 #ffffff13;
+  padding: 10px;
+}
+
+#logoutButton {
+  background-color: transparent;
+  font-family: "Comfortaa";
+  border: none;
+  color: white;
+  font-size: 15px;
+}
+
+#logoutButton:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.menuOverlay {
+  font-family: "Comfortaa";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.499);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.menuContent {
+  background: #124559;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.121);
+  width: 400px;
+  text-align: center;
+}
+
+#createTeamHeader {
+  font-family: "Panton";
+  color: white;
+  font-size: 25px;
+  margin-bottom: 15px;
+}
+
+#teamNameInput {
+  line-height: 25px;
+  caret-color: white;
+  color: white;
+  border: none;
+  font-family: "Comfortaa";
+  background-color: transparent;
+  border-bottom: 2px solid #598392;
+}
+
+#teamNameInput::placeholder {
+  color: white;
+}
+
+#teamNameInput:focus {
+  outline: none;
+}
+
+#selectMembersText {
+  color: white;
+  text-align: left;
+  margin-top: 15px;
+}
+
+#noteText {
+  color: white;
+  font-size: 13px;
+  background-color: #165169;
+  padding: 5px;
+  border-radius: 15px;
+  margin-top: 10px;
+}
+
+.userList {
+  height: 300px;
+  overflow-y: auto;
+  text-align: left;
+  margin-top: 10px;
+  color: rgb(29, 28, 28);
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.userList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.userList::-webkit-scrollbar-thumb {
+  background: #668a97;
+  border-radius: 4px;
+}
+
+.userList::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+}
+
+.userList::-webkit-scrollbar-track {
+  background: #165169;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.user {
+  margin-top: 10px;
+}
+
+#name {
+  font-family: "Panton";
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+#email {
+  color: rgb(58, 58, 58);
+}
+.checkbox {
+  width: 20px;
+}
+
+.button {
+  font-family: "Comfortaa";
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  margin-top: 20px;
+  border: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.21);
+}
+
+.button:hover {
+  background-color: rgb(181, 181, 181);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#toggleSidebarButton{
+  position:absolute;
+  left:200px;
+  z-index:10;
+  border:none;
+  background-color:#124559;
+  padding:5px;
+  color:white;
+  border-bottom-right-radius: 10px;
+  transition: left 0.3s ease-in-out;
+}
+
+#toggleSidebarButton:hover{
+  cursor:pointer;
+  background-color:#17556d;
+  transition:0.3s ease;
+}
+
+#toggleSidebarButton.closed {
+  left: 0;
+}
+
+
+#DmMessageWindow.fullWidth {
+  width: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+
+#DmMessageWindow.shifted {
+  width: calc(100% - 200px); 
+}
+
