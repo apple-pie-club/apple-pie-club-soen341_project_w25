@@ -73,6 +73,13 @@ export default function DashboardPage() {
     console.log("ℹ️ Selected Team:", team);
   };
 
+  const getMessageAreaClass = () => {
+    if(!sidebarOpen && !channelSidebarOpen) return 'bothClosed';
+    if(!sidebarOpen) return 'leftClosed';
+    if(!channelSidebarOpen) return 'rightClosed';
+    return '';
+  }
+
   const handleToggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
   };
