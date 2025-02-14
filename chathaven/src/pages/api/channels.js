@@ -1,6 +1,9 @@
 import connectToDatabase from "@/src/lib/mongodb";
 import Channel from "../../models/Channel";
 import Team from "../../models/Team";
+import User from "../../models/User";
+import jwt from "jsonwebtoken";
+
 export default async function handler(req, res){
     await connectToDatabase();
     if(req.method === "GET"){
@@ -10,7 +13,33 @@ export default async function handler(req, res){
         }
 
         try{
-            const channels = await Channel.find({ teamId: teamId });
+            const token = req.cookies.authToken;
+            if (!token) {
+                return res.status(401).json({ error: "Unauthorized" });
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userId = decoded.userId;
+
+            const user = await User.findById(userId);
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+
+            let channels;
+            if (user.isGlobalAdmin) {
+                // Global Admins see all channels in a team
+                console.log(`🔹 Global Admin. Fetching ALL channels in team ${teamId}...`);
+                channels = await Channel.find({ teamId });
+            } else {
+                // Regular users only see channels they are members of
+                console.log(`🔹 Regular user. Fetching ONLY assigned channels in team ${teamId}...`);
+                channels = await Channel.find({ teamId });
+                if (!channels.length) {
+                    console.warn(`⚠️ No channels found for user: ${userId}`);
+                }
+            }
+            
             res.status(200).json(channels || []);
         }   catch (error){
             res.status(500).json({ error: "Error fetching channels"});

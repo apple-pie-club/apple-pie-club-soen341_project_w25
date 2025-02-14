@@ -31,8 +31,8 @@ export default function DashboardPage() {
     fetch("/api/user", { method: "GET", credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        console.log("User Data:", data); // Debugging log
-        if (data && typeof data.isGlobalAdmin !== "undefined") { // ✅ Fix: Use isGlobalAdmin
+        console.log("User Data for Admin:", data); // Debugging log
+        if (data && typeof data.isGlobalAdmin !== "undefined") { //Use isGlobalAdmin
           setUser(data);
         } else {
           console.warn("isGlobalAdmin field not found in user data!");
@@ -44,17 +44,19 @@ export default function DashboardPage() {
 
 
   useEffect(() => {
+    if (!loadingUser) {
     fetch("/api/teams", { method: "GET", credentials: "include" })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Teams:", data);
+        console.log("Teams Fetched:", data);
         setTeams(data);
       })
       .catch((error) => console.error("Error fetching teams:", error));
-  }, []);
+    }
+  }, [loadingUser]);
 
   useEffect(() => {
-    if (selectedTeam) {
+    if (selectedTeam && !loadingUser) {
       fetch(`/api/channels?teamId=${selectedTeam._id}`, {
         method: "GET",
         credentials: "include",
@@ -66,7 +68,7 @@ export default function DashboardPage() {
         })
         .catch((error) => console.error("Error fetching channels:", error));
     }
-  }, [selectedTeam]);
+  }, [selectedTeam, loadingUser]);
 
   const handleTeamSelect = (team) => {
     setSelectedTeam(team);
@@ -120,7 +122,7 @@ export default function DashboardPage() {
             TEAMS <br />
             {loadingUser ? (
               <p>Loading...</p>
-            ) : user?.isGlobalAdmin ? ( // ✅ FIX: Check isGlobalAdmin instead of role
+            ) : user?.isGlobalAdmin ? ( // Check isGlobalAdmin instead of role
               <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
                 <FaPlus /> Create Team
               </div>

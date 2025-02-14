@@ -23,25 +23,25 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Invalid user token" });
         }
 
-        // ✅ Use Mongoose to find user (No need for `db.collection("users")`)
+        // Use Mongoose to find user (No need for `db.collection("users")`)
         const user = await User.findById(new ObjectId(userId));
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        console.log("✅ API Returning User:", user);
+        console.log("API Returning User:", user);
 
         res.status(200).json({
             _id: user._id,
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
-            isGlobalAdmin: user.isGlobalAdmin,  // ✅ Use isGlobalAdmin field
+            isGlobalAdmin: user.isGlobalAdmin,  // Use isGlobalAdmin field
         });
 
     } catch (error) {
-        console.error("❌ Error fetching user data:", error);
+        console.error("Error fetching user data:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }
