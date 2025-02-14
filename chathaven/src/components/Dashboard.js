@@ -120,8 +120,9 @@ return (
         <ul id="teamList">
             <li id="teamHeader">TEAMS <br/>
               <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
-                <FaPlus /> Create Team</div>
-                </li>
+                <FaPlus /> Create Team
+              </div>
+            </li>
             {teams.length > 0 ? ( 
               teams.map((team)=>(
                 <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>{team.teamName}</li>
@@ -133,13 +134,12 @@ return (
               <LogoutButton />
               <DirectMessagesButton />
             </div>
-        </div>
+      </div>
         
-        <CMsWindow selectedChannel={selectedChannel}/>
+      <CMsWindow selectedChannel={selectedChannel}/>
 
-        <div id="logoutButtonArea">
-          <LogoutButton />
-        </div>
+      <div id="logoutButtonArea">
+        <LogoutButton />
       </div>
       <button
         id="toggleSidebarButton"
