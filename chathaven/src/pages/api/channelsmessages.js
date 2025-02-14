@@ -34,6 +34,8 @@ export default async function handler(req, res) {
     
           // Find the selected Channel by its ID
           const channel = await Channel.findById(channelId);
+          
+            console.log("Fetching messages for channel: ", channelId);
             
           if (!channel) {
             return res

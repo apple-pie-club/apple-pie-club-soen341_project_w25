@@ -216,15 +216,17 @@
   background-color: #124559;
   box-shadow: 0 -4px 8px 0 #ffffff13;
   padding: 10px;
+  
 }
 
 #directMessagesButton {
   background-color: transparent;
-  margin-left:85px;
+  margin-left:150px;
   font-family: "Comfortaa";
   border: none;
   color: white;
   font-size: 15px;
+  
 }
 
 #directMessagesButton:hover{
@@ -235,10 +237,11 @@
 #logoutButtonArea {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 100px;
   background-color: #124559;
   box-shadow: 0 -4px 8px 0 #ffffff13;
   padding: 10px;
+  z-index: 3;
 }
 
 #logoutButton {

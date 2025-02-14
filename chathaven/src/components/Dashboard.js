@@ -138,9 +138,9 @@ return (
         
       <CMsWindow selectedChannel={selectedChannel}/>
 
-      <div id="logoutButtonArea">
+      {/*<div id="logoutButtonArea">
         <LogoutButton />
-      </div>
+      </div>*/}
       <button
         id="toggleSidebarButton"
         onClick={handleToggleSidebar}
