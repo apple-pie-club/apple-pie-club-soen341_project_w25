@@ -138,20 +138,6 @@ return (
         </button>
         
         <CMsWindow selectedChannel={selectedChannel}/>
-        {/*<div id="messagesArea" className={getMessageAreaClass()}>
-            <div className="sentMessage">message 1 message 1 message 1 message 1message 1 message 1 message 1 message 1message 1 </div>
-            <div className="receivedMessage">message 2</div>
-        </div>
-        <div id="messageBar" className={getMessageAreaClass()}>
-                <input
-                    type="text"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                />
-                <button onClick={handleSendMessage}><FaArrowUp /></button>
-        </div>*/}
 
         <button id="toggleChannelSidebarButton" onClick={handleToggleChannelSidebar} className={channelSidebarOpen ? "open" : "closed"}>
           {channelSidebarOpen ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />} </button>

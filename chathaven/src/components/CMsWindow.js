@@ -63,7 +63,7 @@ export default function CMsWindow({ selectedChannel }) {
             
 
             const result = await response.json(); // takes a response stream
-            console.log(result); // error in this ^
+            console.log(result); 
             if(!response.ok){
                 console.error(` Error sending message: ${result.error}`);
                 alert(`Error: ${result.error}`);
