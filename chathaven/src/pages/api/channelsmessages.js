@@ -70,20 +70,22 @@ export default async function handler(req, res) {
             _id:channelId,
         })
 
-        const channel = await Channel.findById(channelId);
+        /*const channel = await Channel.findById(channelId);
         if (!channel) {
             console.error("Error: Channel not found in database");
             return res.status(404).json({ error: "Channel does not exist" });
         
-        }
+        }*/
         console.log("Channel found:", cm);
+        
 
+        // this is creating a new array empty, but removing this makes it so that the messages never get stored in the Channel
         if (!Array.isArray(channel.messages)) {
             console.warn(`Fixing missing messages array for channel ${channelId}`);
             channel.messages = [];
         }
         // If not, then error because a channel should exist
-        if (!channel) { 
+        /*if (!channel) { 
             channel = new Channel({
                 name: channelName,
                 teamId: teamId,
@@ -91,7 +93,7 @@ export default async function handler(req, res) {
             })
             return res.status(400).json({error: "channel doesnt exist"});
             //await channel.save(); // save channel before adding messages
-        }
+        }*/
 
         
         //Create new message object
