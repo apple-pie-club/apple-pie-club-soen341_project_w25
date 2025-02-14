@@ -80,7 +80,7 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
   };
 
   return (
-    <div id="messageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
+    <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
       <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
         {messages.map((msg, index) => (

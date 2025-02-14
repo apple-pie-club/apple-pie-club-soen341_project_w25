@@ -149,9 +149,9 @@ export default function DashboardPage() {
           <DirectMessagesButton />
         </div>
       </div>
+        
+      <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()}/>
 
-      {/* Main chat window */}
-      <CMsWindow selectedChannel={selectedChannel}/>
 
       <button
         id="toggleSidebarButton"
