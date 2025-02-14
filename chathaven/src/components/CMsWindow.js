@@ -5,6 +5,60 @@ export default function CMsWindow({ selectedChannel }) {
 
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [users, setUsers] = useState({});
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch("/api/users", {
+                    method: "GET",
+                    credentials: "include",
+                });
+    
+                if (!response.ok) throw new Error("Failed to fetch users");
+    
+                const data = await response.json();
+                console.log("All Users:", data);
+    
+                const usersMap = {};
+                data.forEach(user => {
+                    usersMap[user._id] = user.firstname && user.lastname
+                        ? `${user.firstname} ${user.lastname}` 
+                        : user.email;
+                });
+    
+                setUsers(usersMap);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+    
+        fetchUsers();
+    }, []);
+
+    // Fetching logged in user ID
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const response = await fetch("/api/user", {
+                    method: "GET",
+                    credentials: "include",
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch user ID");
+
+                const data = await response.json();
+                console.log("Logged-in User ID:", data._id);
+                setLoggedInUserId(data._id);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+    
 
     // Fetching Messages from API
     useEffect (() => {
@@ -49,6 +103,7 @@ export default function CMsWindow({ selectedChannel }) {
             console.error(" Error: selectedChannel is null or missing _id.");
             return;
         }
+        
 
         const channelId = selectedChannel._id; //get channel ID
         console.log("Sending message to: ", channelId);
@@ -79,6 +134,8 @@ export default function CMsWindow({ selectedChannel }) {
         }
     };
 
+    
+
     return (
         <div id="messageWindow">
             <h2>
@@ -86,16 +143,15 @@ export default function CMsWindow({ selectedChannel }) {
             </h2>
 
             <div id="messagesArea">
-                {messages.map((msg, index) => (
-                    <div
-                    key={index}
-                    className={
-                        msg.sender === selectedChannel._id ? "receivedMessage" : "sentMessage"
-                    }
-                    >
-                    {msg.text}
-                    </div>
-                ))}
+            {messages.map((msg, index) => {
+                    const senderName = users[msg.sender] || "Unknown User";
+                    
+                    return (
+                        <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
+                            <strong>{senderName}:</strong> {msg.text}
+                        </div>
+                    );
+                })}
             </div>
 
             <div id="messageBar">

@@ -216,6 +216,7 @@
   background-color: #124559;
   box-shadow: 0 -4px 8px 0 #ffffff13;
   padding: 10px;
+  
 }
 
 #directMessagesButton {
@@ -225,6 +226,7 @@
   border: none;
   color: white;
   font-size: 15px;
+  
 }
 
 #directMessagesButton:hover{
