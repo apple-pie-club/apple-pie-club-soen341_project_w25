@@ -30,5 +30,8 @@ jobs:
       - name: Install dependencies
         run: cd chathaven && npm install
 
+      - name: Run ESLint
+        run: cd chathaven && npm run lint
+
       - name: Run tests
         run: cd chathaven && npm run test --if-present
