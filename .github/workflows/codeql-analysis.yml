@@ -26,6 +26,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: node-cache-Linux-x64-npm-${{ hashFiles('chathaven/package-lock.json') }}
+          restore-keys: |
+            node-cache-Linux-x64-npm-
+            node-cache-
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
