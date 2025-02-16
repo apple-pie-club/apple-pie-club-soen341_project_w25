@@ -20,20 +20,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cache npm dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: node-cache-Linux-x64-npm-${{ hashFiles('chathaven/package-lock.json') }}
-          restore-keys: |
-            node-cache-Linux-x64-npm-
-            node-cache-
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.11.0
-          cache: 'npm'
+          cache: npm
           cache-dependency-path: chathaven/package-lock.json
 
       - name: Install dependencies
