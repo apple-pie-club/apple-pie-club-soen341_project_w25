@@ -23,12 +23,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: 20.11.0
+          cache: npm
           cache-dependency-path: chathaven/package-lock.json
 
       - name: Install dependencies
-        run: cd chathaven && npm install
+        run: cd chathaven && npm ci
+
+      - name: Run ESLint
+        run: cd chathaven && npm run lint
 
       - name: Run tests
         run: cd chathaven && npm run test --if-present
