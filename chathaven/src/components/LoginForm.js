@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Link from 'next/link';
 import "./styles/LoginForm.css";
 
 export default function LoginForm() {
@@ -28,7 +29,8 @@ export default function LoginForm() {
         const data = await res.json();
         setError(data.message);
       }
-    } catch (err) {
+    } catch (error) {
+      console.log(error);
       setError("Something went wrong.");
     }
   };
@@ -55,7 +57,7 @@ export default function LoginForm() {
           required
         />
         <button id="loginButton" type="submit">Login</button>
-        <p className="text">Want to make an account? <a href="/register">Register one here</a></p>
+        <p className="text">Want to make an account? <Link href="/register">Register one here</Link></p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
     </div>

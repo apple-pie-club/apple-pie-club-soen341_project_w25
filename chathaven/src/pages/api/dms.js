@@ -33,6 +33,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json(usersWithDMs);
     } catch (error) {
+      console.log(error);
       console.error("Error fetching DMs:", error);
       return res.status(500).json({ error: "Failed to retrieve DMs." });
     }
@@ -70,6 +71,7 @@ export default async function handler(req, res) {
         .status(201)
         .json({ message: "DM found or created successfully!", dm: existingDM });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Failed to fetch or create DM." });
     }
   } else {

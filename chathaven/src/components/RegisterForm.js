@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./styles/RegisterForm.css"
+import Link from 'next/link';
 
 export default function RegisterForm({ onRegister }) {
   const [firstname, setFirstname] = useState("");
@@ -32,7 +33,8 @@ export default function RegisterForm({ onRegister }) {
       } else {
         setError(data.message);
       }
-    } catch (err) {
+    } catch (error) {
+      console.log(error);
       setError("Something went wrong.");
     }
   };
@@ -84,7 +86,7 @@ export default function RegisterForm({ onRegister }) {
           <p className="text">Request Global Admin Status</p>
         </label>
         <button id="registerButton" type="submit">Register</button>
-        <p className="text">Already have an account? <a href="/login">Login here</a></p>
+        <p className="text">Already have an account? <Link href="/login">Login here</Link></p>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
