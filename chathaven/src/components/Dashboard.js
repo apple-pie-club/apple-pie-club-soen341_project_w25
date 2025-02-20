@@ -111,13 +111,6 @@ export default function DashboardPage() {
       .catch((error) => console.error("Error creating channel:", error));
   };
 
-
-  const [message, setMessage] = useState("");
-  const handleSendMessage = () => {
-    // Logic to send message
-    setMessage(""); // Clear input after sending
-  };
-
   return (
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
