@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import {
   MdKeyboardDoubleArrowLeft,
@@ -14,24 +13,11 @@ import DMsWindow from "./DMsWindow";
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [message, setMessage] = useState("");
   const [participants, setParticipants] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleSendMessage = () => {
-    //logic to send message
-    setMessage(""); // Clear input after sending
-  };
-
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
   };
 
   // Fetch existing DMs on component mount
