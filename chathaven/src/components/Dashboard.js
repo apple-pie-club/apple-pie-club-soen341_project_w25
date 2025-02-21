@@ -71,22 +71,7 @@ export default function DashboardPage() {
     }
   }, [selectedTeam, loadingUser]);
 
-  //get users in a team
-  useEffect(() => {
-    if (selectedTeam && selectedChannel) {
-      fetch(`/api/available-users?teamId=${selectedTeam._id}&channelId=${selectedChannel._id}`, {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("Available Users for channel:", data);
-          setAvailableUsers(data);
-        })
-        .catch((error) => console.error("Error fetching available users:", error));
-    }
-  }, [selectedTeam, selectedChannel]);
-
+  
   const handleTeamSelect = (team) => {
     setSelectedTeam(team);
     console.log("Selected Team:", team);
