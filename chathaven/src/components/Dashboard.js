@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import {
   MdKeyboardDoubleArrowLeft,
@@ -9,7 +8,6 @@ import "./styles/Dashboard.css";
 import LogoutButton from "@/src/components/LogoutButton";
 import DirectMessagesButton from "@/src/components/DirectMessagesButton";
 import CreateTeamMenu from "@/src/components/CreateTeamMenu";
-import { FiInfo } from "react-icons/fi";
 import CreateChannelMenu from "@/src/components/CreateChannelMenu";
 import CMsWindow from "@/src/components/CMsWindow";
 import AddUserToChannelMenu from "@/src/components/AddUserToChannelMenu";
