@@ -12,6 +12,7 @@ import CreateTeamMenu from "@/src/components/CreateTeamMenu";
 import { FiInfo } from "react-icons/fi";
 import CreateChannelMenu from "@/src/components/CreateChannelMenu";
 import CMsWindow from "@/src/components/CMsWindow";
+import AddUserToChannelMenu from "@/src/components/AddUserToChannelMenu";
 
 export default function DashboardPage() {
 
@@ -25,6 +26,8 @@ export default function DashboardPage() {
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false); 
+  const [channelToModify, setChannelToModify] = useState(null);
 
   // Fetch user details (including role)
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function DashboardPage() {
       .catch((error) => console.error("Error fetching teams:", error));
     }
   }, [loadingUser]);
-
+  
   useEffect(() => {
     if (selectedTeam && !loadingUser) {
       fetch(`/api/channels?teamId=${selectedTeam._id}`, {
@@ -70,10 +73,59 @@ export default function DashboardPage() {
     }
   }, [selectedTeam, loadingUser]);
 
+  //get users in a team
+  useEffect(() => {
+    if (selectedTeam && selectedChannel) {
+      fetch(`/api/available-users?teamId=${selectedTeam._id}&channelId=${selectedChannel._id}`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Available Users for channel:", data);
+          setAvailableUsers(data);
+        })
+        .catch((error) => console.error("Error fetching available users:", error));
+    }
+  }, [selectedTeam, selectedChannel]);
+
   const handleTeamSelect = (team) => {
     setSelectedTeam(team);
-    console.log("ℹ️ Selected Team:", team);
+    console.log("Selected Team:", team);
   };
+
+  const handleAddUserToChannel = async (channelId, userIdToAdd) => {
+    try {
+      console.log("Adding user:", userIdToAdd, "to channel:", channelId);
+        const response = await fetch("/api/channels", {
+            method: "PATCH",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ channelId, userIdToAdd }),
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            console.error("Error adding user to channel:", result.error);
+            alert(`Error: ${result.error}`);
+            return;
+        }
+
+        console.log("User added successfully:", result.message);
+        alert("User added successfully!");
+        
+        setChannels((prevChannels) =>
+            prevChannels.map((channel) =>
+                channel._id === channelId
+                    ? { ...channel, members: [...channel.members, userIdToAdd] }
+                    : channel
+            )
+        );
+    } catch (error) {
+        console.error("Failed to add user to channel:", error);
+        alert("An error occurred. Please try again.");
+    }
+};
 
   const getMessageAreaClass = () => {
     if(!sidebarOpen && !channelSidebarOpen) return 'bothClosed';
@@ -108,6 +160,10 @@ export default function DashboardPage() {
           console.error("Error creating channel:", data.error);
         } else {
           setChannels((prevChannels) => [...prevChannels, data]);
+          setUser((prevUser) => ({
+            ...prevUser,
+            isChannelAdmin: [...prevUser.isChannelAdmin, data._id],
+          }));
         }
       })
       .catch((error) => console.error("Error creating channel:", error));
@@ -160,6 +216,13 @@ export default function DashboardPage() {
       </div>
         
       <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()}/>
+      <AddUserToChannelMenu
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        selectedChannel={channelToModify}
+        selectedTeam={selectedTeam}
+        onAddUser={handleAddUserToChannel}
+      />
 
 
       <button
@@ -199,11 +262,21 @@ export default function DashboardPage() {
                 key={channel._id}
                 className={`channelName ${selectedChannel?._id === channel._id ? "active" : ""}`}
                 onClick={() => {
-                  console.log("ℹ️ Selected Channel:", channel);
+                  console.log("Selected Channel:", channel);
                   setSelectedChannel(channel);
-                }}
-              >
+                }}>
                 {channel.name}
+                
+                {(user?.isGlobalAdmin || user?.isChannelAdmin?.includes(channel._id))  && (
+                <button
+                 id="addUser"
+                 onClick={() => {
+                 setChannelToModify(channel);
+                 setIsUserModalOpen(true);
+                }}>
+                <FaPlus />
+                </button>
+                )}
               </li>
             ))
           ) : (

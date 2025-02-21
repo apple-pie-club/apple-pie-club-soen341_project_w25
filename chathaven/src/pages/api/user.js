@@ -1,10 +1,10 @@
 import connectToDatabase from "@/src/lib/mongodb";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
-import User from "@/src/models/User"; // ✅ Import User model
+import User from "@/src/models/User"; 
 
 export default async function handler(req, res) {
-    await connectToDatabase(); // ✅ Now it returns a Mongoose connection
+    await connectToDatabase();
 
     if (req.method !== "GET") {
         return res.status(405).json({ error: `Method ${req.method} not allowed` });
@@ -37,7 +37,8 @@ export default async function handler(req, res) {
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
-            isGlobalAdmin: user.isGlobalAdmin,  // Use isGlobalAdmin field
+            isGlobalAdmin: user.isGlobalAdmin,
+            isChannelAdmin: user.isChannelAdmin,  
         });
 
     } catch (error) {

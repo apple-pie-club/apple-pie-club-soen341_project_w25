@@ -145,7 +145,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
                     
                     return (
                         <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
-                            <strong>{senderName}:</strong> {msg.text}
+                            <strong id="messageSenderName">{senderName}:</strong> <div>{msg.text}</div>
                         </div>
                     );
                 })}
