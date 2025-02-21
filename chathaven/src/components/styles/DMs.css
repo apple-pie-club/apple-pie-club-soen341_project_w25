@@ -60,7 +60,9 @@ body{
   top: 0;
   box-shadow: 0 4px 8px 0 #ffffff13;
 }
-
+#DMsList{
+  margin-bottom:50px;
+}
 #createDM {
   font-size: 15px;
   font-family: "Comfortaa";
