@@ -1,37 +1,23 @@
 import { useState, useEffect } from "react";
-import { FaArrowUp } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa6";
 import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 import "./styles/DMs.css";
-import LogoutButton from "@/src/components/LogoutButton";
-import ChannelButton from "@/src/components/ChannelButton";
-import CreateDMMenu from "@/src/components/CreateDMMenu";
-import DMsWindow from "@/src/components/DMsWindow";
+import LogoutButton from "./LogoutButton";
+import ChannelButton from "./ChannelButton";
+import CreateDMMenu from "./CreateDMMenu";
+import DMsWindow from "./DMsWindow";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [message, setMessage] = useState("");
   const [participants, setParticipants] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const handleSendMessage = () => {
-    //logic to send message
-    setMessage(""); // Clear input after sending
-  };
-
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
   };
 
   // Fetch existing DMs on component mount

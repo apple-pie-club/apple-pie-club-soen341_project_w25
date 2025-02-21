@@ -1,4 +1,4 @@
-import connectToDatabase from "@/src/lib/mongodb";
+import connectToDatabase from "../../lib/mongodb";
 import Team from "../../models/Team";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         .status(201)
         .json({ message: "Team created successfully!", team: newTeam });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Error creating team" });
     }
   }
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
                  console.log("Teams Fetched:", teams);
                 res.status(200).json(teams);
             } catch(error){
+                console.log(error);
                 res.status(500).json({ error: "Error fetching teams" });
             }
         }

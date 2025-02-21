@@ -1,5 +1,5 @@
-import connectToDatabase from "@/src/lib/mongodb"; 
-import User from "../../../models/User"; // Corrected import path
+import connectToDatabase from "../../../lib/mongodb";
+import User from "../../../models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
@@ -43,6 +43,7 @@ export default async function handler(req, res) {
       isGlobalAdmin: newUser.isGlobalAdmin,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Something went wrong" });
   }
 }

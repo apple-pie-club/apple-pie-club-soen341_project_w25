@@ -12,7 +12,8 @@ export async function middleware(req) {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     await jwtVerify(token, secret);
     return NextResponse.next();
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
     return NextResponse.redirect(new URL("/login", req.url));  // Redirect if the token is invalid
   }
 }

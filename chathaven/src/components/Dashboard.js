@@ -5,12 +5,12 @@ import {
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
 import "./styles/Dashboard.css";
-import LogoutButton from "@/src/components/LogoutButton";
-import DirectMessagesButton from "@/src/components/DirectMessagesButton";
-import CreateTeamMenu from "@/src/components/CreateTeamMenu";
-import CreateChannelMenu from "@/src/components/CreateChannelMenu";
-import CMsWindow from "@/src/components/CMsWindow";
-import AddUserToChannelMenu from "@/src/components/AddUserToChannelMenu";
+import LogoutButton from "./LogoutButton";
+import DirectMessagesButton from "./DirectMessagesButton";
+import CreateTeamMenu from "./CreateTeamMenu";
+import CreateChannelMenu from "./CreateChannelMenu";
+import CMsWindow from "./CMsWindow";
+import AddUserToChannelMenu from "./AddUserToChannelMenu";
 
 export default function DashboardPage() {
 
@@ -165,13 +165,6 @@ export default function DashboardPage() {
         }
       })
       .catch((error) => console.error("Error creating channel:", error));
-  };
-
-
-  const [message, setMessage] = useState("");
-  const handleSendMessage = () => {
-    // Logic to send message
-    setMessage(""); // Clear input after sending
   };
 
   return (

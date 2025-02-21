@@ -1,4 +1,4 @@
-import connectToDatabase from "@/src/lib/mongodb";
+import connectToDatabase from "../../lib/mongodb";
 import User from "../../models/User";
 
 export default async function handler(req, res){
@@ -10,6 +10,7 @@ export default async function handler(req, res){
             const users = await User.find({}, "firstname lastname email _id");
             res.status(200).json(users);
         } catch(error){
+            console.log(error);
             res.status(500).json({ error: "Error fetching users" });
         }
     } else{

@@ -1,4 +1,4 @@
-import DashboardPage from "@/src/components/DMsDashboard";
+import DashboardPage from "../components/DMsDashboard";
 
 export default function DMsDashboard() {
   return (

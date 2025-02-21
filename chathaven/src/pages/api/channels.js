@@ -1,4 +1,4 @@
-import connectToDatabase from "@/src/lib/mongodb";
+import connectToDatabase from "../../lib/mongodb";
 import Channel from "../../models/Channel";
 import Team from "../../models/Team";
 import User from "../../models/User";
@@ -42,6 +42,7 @@ export default async function handler(req, res){
             
             res.status(200).json(channels || []);
         }   catch (error){
+            console.log(error);
             res.status(500).json({ error: "Error fetching channels"});
         
         }
