@@ -1,7 +1,4 @@
 import { useRouter } from "next/navigation";
-import LogoutButton from "./LogoutButton";
-import "./styles/Dashboard.css";
-import "./styles/Home.css";
 
 export default function HomePage() {
   const router = useRouter();
@@ -40,9 +37,6 @@ export default function HomePage() {
             Register
           </button>
         </div>
-      </div>
-      <div id="logoutButtonArea">
-        <LogoutButton />
       </div>
     </div>
   );
