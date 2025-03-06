@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { FaArrowUp, FaUserSlash } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
+import { HiQuestionMarkCircle } from "react-icons/hi2";
 import "./styles/Dashboard.css";
+
 
 export default function CMsWindow({ selectedChannel, messageAreaClass }) {
     const [messages, setMessages] = useState([]);
@@ -9,7 +12,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
     const [users, setUsers] = useState({});
     const [members, setMembers] = useState([]);
     const [isChannelAdmin, setIsChannelAdmin] = useState(false);
-
+    const [isChannelMemberListOpen, setIsChannelMemberListOpen] = useState(false);
     // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
@@ -139,6 +142,10 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
         }
     };
 
+    const handleOpenChannelMemberList = () =>{
+        setIsChannelMemberListOpen((prev) => !prev);
+    };
+
     // Handle Banning Users (Admin Only)
     const handleBanUser = async (userId) => {
         if (!selectedChannel || !selectedChannel._id) {
@@ -180,11 +187,8 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
 
     return (
         <div id="messageWindow">
-
-            {/* Channel Members Box in Sidebar */}
-            {/* Channel Members Box in Sidebar */}
-            <div id="channelSidebarMembers">
-                <h3>Channel Members</h3>
+            <div id="channelSidebarMembers" className={isChannelMemberListOpen? "open":"closed"}>
+                <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3> 
                 <ul>
                     {members.length > 0 ? (
                         members.map((memberId) => (
@@ -222,6 +226,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
+                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList}/>
                 <input
                     type="text"
                     placeholder="Type a message..."
