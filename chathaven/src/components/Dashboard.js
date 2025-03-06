@@ -4,6 +4,7 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import LogoutButton from "./LogoutButton";
 import DirectMessagesButton from "./DirectMessagesButton";
@@ -11,7 +12,7 @@ import CreateTeamMenu from "./CreateTeamMenu";
 import CreateChannelMenu from "./CreateChannelMenu";
 import CMsWindow from "./CMsWindow";
 import AddUserToChannelMenu from "./AddUserToChannelMenu";
-
+import EditProfileMenu from  "./EditProfileMenu";
 export default function DashboardPage() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,7 +27,7 @@ export default function DashboardPage() {
   const [loadingUser, setLoadingUser] = useState(true);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false); 
   const [channelToModify, setChannelToModify] = useState(null);
-
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   // Fetch user details (including role)
   useEffect(() => {
     fetch("/api/user", { method: "GET", credentials: "include" })
@@ -188,6 +189,12 @@ export default function DashboardPage() {
         <div id="logoutButtonArea">
           <LogoutButton />
           <DirectMessagesButton />
+          <div id="profileButton" onClick={()=> {
+            setIsProfileMenuOpen(true)
+            console.log("profile button clicked", isProfileMenuOpen);
+            }}>
+            <FaUserCircle />
+          </div>
         </div>
       </div>
         
@@ -199,7 +206,12 @@ export default function DashboardPage() {
         selectedTeam={selectedTeam}
         onAddUser={handleAddUserToChannel}
       />
-
+      {isProfileMenuOpen && (<EditProfileMenu 
+      user = {user} 
+      isOpen = {isProfileMenuOpen}
+      onClose={()=>setIsProfileMenuOpen(false)}
+      />
+      )}
 
       <button
         id="toggleSidebarButton"
