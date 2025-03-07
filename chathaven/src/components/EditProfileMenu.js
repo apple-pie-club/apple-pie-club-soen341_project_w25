@@ -15,8 +15,6 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  if(!isOpen) return null;
-
 
   useEffect(() => {
     setFormData({
@@ -112,6 +110,9 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
       showErrorMessage("An error occurred. Please try again.");
     }
   };
+
+  if(!isOpen) return null;
+  
   return (
     <div id="editProfileOverlay" style={{ display: isOpen ? "flex" : "none" }}>
       <div id="editProfileMenu" >
