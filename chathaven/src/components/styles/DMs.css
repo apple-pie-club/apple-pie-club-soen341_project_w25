@@ -232,7 +232,7 @@ body{
   border: none;
   color: white;
   font-size: 15px;
-  margin-left:85px;
+  margin-left:60px;
 }
 
 #channelButton:hover{
@@ -421,3 +421,24 @@ body{
   width: calc(100% - 200px); 
 }
 
+.loadingScreen{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.499);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #ffffff #0000;
+  animation: l1 1s infinite;
+}
+@keyframes l1 {to{transform: rotate(.5turn)}}

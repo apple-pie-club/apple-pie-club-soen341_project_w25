@@ -167,7 +167,7 @@ export default function DashboardPage() {
                 <FaPlus /> Create Team
               </div>
             ) : (
-              <p>Not an admin</p>
+              <></>
             )}
           </li>
 
@@ -191,7 +191,6 @@ export default function DashboardPage() {
           <DirectMessagesButton />
           <div id="profileButton" onClick={()=> {
             setIsProfileMenuOpen(true)
-            console.log("profile button clicked", isProfileMenuOpen);
             }}>
             <FaUserCircle />
           </div>
@@ -207,7 +206,8 @@ export default function DashboardPage() {
         onAddUser={handleAddUserToChannel}
       />
       {isProfileMenuOpen && (<EditProfileMenu 
-      user = {user} 
+      user = {user}
+      setUser = {setUser} 
       isOpen = {isProfileMenuOpen}
       onClose={()=>setIsProfileMenuOpen(false)}
       />
@@ -289,6 +289,11 @@ export default function DashboardPage() {
           teamId={selectedTeam ? selectedTeam._id : ""}
         />
       )}
+      { (loadingUser && teams) && (
+        <div className="loadingScreen">
+          <div className="loader"></div>
+        </div>
+      )}  
     </div>
   );
 }
