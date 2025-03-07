@@ -8,7 +8,12 @@ export default async function handler(req, res) {
 
   try {
     await connectToDatabase();
-    const { firstname, lastname, email, password, requestGlobalAdmin } = req.body;
+    const { firstname, lastname, email, password, contactByFax, requestGlobalAdmin } = req.body;
+
+    // contactByFax is an invisible field that only bots will fill out
+    if (contactByFax) {
+      return res.status(400).json({ message: "Spam detected" });
+    }
 
     // Check if email is already registered
     const existingUser = await User.findOne({ email });
