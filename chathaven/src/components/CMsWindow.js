@@ -146,7 +146,49 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
         setIsChannelMemberListOpen((prev) => !prev);
     };
 
-    // Handle Banning Users (Admin Only)
+    
+// Handle Deleting Messages (Admin Only)
+const handleDelete = async (messageId) => {
+    if (!selectedChannel || !selectedChannel._id) {
+        console.error("Error: selectedChannel is null or missing _id.");
+        alert("Error: Channel ID is missing.");
+        return;
+    }
+
+    console.log("Deleting message:", messageId);
+    console.log("Channel ID:", selectedChannel._id);
+
+    try {
+        const response = await fetch(
+            `/api/channelsmessages?messageId=${messageId}&channelId=${selectedChannel._id}`,
+            {
+                method: "DELETE",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+            }
+        );
+
+        const result = await response.json();
+        console.log("Delete Response:", result);
+
+        if (!response.ok) {
+            console.error(`Error deleting message: ${result.error}`);
+            alert(`Error: ${result.error}`);
+            return;
+        }
+
+        console.log(`Message ${messageId} deleted successfully!`);
+        setMessages((prevMessages) => prevMessages.filter(msg => msg._id !== messageId));
+
+    } catch (error) {
+        console.error("Error deleting message:", error);
+        alert("An error occurred. Please try again.");
+    }
+};
+
+
+
+// Handle Banning Users (Admin Only)
     const handleBanUser = async (userId) => {
         if (!selectedChannel || !selectedChannel._id) {
             console.error("Cannot ban user: selectedChannel is null or missing _id.");
@@ -215,13 +257,21 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass}>
                 {messages.map((msg, index) => {
-                    const senderName = users[msg.sender] || "Unknown User";
-                    return (
-                        <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
-                            <strong>{senderName}:</strong> {msg.text}
-                        </div>
-                    );
-                })}
+    const senderName = users[msg.sender] || "Unknown User";
+    return (
+        <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
+            <strong>{senderName}:</strong> {msg.text}
+            
+            {/* Show delete button only if the logged-in user is an admin */}
+            {isChannelAdmin && (
+                <span className="deleteIcon" onClick={() => handleDelete(msg._id)} title="Delete message">
+                    🗑️
+                </span>
+            )}
+        </div>
+    );
+})}
+
             </div>
 
             {/* Message Input */}

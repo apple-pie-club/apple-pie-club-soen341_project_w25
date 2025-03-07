@@ -831,3 +831,17 @@
 .success.show{
   opacity:1;
 }
+
+
+.deleteIcon {
+    cursor: pointer;
+    margin-left: 10px;
+    color: red;
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0;
+}
+
+.receivedMessage:hover .deleteIcon,
+.sentMessage:hover .deleteIcon {
+    opacity: 1;
+}
