@@ -7,14 +7,33 @@ export default function RegisterForm({ onRegister }) {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [contactByFax, setContactByFax] = useState(false);
   const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+
+  const showErrorMessage = (message) => {
+    setError(message);
+    setShowError(true);
+    
+    setTimeout(() => {
+      setShowError(false);
+    }, 3000);
+  };
+
+  const showSuccessMessage = ()=>{
+    setShowSuccess(true);
+
+    setTimeout(() =>{
+      setShowSuccess(false);
+    }, 3000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -28,14 +47,14 @@ export default function RegisterForm({ onRegister }) {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess("Registration successful! You can now log in.");
+        showSuccessMessage();
         setTimeout(() => onRegister(), 2000); // Call a function to redirect to login after 2000ms
       } else {
-        setError(data.message);
+        showErrorMessage(data.message);
       }
     } catch (error) {
       console.log(error);
-      setError("Something went wrong.");
+      showErrorMessage("Something went wrong.");
     }
   };
 
@@ -68,6 +87,17 @@ export default function RegisterForm({ onRegister }) {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+
+        {/* Honeypot - this field is invisible to humans and catches spambots */}
+        <input
+          type="checkbox"
+          name="ensure_that_im_contacted_by_fax"
+          checked={contactByFax}
+          tabIndex="-1"
+          onChange={(e) => setContactByFax(e.target.checked)}
+          style={{ display: "none" }}
+          autoComplete="off"
+        />
         <input
           className="textInput"
           type="password"
@@ -88,8 +118,17 @@ export default function RegisterForm({ onRegister }) {
         <button id="registerButton" type="submit">Register</button>
         <p className="text">Already have an account? <Link href="/login">Login here</Link></p>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {showError && 
+        <div className={`alert ${showError ? "show" : ""}`}>
+          <p className="error">{error}</p>
+        </div>}
+
+      {showSuccess &&
+        <div className={`success ${showSuccess ? "show" : ""}`}>
+          <p className="successMessage">User successfully registered</p>
+        </div>
+      }
+
     </div>
   );
 }

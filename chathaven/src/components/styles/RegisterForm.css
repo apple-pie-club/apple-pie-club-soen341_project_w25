@@ -150,3 +150,39 @@ body{
     transition:all 0.35s ease;
     box-shadow: 0 4px 8px 0 #00000039;
 }
+
+.alert{
+    font-family:"Comfortaa";
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .alert.show {
+    opacity: 1;
+  }
+  
+  .success{
+    font-family:"Comfortaa";
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(33, 255, 59, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .success.show{
+    opacity:1;
+  }

@@ -14,13 +14,17 @@ export default function CreateChannelMenu({ isOpen, onClose, teamMembers, onCrea
   }, []);
 
   const handleCreate = () => {
-    const newChannel = {
-      channelName,
-      teamId,
-      members: [...selectedMembers, creatorId], 
-    };
-    onCreateChannel(newChannel);
-    onClose(); 
+    if(channelName === ""){
+      window.alert("Missing Channel Name");
+    } else {
+      const newChannel = {
+        channelName,
+        teamId,
+        members: [...selectedMembers, creatorId], 
+      };
+      onCreateChannel(newChannel);
+      onClose(); 
+    }
   };
 
   const toggleMemberSelection = (memberId) => {
@@ -39,12 +43,12 @@ export default function CreateChannelMenu({ isOpen, onClose, teamMembers, onCrea
             <p>Create Channel</p>
           </div>
           <div className="menuBody">
-            <input
-              id="channelNameInput"
-              type="text"
-              value={channelName}
-              onChange={(e) => setChannelName(e.target.value)}
-              placeholder="Enter channel name"
+            <input 
+            id="channelNameInput" 
+            type="text" 
+            value={channelName} 
+            onChange={(e) => setChannelName(e.target.value)} 
+            placeholder="Enter channel name" 
             />
               <p className="selectMembersText">Select channel members:</p>
               <p id="noteText">You will automatically be admin of this channel</p>

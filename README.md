@@ -1,5 +1,7 @@
 # Apple Pie Club Soen341 Project 2025
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2c2ba204-6c78-4d4a-bfed-2344d09dd8d3/deploy-status)](https://app.netlify.com/sites/the-real-chathaven/deploys)
+
 This is purely a university project.
 
 ## Overview of the project

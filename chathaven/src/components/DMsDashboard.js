@@ -4,25 +4,46 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
 import "./styles/DMs.css";
 import LogoutButton from "./LogoutButton";
 import ChannelButton from "./ChannelButton";
 import CreateDMMenu from "./CreateDMMenu";
 import DMsWindow from "./DMsWindow";
+import EditProfileMenu from  "./EditProfileMenu";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [participants, setParticipants] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
   };
 
+  useEffect(() => {
+    fetch("/api/user", { method: "GET", credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("User Data for Admin:", data); // Debugging log
+        if (data && typeof data.isGlobalAdmin !== "undefined") { //Use isGlobalAdmin
+          setUser(data);
+        } else {
+          console.warn("isGlobalAdmin field not found in user data!");
+        }
+      })
+      .catch((error) => console.error("Error fetching user data:", error))
+      .finally(() => setLoadingUser(false));
+  }, []);
+
   // Fetch existing DMs on component mount
   useEffect(() => {
-    fetch("/api/dms", {
+    if(!loadingUser)
+    {fetch("/api/dms", {
       method: "GET",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -32,8 +53,8 @@ export default function DMsPage() {
         console.log("Participants fetched:", data); // Debug
         setParticipants(data);
       })
-      .catch((error) => console.error(" Error fetching DMs:", error));
-  }, []);
+      .catch((error) => console.error(" Error fetching DMs:", error));}
+  }, [loadingUser]);
 
   return (
     <div id="DMsContainer">
@@ -69,6 +90,11 @@ export default function DMsPage() {
         <div id="logoutButtonArea">
           <LogoutButton />
           <ChannelButton />
+          <div id="profileButton" onClick={()=> {
+                      setIsProfileMenuOpen(true)
+                      }}>
+                      <FaUserCircle />
+            </div>
         </div>
       </div>
       <button
@@ -114,6 +140,19 @@ export default function DMsPage() {
           }
         />
       )}
+
+      {isProfileMenuOpen && (<EditProfileMenu 
+            user = {user}
+            setUser = {setUser} 
+            isOpen = {isProfileMenuOpen}
+            onClose={()=>setIsProfileMenuOpen(false)}
+            />
+      )}
+      { (loadingUser && participants) && (
+        <div className="loadingScreen">
+          <div className="loader"></div>
+        </div>
+      )} 
     </div>
   );
 }
