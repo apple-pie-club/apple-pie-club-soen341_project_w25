@@ -7,6 +7,7 @@ export default function RegisterForm({ onRegister }) {
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [contactByFax, setContactByFax] = useState(false);
   const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -67,6 +68,17 @@ export default function RegisterForm({ onRegister }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        />
+
+        {/* Honeypot - this field is invisible to humans and catches spambots */}
+        <input
+          type="checkbox"
+          name="ensure_that_im_contacted_by_fax"
+          checked={contactByFax}
+          tabIndex="-1"
+          onChange={(e) => setContactByFax(e.target.checked)}
+          style={{ display: "none" }}
+          autoComplete="off"
         />
         <input
           className="textInput"
