@@ -156,6 +156,15 @@ export default function DashboardPage() {
   return (
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
+      <div id="logoutButtonArea">
+        <div id="profileButton" onClick={()=> {
+            setIsProfileMenuOpen(true)
+            }}>
+            <FaUserCircle />
+          </div>
+          <DirectMessagesButton />
+          <LogoutButton />
+        </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
           <li id="teamHeader">
@@ -186,15 +195,6 @@ export default function DashboardPage() {
             <li className="noTeams">No teams yet</li>
           )}
         </ul>
-        <div id="logoutButtonArea">
-          <LogoutButton />
-          <DirectMessagesButton />
-          <div id="profileButton" onClick={()=> {
-            setIsProfileMenuOpen(true)
-            }}>
-            <FaUserCircle />
-          </div>
-        </div>
       </div>
         
       <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()}/>

@@ -32,7 +32,7 @@ body{
   position: fixed;
   top: 0;
   height: 100vh;
-  left: 0;
+  left: 40px;
   overflow-y: auto;
   transition: width 0.3s ease-in-out;
 }
@@ -145,8 +145,8 @@ body{
 #DmMessageBar {
   position: fixed;
   bottom: 0;
-  left: 200px;
-  width: calc(100% - 200px);
+  left: 240px;
+  width: calc(100% - 240px);
   height: 50px;
   background-color: #f1f1f1;
   display: flex;
@@ -157,7 +157,7 @@ body{
 }
 
 #DmMessageBar.fullWidth {
-  left: 0;
+  left: 40px;
   width: 100%;
 }
 
@@ -188,9 +188,9 @@ body{
 
 #DmMessagesArea {
   position: absolute;
-  left: 200px;
+  left: 240px;
   margin-bottom: 50px;
-  width: calc(100% - 200px);
+  width: calc(100% - 240px);
   height: calc(100% - 50px);
   background-color: #f1f1f1;
   padding: 10px;
@@ -201,7 +201,7 @@ body{
 }
 
 #DmMessagesArea.fullWidth {
-  left: 0;
+  left: 40px;
   width: 100%;
 }
 
@@ -231,35 +231,40 @@ body{
   font-family: "Comfortaa";
   border: none;
   color: white;
-  font-size: 15px;
-  margin-left:60px;
+  font-size: 25px;
 }
 
 #channelButton:hover{
-  color:rgb(29, 29, 29);
+  transform:scale(1.1);
     cursor:pointer;
 }
 
 #logoutButtonArea {
+  background-color: #0a2a36;
+  width: 40px;
+  height: 100vh;
   position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #124559;
-  box-shadow: 0 -4px 8px 0 #ffffff13;
-  padding: 10px;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
 }
 
 #logoutButton {
+  position:absolute;
+  bottom:5px;
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
   color: white;
-  font-size: 15px;
+  font-size: 25px;
 }
 
 #logoutButton:hover {
   cursor: pointer;
-  text-decoration: underline;
+  transform:scale(1.1);
 }
 
 .menuOverlay {
@@ -390,7 +395,7 @@ body{
 
 #toggleSidebarButton{
   position:absolute;
-  left:200px;
+  left:240px;
   z-index:10;
   border:none;
   background-color:#124559;
@@ -407,7 +412,7 @@ body{
 }
 
 #toggleSidebarButton.closed {
-  left: 0;
+  left: 240px;
 }
 
 
@@ -418,7 +423,7 @@ body{
 
 
 #DmMessageWindow.shifted {
-  width: calc(100% - 200px); 
+  width: calc(100% - 240px); 
 }
 
 .loadingScreen{
