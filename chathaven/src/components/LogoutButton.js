@@ -10,5 +10,5 @@ export default function LogoutButton() {
     router.push("/login");
   };
 
-  return <button id="logoutButton"onClick={handleLogout}><CiLogout /> Logout</button>;
+  return <button id="logoutButton"onClick={handleLogout}><CiLogout /></button>;
 }

@@ -58,6 +58,15 @@ export default function DMsPage() {
 
   return (
     <div id="DMsContainer">
+      <div id="logoutButtonArea">
+      <div id="profileButton" onClick={()=> {
+                      setIsProfileMenuOpen(true)
+                      }}>
+                      <FaUserCircle />
+            </div>
+            <ChannelButton />
+          <LogoutButton />
+        </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="DMsList">
           <li id="DMsHeader">
@@ -86,16 +95,6 @@ export default function DMsPage() {
             <li className="noDms">No DMs yet</li>
           )}
         </ul>
-
-        <div id="logoutButtonArea">
-          <LogoutButton />
-          <ChannelButton />
-          <div id="profileButton" onClick={()=> {
-                      setIsProfileMenuOpen(true)
-                      }}>
-                      <FaUserCircle />
-            </div>
-        </div>
       </div>
       <button
         id="toggleSidebarButton"
