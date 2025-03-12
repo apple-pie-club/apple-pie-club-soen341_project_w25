@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaArrowUp, FaUserSlash } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
+import { MdExitToApp } from "react-icons/md";
 import "./styles/Dashboard.css";
 
 
@@ -187,6 +188,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
 
     return (
         <div id="messageWindow">
+            <div id="channelSidebarMembersOverlay"style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
             <div id="channelSidebarMembers" className={isChannelMemberListOpen? "open":"closed"}>
                 <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3> 
                 <ul>
@@ -194,7 +196,12 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
                         members.map((memberId) => (
                             <li key={memberId} className="memberListItem">
                                 <span>{users[memberId] || `Unknown User (${memberId})`}</span>
-                                {isChannelAdmin && (
+                                {loggedInUserId === memberId ? 
+                                (<button className="leaveButton">
+                                    <MdExitToApp /> Leave
+                                </button>) :
+                            
+                                (isChannelAdmin && (
                                     <button
                                         className="banButton"
                                         onClick={() => handleBanUser(memberId)}
@@ -202,13 +209,14 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
                                     >
                                         <FaUserSlash /> Ban
                                     </button>
-                                )}
+                                ))}
                             </li>
                         ))
                     ) : (
                         <li>No members found.</li>
                     )}
                 </ul>
+            </div>
             </div>
 
 

@@ -4,7 +4,8 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaUserPlus } from "react-icons/fa";
+import { PiUserCirclePlusFill } from "react-icons/pi";
 import "./styles/Dashboard.css";
 import LogoutButton from "./LogoutButton";
 import DirectMessagesButton from "./DirectMessagesButton";
@@ -253,7 +254,7 @@ export default function DashboardPage() {
                   console.log("Selected Channel:", channel);
                   setSelectedChannel(channel);
                 }}>
-                {channel.name}
+    
                 
                 {(user?.isGlobalAdmin || user?.isChannelAdmin?.includes(channel._id))  && (
                 <button
@@ -262,9 +263,10 @@ export default function DashboardPage() {
                  setChannelToModify(channel);
                  setIsUserModalOpen(true);
                 }}>
-                <FaPlus />
+                <FaUserPlus />
                 </button>
                 )}
+                {channel.name}
               </li>
             ))
           ) : (

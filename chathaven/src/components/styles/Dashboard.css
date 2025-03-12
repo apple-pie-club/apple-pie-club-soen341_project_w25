@@ -514,18 +514,19 @@
 }
 
 #addUser {
-  background-color: skyblue;
-  margin-left: 10px;
-  border-radius: 8px;
-  padding: 2px;
+  font-size:15px;
   transition: all 0.5s;
   text-align: center;
   border: none;
+  background-color:transparent;
+  color:white;
+  margin-right:5px;
 }
 
 #addUser:hover{
   cursor:pointer;
-  background-color:rgb(103, 162, 185);
+  transform:scale(1.1);
+  color:black;
 }
 
 #createChannel{
@@ -600,7 +601,7 @@
     top: 10%;
     left: 50%;
     transform: translate(-50%, 0);
-    width: 250px;
+    width: 400px;
     background-color: #124559;
     padding: 15px;
     color: white;
@@ -622,7 +623,19 @@
     margin-bottom: 10px;
     text-align: center;
 }
-
+#channelSidebarMembersOverlay{
+  font-family: "Comfortaa";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.499);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
 .closeButton{
   position:absolute;
   top:10px;
@@ -832,4 +845,21 @@
 
 .success.show{
   opacity:1;
+}
+
+.leaveButton {
+  background: rgb(218, 218, 218);
+  color:black;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left:5px;
+}
+
+.leaveButton:hover {
+  background: rgb(142, 142, 142);
+  color:white;
+  transition:0.35s ease;
 }
