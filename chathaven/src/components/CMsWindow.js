@@ -6,7 +6,7 @@ import { MdExitToApp } from "react-icons/md";
 import "./styles/Dashboard.css";
 
 
-export default function CMsWindow({ selectedChannel, messageAreaClass }) {
+export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveChannel }) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -14,6 +14,8 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
     const [members, setMembers] = useState([]);
     const [isChannelAdmin, setIsChannelAdmin] = useState(false);
     const [isChannelMemberListOpen, setIsChannelMemberListOpen] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
     // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
@@ -186,6 +188,65 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
         }
     };
 
+    const showSuccessMessage = ()=>{
+        setShowSuccess(true);
+    
+        setTimeout(() =>{
+          setShowSuccess(false);
+        }, 3000);
+      };
+
+      const showErrorMessage = (message) => {
+        setError(message);
+        setShowError(true);
+      
+        setFormData({
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          oldPassword: "",
+          newPassword: "",
+        });
+        
+        setTimeout(() => {
+          setShowError(false);
+        }, 3000);
+      };
+
+
+    const handleLeaveChannel = async() =>{
+        if(!selectedChannel || !selectedChannel._id){
+            console.error("Error: selectedChannel is null or missing _id.");
+            return;
+        }
+
+        try{
+            const response = await fetch("/api/channels", {
+                method: "DELETE",
+                credentials: "include",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify({ channelId: selectedChannel._id}),
+            });
+
+            const result = await response.json();
+            if(!response.ok){
+                console.error(`Error leaving channel: ${result.error}`);
+                showErrorMessage(result.error);
+                return;
+            }
+
+            showSuccessMessage();
+
+            setMembers((prevMembers) => prevMembers.filter((member => member!== loggedInUserId)));
+
+            onLeaveChannel(selectedChannel._id);
+            setIsChannelMemberListOpen(false);
+        } catch (error){
+            console.error("Error leaving channel: ", error);
+            showErrorMessage("An error occurred. Please try again.");
+        }
+    };
+
     return (
         <div id="messageWindow">
             <div id="channelSidebarMembersOverlay"style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
@@ -197,7 +258,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
                             <li key={memberId} className="memberListItem">
                                 <span>{users[memberId] || `Unknown User (${memberId})`}</span>
                                 {loggedInUserId === memberId ? 
-                                (<button className="leaveButton">
+                                (<button className="leaveButton" onClick={handleLeaveChannel} title="Leave channel">
                                     <MdExitToApp /> Leave
                                 </button>) :
                             
@@ -251,6 +312,19 @@ export default function CMsWindow({ selectedChannel, messageAreaClass }) {
                     <FaArrowUp />
                 </button>
             </div>
+
+            {showError && 
+            <div className={`alert ${showError ? "show" : ""}`}>
+                <p className="error">{error}</p>
+            </div>
+            }
+
+            {showSuccess &&
+            <div className={`success ${showSuccess ? "show" : ""}`}>
+                <p className="successMessage">Successfully left channel.</p>
+            </div>
+            }
+
         </div>
     );
 }

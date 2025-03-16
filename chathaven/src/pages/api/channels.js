@@ -188,6 +188,47 @@ export default async function handler(req, res){
             console.error("Error adding user to channel:", error);
             return res.status(500).json({ error: "Failed to add user to channel" });
         }
+    } 
+    
+    else if (req.method === "DELETE"){
+        const { channelId} = req.body;
+
+        if(!channelId){
+            return res.status(400).json({error: "Channel ID is required"});
+        }
+
+        try{
+            const token = req.cookies.authToken;
+            if(!token){
+                return res.status(401).json({error:"Unauthorized"});
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userId = decoded.userId;
+
+            const channel = await Channel.findById(channelId);
+            if(!channel){
+                return res.status(404).json({error: "Channel not found"});
+            }
+
+            await Channel.findByIdAndUpdate(channelId, {
+                $pull: {members: userId}
+            });
+
+            await User.findByIdAndUpdate(userId, {
+                $pull:{isChannelAdmin:channelId}
+            });
+
+            const updatedChannels = await Channel.find({members: userId});
+
+            return res.status(200).json({
+                message:"Successfully left channel",
+                channels: updatedChannels
+            });
+        } catch (error){
+            console.error("Error leaving channel:", error);
+            return res.status(500).json({error: "Failed to leave channel"});
+        }
     }
 
     res.setHeader("Allow", ["GET", "POST", "PATCH"]);

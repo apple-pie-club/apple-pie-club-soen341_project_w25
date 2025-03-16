@@ -814,6 +814,7 @@
 @keyframes l1 {to{transform: rotate(.5turn)}}
 
 .alert{
+  font-family:"Comfortaa";
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -831,6 +832,7 @@
 }
 
 .success{
+  font-family:"Comfortaa";
   position: fixed;
   bottom: 20px;
   left: 50%;
