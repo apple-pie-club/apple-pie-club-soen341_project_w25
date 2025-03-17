@@ -132,8 +132,8 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
           <div className="infoBox">
           <div className="inputGroup">
             <label>Email</label><input name="email" type="text" value={formData.email} onChange={handleChange} disabled={!editMode}></input>
-            <label style={{marginTop:20 +'px'}}>Password</label><input name="oldPassword" type="password" placeholder="Enter old password" onChange={handleChange} disabled={!editMode} style={{marginBottom:10 +'px'}}></input>
-            <input name="newPassword" type="password" placeholder="Enter new password" onChange={handleChange} disabled={!editMode}></input>
+            <label style={{marginTop:20 +'px'}}>Password</label><input name="oldPassword" type="password" placeholder="Enter old password" value={formData.oldPassword} onChange={handleChange} disabled={!editMode} style={{marginBottom:10 +'px'}}></input>
+            <input name="newPassword" type="password" placeholder="Enter new password" value={formData.newPassword} onChange={handleChange} disabled={!editMode}></input>
           </div>
         </div>
             :

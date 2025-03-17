@@ -4,7 +4,7 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaUserPlus } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import LogoutButton from "./LogoutButton";
 import DirectMessagesButton from "./DirectMessagesButton";
@@ -153,6 +153,11 @@ export default function DashboardPage() {
       .catch((error) => console.error("Error creating channel:", error));
   };
 
+  const handleChannelLeave = (channelId) => {
+    if(!user.isGlobalAdmin)
+      setChannels((prevChannels) => prevChannels.filter(channel => channel._id !== channelId));
+  };
+
   return (
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
@@ -197,7 +202,7 @@ export default function DashboardPage() {
         </ul>
       </div>
         
-      <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()}/>
+      <CMsWindow selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()} onLeaveChannel={handleChannelLeave}/>
       <AddUserToChannelMenu
         isOpen={isUserModalOpen}
         onClose={() => setIsUserModalOpen(false)}
@@ -253,7 +258,7 @@ export default function DashboardPage() {
                   console.log("Selected Channel:", channel);
                   setSelectedChannel(channel);
                 }}>
-                {channel.name}
+    
                 
                 {(user?.isGlobalAdmin || user?.isChannelAdmin?.includes(channel._id))  && (
                 <button
@@ -262,9 +267,10 @@ export default function DashboardPage() {
                  setChannelToModify(channel);
                  setIsUserModalOpen(true);
                 }}>
-                <FaPlus />
+                <FaUserPlus />
                 </button>
                 )}
+                {channel.name}
               </li>
             ))
           ) : (
