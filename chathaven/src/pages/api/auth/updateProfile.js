@@ -26,13 +26,18 @@ export default async function handler(req, res) {
       user.email = email;
     }
 
-    // Validate old password if changing password
-    if (oldPassword && newPassword) {
+    if (oldPassword) {
       const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
       if (!isPasswordCorrect) {
         return res.status(400).json({ message: "Incorrect old password" });
       }
-      user.password = await bcrypt.hash(newPassword, 10);
+    
+      // Only update password if newPassword is provided
+      if (newPassword) {
+        user.password = await bcrypt.hash(newPassword, 10);
+      } else {
+        return res.status(400).json({ message: "New password cannot be empty" });
+      }
     }
 
     // Update other fields

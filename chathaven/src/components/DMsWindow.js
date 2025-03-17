@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import "./styles/DMs.css";
 
 export default function DMsWindow({ selectedUser , sidebarOpen}) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const listRef = useRef(null);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -39,6 +40,10 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
 
     fetchMessages();
   }, [selectedUser]);
+
+  useEffect(() => {
+    listRef.current?.lastElementChild?.scrollIntoView()
+}, [messages]);
 
   // Handle sending messages
   const handleSendMessage = async () => {
@@ -82,7 +87,7 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
-      <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
+      <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"} ref={listRef}>
         {messages.map((msg, index) => (
           <div
             key={index}

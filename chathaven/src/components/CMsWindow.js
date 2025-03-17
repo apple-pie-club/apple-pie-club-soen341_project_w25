@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaArrowUp, FaUserSlash } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
@@ -16,6 +16,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
     const [isChannelMemberListOpen, setIsChannelMemberListOpen] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
+    const listRef = useRef(null);
     // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
@@ -108,6 +109,9 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
         fetchMessages();
     }, [selectedChannel]);
 
+    useEffect(() => {
+        listRef.current?.lastElementChild?.scrollIntoView()
+    }, [messages]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!message.trim()) return;
@@ -199,14 +203,6 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
       const showErrorMessage = (message) => {
         setError(message);
         setShowError(true);
-      
-        setFormData({
-          firstname: user.firstname,
-          lastname: user.lastname,
-          email: user.email,
-          oldPassword: "",
-          newPassword: "",
-        });
         
         setTimeout(() => {
           setShowError(false);
@@ -282,7 +278,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
 
 
             {/* Messages Area */}
-            <div id="messagesArea" className={messageAreaClass}>
+            <div id="messagesArea" className={messageAreaClass} ref={listRef}>
                 {messages.map((msg, index) => {
                     const senderName = users[msg.sender] || "Unknown User";
                     return (
