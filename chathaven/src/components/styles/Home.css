@@ -21,7 +21,7 @@ body{
     margin: auto;
     margin-top:80px;
     width: 500px;
-    height: 450px;
+    height: 400px;
     padding: 50px;
     border-radius:50px;
     box-shadow: 0 4px 8px 0 #00000033, 0 6px 20px 0 #00000030;
@@ -51,4 +51,27 @@ body{
     background-color:#668a97;
     transition:all 0.35s ease;
     box-shadow: 0 4px 8px 0 #00000039;
+}
+
+#logoutButtonArea {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: #124559;
+  padding: 8px;
+  align-items: center;
+}
+
+#logoutButton {
+    background-color: transparent;
+    font-family: "Comfortaa";
+    border: none;
+    color: white;
+    font-size: 25px;
+}
+
+#logoutButton:hover {
+    cursor: pointer;
+    transform:scale(1.1);
 }
