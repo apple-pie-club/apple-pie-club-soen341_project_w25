@@ -117,7 +117,7 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
     <div id="editProfileOverlay" style={{ display: isOpen ? "flex" : "none" }}>
       <div id="editProfileMenu" >
         <RxCross2 id="closeButton" onClick={onClose} />
-        <h3>Your Profile <FiEdit id="editButton" onClick={turnOnEditMode}/></h3>
+        <h3>Your Profile <FiEdit id="editButton" data-testid="edit-button" onClick={turnOnEditMode}/></h3>
         <form id="userInfo" onSubmit={handleSubmit}>
           <div className="infoBox">
             <div className="inputGroup">
