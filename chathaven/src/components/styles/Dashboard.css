@@ -224,6 +224,9 @@
   border-radius: 10px;
   border-bottom-left-radius: 0;
   align-self: flex-start;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 .sentMessage {
@@ -236,6 +239,9 @@
   border-radius: 10px;
   border-bottom-right-radius: 0;
   align-self: flex-end;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 #directMessagesArea {
