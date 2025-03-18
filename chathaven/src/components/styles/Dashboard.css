@@ -126,7 +126,7 @@
 }
 
 #messageWindow.bothClosed{
-  width:100%;
+  width:calc(100vw - 40px);
 }
 
 #messageBar {
@@ -155,9 +155,9 @@
 }
 
 #messageBar.bothClosed{
-    left:80px;
+    left:40px;
     right:0;
-    width:100%;
+    width:calc(100vw - 40px);
 }
 
 #messageBar input {
@@ -213,7 +213,7 @@
 #messagesArea.bothClosed{
     margin-left:40px;
     margin-right:0;
-    width:100vw;
+    width:calc(100vw - 40px);
 }
 .receivedMessage {
   font-family:"Comfortaa";
@@ -456,7 +456,6 @@
 #toggleSidebarButton:hover{
     cursor:pointer;
     background-color:#17556d;
-    transition:0.3s ease;
 }
 
 #toggleSidebarButton.closed {
@@ -496,7 +495,6 @@
 #toggleChannelSidebarButton:hover{
     cursor:pointer;
     background-color:#17556d;
-    transition:0.3s ease;
 }
 
 #toggleChannelSidebarButton.closed {
