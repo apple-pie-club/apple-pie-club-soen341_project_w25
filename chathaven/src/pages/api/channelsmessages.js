@@ -56,6 +56,7 @@ export default async function handler(req, res) {
         try{
         const channelId = req.body.channelId
         const text = req.body.text;
+        const reply = req.body.reply;
         console.log(`Sending message to channel: ${channelId} by user: ${loggedInUserId}`);
 
         if(!channelId) {
@@ -79,9 +80,10 @@ export default async function handler(req, res) {
             sender: loggedInUserId,
             text: text.trim(),
             timestamp: new Date(),
+            reply: reply
         };
         console.log("New message object:", newMessage);
-    
+        
         
         //Add message to Channel
         cm.messages.push(newMessage);
