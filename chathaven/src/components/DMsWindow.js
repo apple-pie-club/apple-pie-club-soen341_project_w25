@@ -1,12 +1,40 @@
 import { useState, useEffect, useRef } from "react";
-import { FaArrowUp } from "react-icons/fa";
+import { FaArrowUp, FaReply } from "react-icons/fa";
+import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 
 export default function DMsWindow({ selectedUser , sidebarOpen}) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null);
+  const [reply, setReply] = useState(null);
+  const [users, setUsers] = useState({});
   const listRef = useRef(null);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch("/api/users", { method: "GET", credentials: "include" });
+            if (!response.ok) throw new Error("Failed to fetch users");
+
+            const data = await response.json();
+            console.log("Fetched Users:", data);
+
+            const usersMap = {};
+            data.forEach(user => {
+                usersMap[user._id] = user.firstname && user.lastname
+                    ? `${user.firstname} ${user.lastname}`
+                    : user.email;
+            });
+
+            setUsers(usersMap);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    fetchUsers();
+}, []);
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedUser || !selectedUser._id) {
@@ -63,7 +91,7 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, text: message }), //  Send `userId` in the body
+        body: JSON.stringify({ userId, text: message, reply: reply }), //  Send `userId` in the body
       });
 
       const result = await response.json();
@@ -78,6 +106,7 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
 
       setMessages((prevMessages) => [...prevMessages, result.newMessage]); //  Append new message
       setMessage(""); //  Clear input after sending
+      setReply(null);
     } catch (error) {
       console.error("Error sending message:", error);
       alert("An error occurred. Please try again.");
@@ -88,21 +117,55 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
       <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"} ref={listRef}>
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={
-              msg.sender === selectedUser._id
-                ? "receivedMessage"
-                : "sentMessage"
-            }
-          >
-            {msg.text}
-          </div>
-        ))}
+        {messages.map((msg, index) => {
+          const senderName = users[msg.sender] || "Unknown User";
+          const isHovered = hoveredMessageIndex === index;
+          const replyMessage = msg.reply;
+          return ( <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+                                      {replyMessage &&
+                                      (
+                                      <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
+          
+                                          {msg.sender===selectedUser._id &&
+                                              <div className="replyMessageIndicatorReceived"></div>
+                                          }
+                                          <div className={`replyMessage ${msg.sender !== selectedUser._id ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
+                                              <p>{users[replyMessage.sender]}: <br/>{replyMessage.text}</p>
+                                          </div>
+          
+                                          {msg.sender!==selectedUser._id &&
+                                              <div className="replyMessageIndicatorSent"></div>
+                                          }
+                                      </div>
+                                      )}
+                                      <div className="messageContent" style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
+                                          {isHovered && msg.sender !== selectedUser._id && (
+                                          <div className="actionBox">
+                                              <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                          </div>
+                                          )}
+                                          
+                                          <div key={index} className={msg.sender !== selectedUser._id ? "sentMessage" : "receivedMessage"} style={{marginTop: replyMessage? '0px': '10px'}}>
+                                              <span>{msg.sender === selectedUser._id && <strong>{senderName}: <br/></strong>}{msg.text}</span>
+                                          </div>
+                                          {isHovered && msg.sender === selectedUser._id && (
+                                              <div className="actionBox">
+                                                  <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                              </div>
+                                          )}
+                                      </div>
+                                  </div>);
+      })}
       </div>
 
       <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
+        {reply && (
+          <div className="DMreplyingBox">
+            <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
+            <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
+          </div>
+        )}
+        
         <input
           type="text"
           placeholder="Type a message..."
