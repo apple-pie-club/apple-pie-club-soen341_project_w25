@@ -158,7 +158,7 @@ body{
 
 #DmMessageBar.fullWidth {
   left: 40px;
-  width: 100%;
+  width: calc(100vw - 40px);
 }
 
 #DmMessageBar input {
@@ -193,7 +193,6 @@ body{
   width: calc(100% - 240px);
   height: calc(100% - 50px);
   background-color: #f1f1f1;
-  padding: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -203,28 +202,34 @@ body{
 
 #DmMessagesArea.fullWidth {
   left: 40px;
-  width: 100%;
+  width: calc(100vw - 40px);
 }
 
 .receivedMessage {
+  font-family:"Comfortaa";
   margin: 10px;
   padding: 10px;
-  width: 40%;
+  max-width: 40%;
   background-color: white;
   border-radius: 10px;
   border-bottom-left-radius: 0;
-  align-self: flex-start;
+  white-space: normal; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 .sentMessage {
+  font-family:"Comfortaa";
   margin: 10px;
   padding: 10px;
-  width: 40%;
+  max-width: 40%;
   background-color: #598291;
   color: white;
   border-radius: 10px;
   border-bottom-right-radius: 0;
-  align-self: flex-end;
+  white-space: normal; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
 }
 
 #channelButton {
@@ -409,7 +414,6 @@ body{
 #toggleSidebarButton:hover{
   cursor:pointer;
   background-color:#17556d;
-  transition:0.3s ease;
 }
 
 #toggleSidebarButton.closed {
@@ -418,7 +422,7 @@ body{
 
 
 #DmMessageWindow.fullWidth {
-  width: 100%;
+  width: calc(100vw - 40px);
   transition: width 0.3s ease-in-out;
 }
 
@@ -448,3 +452,104 @@ body{
   animation: l1 1s infinite;
 }
 @keyframes l1 {to{transform: rotate(.5turn)}}
+
+.message{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+}
+
+.message:hover{
+  background-color:rgb(208, 208, 208);
+}
+
+.actionBox{
+  display:flex;
+  align-items:center;
+}
+
+.replyButton:hover{
+  cursor:pointer;
+  transform:scale(1.2);
+  transition:ease 0.3s;
+}
+
+.DMreplyingBox{
+  position:absolute;
+  font-family:"Comfortaa";
+  background-color:#aacedc;
+  bottom:100%;
+  left:10px;
+  right:50px;
+  width:calc(100% - 63px);
+  height:50px;
+  display:flex;
+  padding:8px;
+  border-radius: 5px 5px 0 0;
+  justify-content: space-between;
+}
+
+.DMreplyingBox span {
+  margin: 0;
+  font-size: 14px;
+  font-weight:bold;
+}
+.DMreplyingBox span p{
+  margin-top:5px;
+  font-weight:normal;
+}
+.closeReply {
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.closeReply:hover{
+  transition:scale(1.2);
+}
+
+.messageContent{
+  display:flex;
+  flex-direction:row;
+  width:100%
+}
+
+.replyMessage{
+  font-family:"Comfortaa";
+  font-size:10px;
+  padding: 10px;
+  max-width: 40%;
+  margin:10px 5px 5px 5px;
+  color:#8b8b8b;
+  background-color:#d6d4d4;
+  border-radius: 10px;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
+}
+
+.replyMessage.sent {
+  align-self: flex-end; 
+}
+
+.replyMessage.received {
+  align-self: flex-start;
+}
+
+.replyMessageIndicatorReceived{
+  border-radius:10px;
+  background-color:#d6d4d4;
+  width:5px;
+  margin-left:10px;
+  height:85%;
+  margin-bottom:0;
+}
+
+.replyMessageIndicatorSent{
+  border-radius:10px;
+  background-color:#d6d4d4;
+  width:5px;
+  margin-right:10px;
+  height:85%;
+  margin-bottom:0;
+}

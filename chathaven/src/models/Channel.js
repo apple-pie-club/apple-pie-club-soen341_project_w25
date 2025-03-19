@@ -19,6 +19,10 @@ const ChannelSchema = new mongoose.Schema({
             type: Date, // Timestamp of when the message was sent
             default: Date.now, // Defaults to the current time
           },
+          reply:{
+            type: mongoose.Schema.Types.Mixed,
+            default:null
+          }
         },
       ],
 });

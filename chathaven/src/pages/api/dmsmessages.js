@@ -58,6 +58,7 @@ export default async function handler(req, res) {
     try {
       const userId = req.body.userId;
       const text = req.body.text;
+      const reply = req.body.reply;
       console.log("Sending message to:", userId);
 
       if (!userId) {
@@ -88,6 +89,7 @@ export default async function handler(req, res) {
         sender: loggedInUserId,
         text: text.trim(),
         timestamp: new Date(),
+        reply:reply
       };
 
       // Add message to DM

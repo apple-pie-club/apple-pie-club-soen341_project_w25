@@ -3,6 +3,7 @@ import { FaArrowUp, FaUserSlash } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { MdExitToApp } from "react-icons/md";
+import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
 
 
@@ -16,6 +17,8 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
     const [isChannelMemberListOpen, setIsChannelMemberListOpen] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null);
+    const [reply, setReply] = useState(null);
     const listRef = useRef(null);
     // Fetch all users
     useEffect(() => {
@@ -129,7 +132,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ channelId, text: message }),
+                body: JSON.stringify({ channelId, text: message , reply: reply}),
             });
 
             const result = await response.json();
@@ -143,6 +146,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
             console.log("Message sent successfully:", result.newMessage);
             setMessages((prevMessages) => [...prevMessages, result.newMessage]);
             setMessage("");
+            setReply(null);
         } catch (error) {
             console.error("Error sending message:", error);
             alert("An error occurred. Please try again.");
@@ -281,9 +285,42 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
                 {messages.map((msg, index) => {
                     const senderName = users[msg.sender] || "Unknown User";
+                    const isHovered = hoveredMessageIndex === index;
+                    const replyMessage = msg.reply;
                     return (
-                        <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
-                            <strong>{senderName}:</strong> {msg.text}
+                        <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+                            {replyMessage &&
+                            (
+                            <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+
+                                {msg.sender!==loggedInUserId &&
+                                    <div className="replyMessageIndicatorReceived"></div>
+                                }
+                                <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                                    <p>{users[replyMessage.sender]}: <br/>{replyMessage.text}</p>
+                                </div>
+
+                                {msg.sender===loggedInUserId &&
+                                    <div className="replyMessageIndicatorSent"></div>
+                                }
+                            </div>
+                            )}
+                            <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                                {isHovered && msg.sender === loggedInUserId && (
+                                <div className="actionBox">
+                                    <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                </div>
+                                )}
+                                
+                                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{marginTop: replyMessage? '0px': '10px'}}>
+                                    <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br/></strong>} {msg.text}</span>
+                                </div>
+                                {isHovered && msg.sender !== loggedInUserId && (
+                                    <div className="actionBox">
+                                        <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     );
                 })}
@@ -292,6 +329,13 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
                 <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList}/>
+                {reply && (
+                    <div className="replyingBox">
+                        <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
+                        <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
+                    </div>
+                )
+                }
                 <input
                     type="text"
                     placeholder="Type a message..."
