@@ -220,27 +220,28 @@
   font-family:"Comfortaa";
   margin: 10px;
   padding: 10px;
-  width: 40%;
+  max-width: 40%;
   background-color: white;
   border-radius: 10px;
   border-bottom-left-radius: 0;
-  align-self: flex-start;
-  white-space: pre-wrap; 
+  white-space: normal; 
   word-wrap: break-word; 
   overflow-wrap: break-word;
 }
 
+.receivedMessage strong{
+  font-size:12px;
+}
 .sentMessage {
   font-family:"Comfortaa";
   margin: 10px;
   padding: 10px;
-  width: 40%;
+  max-width: 40%;
   background-color: #598291;
   color: white;
   border-radius: 10px;
   border-bottom-right-radius: 0;
-  align-self: flex-end;
-  white-space: pre-wrap; 
+  white-space: normal; 
   word-wrap: break-word; 
   overflow-wrap: break-word;
 }
@@ -890,6 +891,7 @@
 
 .message{
   display:flex;
+  flex-direction:column;
   width:100%;
 }
 
@@ -923,12 +925,12 @@
   justify-content: space-between;
 }
 
-.replyingBox p {
+.replyingBox span {
   margin: 0;
   font-size: 14px;
   font-weight:bold;
 }
-.replyingBox p p{
+.replyingBox span p{
   margin-top:5px;
   font-weight:normal;
 }
@@ -940,4 +942,50 @@
 
 .closeReply:hover{
   transition:scale(1.2);
+}
+
+.messageContent{
+  display:flex;
+  flex-direction:row;
+  width:100%
+}
+
+.replyMessage{
+  font-family:"Comfortaa";
+  font-size:10px;
+  padding: 10px;
+  max-width: 40%;
+  margin:10px 5px 5px 5px;
+  color:#8b8b8b;
+  background-color:#d6d4d4;
+  border-radius: 10px;
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
+}
+
+.replyMessage.sent {
+  align-self: flex-end; 
+}
+
+.replyMessage.received {
+  align-self: flex-start;
+}
+
+.replyMessageIndicatorReceived{
+  border-radius:10px;
+  background-color:#d6d4d4;
+  width:5px;
+  margin-left:10px;
+  height:85%;
+  margin-bottom:0;
+}
+
+.replyMessageIndicatorSent{
+  border-radius:10px;
+  background-color:#d6d4d4;
+  width:5px;
+  margin-right:10px;
+  height:85%;
+  margin-bottom:0;
 }

@@ -288,22 +288,39 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     const isHovered = hoveredMessageIndex === index;
                     const replyMessage = msg.reply;
                     return (
-                        <div className="message" key={index} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-                            
-                            {isHovered && msg.sender === loggedInUserId && (
-                            <div className="actionBox">
-                                <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                        <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+                            {replyMessage &&
+                            (
+                            <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+
+                                {msg.sender!==loggedInUserId &&
+                                    <div className="replyMessageIndicatorReceived"></div>
+                                }
+                                <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                                    <p>{users[replyMessage.sender]}: <br/>{replyMessage.text}</p>
+                                </div>
+
+                                {msg.sender===loggedInUserId &&
+                                    <div className="replyMessageIndicatorSent"></div>
+                                }
                             </div>
-                        )}
-                        
-                        <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}>
-                            <strong>{senderName}:</strong> {msg.text}
-                        </div>
-                        {isHovered && msg.sender !== loggedInUserId && (
-                            <div className="actionBox">
-                                <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                            )}
+                            <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                                {isHovered && msg.sender === loggedInUserId && (
+                                <div className="actionBox">
+                                    <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                </div>
+                                )}
+                                
+                                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{marginTop: replyMessage? '0px': '10px'}}>
+                                    <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br/></strong>} {msg.text}</span>
+                                </div>
+                                {isHovered && msg.sender !== loggedInUserId && (
+                                    <div className="actionBox">
+                                        <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
+                                    </div>
+                                )}
                             </div>
-                        )}
                         </div>
                     );
                 })}
@@ -314,7 +331,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList}/>
                 {reply && (
                     <div className="replyingBox">
-                        <p>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></p>
+                        <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
                         <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
                 )
