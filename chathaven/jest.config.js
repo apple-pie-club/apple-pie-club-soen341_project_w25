@@ -61,7 +61,7 @@ const config = {
   //   "node"
   // ],
 
-  setupFilesAfterEnv: ['<rootDir>/src/setup.jest.js'],
+  setupFilesAfterEnv: ['<rootDir>/config/setup.jest.js'],
 
   // The test environment that will be used for testing
   testEnvironment: 'jsdom',
