@@ -1,6 +1,7 @@
 jest.spyOn(console, "error").mockImplementation((...args) => {
     const messagesToIgnore = [
-        "selectedUser is null or missing _id"
+        "selectedUser is null or missing _id",
+        "Error sending message:"
     ];
 
     const shouldSuppress = args.some(arg =>
@@ -16,7 +17,8 @@ jest.spyOn(console, "warn").mockImplementation((...args) => {
     const messagesToIgnore = [
         "Error fetching users:",
         "Error fetching user data",
-        "Error: selectedChannel is null or missing _id."
+        "Error: selectedChannel is null or missing _id.",
+        "Error fetching messages:"   
     ];
 
     const shouldSuppress = args.some(arg =>
