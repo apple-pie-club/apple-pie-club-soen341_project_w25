@@ -99,7 +99,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     headers: { "Content-Type": "application/json" },
                 });
 
-                if (!response.ok) throw new Error(`Failed to fetch messages: ${response.status}`);
+                if (!response.ok) throw new Error(`Error fetching messages: ${response.status}`);
 
                 const data = await response.json();
                 console.log("Messages fetched:", data);

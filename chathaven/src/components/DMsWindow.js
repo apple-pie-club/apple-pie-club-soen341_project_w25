@@ -53,7 +53,7 @@ export default function DMsWindow({ selectedUser , sidebarOpen}) {
         });
 
         if (!response.ok) {
-          const errormsg = ` Failed to fetch messages: ${response.status} ${response.statusText}`;
+          const errormsg = `Error fetching messages: ${response.status} ${response.statusText}`;
           console.error(errormsg);
           throw new Error(errormsg);
         }
