@@ -28,3 +28,6 @@ jest.spyOn(console, "warn").mockImplementation((...args) => {
         originalWarn(...args);
     }
 });
+
+jest.spyOn(console, "log").mockImplementation((...args) => {
+});
