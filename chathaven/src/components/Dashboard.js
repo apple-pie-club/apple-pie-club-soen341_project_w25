@@ -15,6 +15,7 @@ import AddUserToChannelMenu from "./AddUserToChannelMenu";
 import EditProfileMenu from "./EditProfileMenu";
 import SocketClient from "./SocketClient";
 import { useSocket } from "./SocketContext";
+import { useRouter } from "next/router";
 export default function DashboardPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [teams, setTeams] = useState([]);
@@ -30,6 +31,7 @@ export default function DashboardPage() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [channelToModify, setChannelToModify] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const router = useRouter();
   // Fetch user details (including role)
   useEffect(() => {
     fetch("/api/user", { method: "GET", credentials: "include" })
@@ -246,6 +248,18 @@ export default function DashboardPage() {
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, [lastActiveTime, userId]);
 
+  const handleLogout = async () => {
+    // Emit status change to "unavailable" before logging out
+    if (userId) {
+      console.log("Setting status to 'unavailable' for user:", userId);
+      updateStatus("unavailable"); // Emit the status change to "unavailable"
+    }
+    // Call logout API
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    // Redirect to login page after logout
+    router.push("/login");
+  };
+
   return (
     <div id="dashboardContainer">
       <SocketClient />
@@ -260,7 +274,7 @@ export default function DashboardPage() {
           <FaUserCircle />
         </div>
         <DirectMessagesButton />
-        <LogoutButton />
+        <LogoutButton handleLogout={handleLogout} />
       </div>
       <div
         id="sidebar"
