@@ -5,9 +5,10 @@ import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { MdExitToApp } from "react-icons/md";
 import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
+import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
 
 
-export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveChannel }) {
+export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -20,6 +21,10 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
     const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null);
     const [reply, setReply] = useState(null);
     const listRef = useRef(null);
+    const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+    const inputRef = useRef(null);
+    const [user, setUser] = useState(null);
+
     // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
@@ -56,6 +61,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 const data = await response.json();
                 console.log("Logged-in User:", data);
                 setLoggedInUserId(data._id);
+                setUser(data);
 
                 if (data.isChannelAdmin) {
                     setIsChannelAdmin(true);
@@ -262,7 +268,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                                     <MdExitToApp /> Leave
                                 </button>) :
                             
-                                (isChannelAdmin && (
+                                ((user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
                                     <button
                                         className="banButton"
                                         onClick={() => handleBanUser(memberId)}
@@ -283,48 +289,73 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
 
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
-                {messages.map((msg, index) => {
-                    const senderName = users[msg.sender] || "Unknown User";
-                    const isHovered = hoveredMessageIndex === index;
-                    const replyMessage = msg.reply;
-                    return (
-                        <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-                            {replyMessage &&
-                            (
-                            <div style={{display:'flex', flexDirection:'row', alignItems:'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+  {selectedTeam && !selectedChannel ? (
+    <div className="teamNameDisplay">
+      <h2>{selectedTeam.teamName}</h2>
+      <p>Select a channel to start messaging.</p>
+      <p>Want to join a channel? Request to join a channel in this team!</p>
+      <button className="button" onClick={() => {
+        console.log("Request to Join button clicked");
+        setIsRequestModalOpen(true)}}>
+        Request to Join
+       </button>
+    </div>
+  ) : selectedChannel ? (
+    <div className="messagesContainer">
+      {messages.length > 0 ? (
+        messages.map((msg, index) => {
+          const senderName = users[msg.sender] || "Unknown User";
+          const isHovered = hoveredMessageIndex === index;
+          const replyMessage = msg.reply;
 
-                                {msg.sender!==loggedInUserId &&
-                                    <div className="replyMessageIndicatorReceived"></div>
-                                }
-                                <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                                    <p>{users[replyMessage.sender]}: <br/>{replyMessage.text}</p>
-                                </div>
-
-                                {msg.sender===loggedInUserId &&
-                                    <div className="replyMessageIndicatorSent"></div>
-                                }
-                            </div>
-                            )}
-                            <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                                {isHovered && msg.sender === loggedInUserId && (
-                                <div className="actionBox">
-                                    <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
-                                </div>
-                                )}
-                                
-                                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{marginTop: replyMessage? '0px': '10px'}}>
-                                    <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br/></strong>} {msg.text}</span>
-                                </div>
-                                {isHovered && msg.sender !== loggedInUserId && (
-                                    <div className="actionBox">
-                                        <FaReply className="replyButton" onClick={()=>setReply(msg)}/>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
+          return (
+            <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+              {replyMessage && (
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                  {msg.sender !== loggedInUserId && <div className="replyMessageIndicatorReceived"></div>}
+                  <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                    <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
+                  </div>
+                  {msg.sender === loggedInUserId && <div className="replyMessageIndicatorSent"></div>}
+                </div>
+              )}
+              <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                {isHovered && msg.sender === loggedInUserId && (
+                  <div className="actionBox">
+                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
+                  </div>
+                )}
+                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
+                  <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
+                </div>
+                {isHovered && msg.sender !== loggedInUserId && (
+                  <div className="actionBox">
+                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
+                  </div>
+                )}
+              </div>
             </div>
+          );
+        })
+      ) : (
+        <p>No messages yet.</p>
+      )}
+    </div>
+  ) : (
+    <div className="defaultMessageArea">
+      <p>Select a team to get started.</p>
+    </div>
+  )}
+</div>
+<RequestToJoinChannelMenu
+        isOpen={isRequestModalOpen}
+        onClose={() => {
+            console.log("Closing Request to Join Modal");
+            setIsRequestModalOpen(false)}}
+        selectedTeam={selectedTeam}
+        userId={loggedInUserId}
+      />
+    
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
@@ -337,6 +368,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 )
                 }
                 <input
+                    ref={inputRef}
                     type="text"
                     placeholder="Type a message..."
                     value={message}
