@@ -220,6 +220,7 @@ export default function DashboardPage() {
 
       <button
         id="toggleSidebarButton"
+        data-testid="toggle-sidebar-button"
         onClick={handleToggleSidebar}
         className={sidebarOpen ? "open" : "closed"}
       >
@@ -228,6 +229,7 @@ export default function DashboardPage() {
 
       <button
         id="toggleChannelSidebarButton"
+        data-testid="toggle-channel-sidebar-button"
         onClick={handleToggleChannelSidebar}
         className={channelSidebarOpen ? "open" : "closed"}
       >

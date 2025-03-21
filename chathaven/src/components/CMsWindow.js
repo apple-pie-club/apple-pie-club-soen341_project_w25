@@ -99,7 +99,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     headers: { "Content-Type": "application/json" },
                 });
 
-                if (!response.ok) throw new Error(`Failed to fetch messages: ${response.status}`);
+                if (!response.ok) throw new Error(`Error fetching messages: ${response.status}`);
 
                 const data = await response.json();
                 console.log("Messages fetched:", data);
@@ -341,7 +341,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
                             handleSendMessage();
