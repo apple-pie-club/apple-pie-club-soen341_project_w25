@@ -10,7 +10,7 @@ export default function DirectMessagesButton() {
   };
 
   return (
-    <button id="directMessagesButton" onClick={handleRedirect}>
+    <button id="directMessagesButton" onClick={handleRedirect} title="Direct Messages">
       <FaInbox />
     </button>
   );

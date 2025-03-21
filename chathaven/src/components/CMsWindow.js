@@ -405,7 +405,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
-                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList} />
+                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList} title="Channel Members" />
 
                 {reply && (
                     <div className="replyingBox">

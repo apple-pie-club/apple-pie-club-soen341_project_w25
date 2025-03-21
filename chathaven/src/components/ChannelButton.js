@@ -10,7 +10,7 @@ export default function ChannelButton() {
   };
 
   return (
-    <button id="channelButton" onClick={handleRedirect}>
+    <button id="channelButton" onClick={handleRedirect} title="Return to channels">
       <PiKeyReturnFill />
     </button>
   );

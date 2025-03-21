@@ -61,7 +61,7 @@ export default function DMsPage() {
       <div id="logoutButtonArea">
       <div id="profileButton" onClick={()=> {
                       setIsProfileMenuOpen(true)
-                      }}>
+                      }} title = "Your profile">
                       <FaUserCircle />
             </div>
             <ChannelButton />
