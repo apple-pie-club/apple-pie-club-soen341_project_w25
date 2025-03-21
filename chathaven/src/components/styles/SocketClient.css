@@ -1,0 +1,4 @@
+.scrollable-container {
+  max-height: 300px; /* Adjust height based on your UI */
+  overflow-y: auto; /* Enables vertical scrolling */
+}

@@ -41,7 +41,7 @@
   margin: 0;
   padding: 0;
   width: 100%;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 #teamHeader {
@@ -68,27 +68,28 @@
   cursor: pointer;
 }
 
-.teamName, .channelName{
-    font-family:'Comfortaa';
-    display:block;
-    padding:10px;
-    color:white;
-    border-radius:10px;
-    margin:5px;
-    word-wrap: break-word;
-    overflow-wrap:break-word;
-    white-space: normal;
+.teamName,
+.channelName {
+  font-family: "Comfortaa";
+  display: block;
+  padding: 10px;
+  color: white;
+  border-radius: 10px;
+  margin: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
-.teamName:hover, .channelName:hover{
-    background-color:#668a97;
-    cursor:pointer;
-    transition:0.20s ease;
-
+.teamName:hover,
+.channelName:hover {
+  background-color: #668a97;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.channelName.active{
-  background-color: #1b9aaa; 
+.channelName.active {
+  background-color: #1b9aaa;
   font-weight: bold;
 }
 #sidebar::-webkit-scrollbar {
@@ -108,56 +109,57 @@
   background: #124559;
 }
 
-#messageWindow{
+#messageWindow {
   display: flex;
-  flex-direction:column;
-  transition:width 0.3s ease-in-out;
+  flex-direction: column;
+  transition: width 0.3s ease-in-out;
   width: calc(100% - 440px);
 }
 
-#messageWindow.leftClosed{
-  left:40px;
+#messageWindow.leftClosed {
+  left: 40px;
   width: calc(100% - 240px);
 }
 
-#messageWindow.rightClosed{
-  right:0;
-  width:calc(100% - 240px);
+#messageWindow.rightClosed {
+  right: 0;
+  width: calc(100% - 240px);
 }
 
-#messageWindow.bothClosed{
-  width:calc(100vw - 40px);
+#messageWindow.bothClosed {
+  width: calc(100vw - 40px);
 }
 
 #messageBar {
-    position: fixed;
-    bottom: 0;
-    left: 240px; 
-    right:200px;
-    width: calc(100% - 440px);
-    height:50px;
-    background-color: #f1f1f1;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border:none;
-    transition: left 0.3s ease-in-out, right 0.3s ease-in-out, width 0.3s ease-in-out;
+  position: fixed;
+  bottom: 0;
+  left: 240px;
+  right: 200px;
+  width: calc(100% - 440px);
+  height: 50px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: none;
+  transition: left 0.3s ease-in-out, right 0.3s ease-in-out,
+    width 0.3s ease-in-out;
 }
 
-#messageBar.leftClosed{
-    left:40px;
-    width: calc(100% - 240px);
+#messageBar.leftClosed {
+  left: 40px;
+  width: calc(100% - 240px);
 }
 
-#messageBar.rightClosed{
-    right:0;
-    width: calc(100% - 240px);
+#messageBar.rightClosed {
+  right: 0;
+  width: calc(100% - 240px);
 }
 
-#messageBar.bothClosed{
-    left:40px;
-    right:0;
-    width:calc(100vw - 40px);
+#messageBar.bothClosed {
+  left: 40px;
+  right: 0;
+  width: calc(100vw - 40px);
 }
 
 #messageBar input {
@@ -185,55 +187,56 @@
   transition: 0.2s ease;
 }
 
-#messagesArea{
-    margin-left:240px;
-    margin-bottom:50px;
-    margin-right:200px;
-    width:calc(100vw - 440px);
-    height: calc(100vh - 50px);
-    background-color:#f1f1f1;
-    padding:0px;
-    overflow-y:auto;
-    display:flex;
-    flex-direction:column;
-    transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out, width 0.3s ease-in-out;
-    scroll-behavior:smooth;
-    align-items: flex-start;
+#messagesArea {
+  margin-left: 240px;
+  margin-bottom: 50px;
+  margin-right: 200px;
+  width: calc(100vw - 440px);
+  height: calc(100vh - 50px);
+  background-color: #f1f1f1;
+  padding: 0px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out, margin-right 0.3s ease-in-out,
+    width 0.3s ease-in-out;
+  scroll-behavior: smooth;
+  align-items: flex-start;
 }
 
-#messagesArea.leftClosed{
-    margin-left:40px;
-    width: calc(100vw - 240px);
+#messagesArea.leftClosed {
+  margin-left: 40px;
+  width: calc(100vw - 240px);
 }
 
-#messagesArea.rightClosed{
-    margin-right:0;
-    width:calc(100vw - 240px);
+#messagesArea.rightClosed {
+  margin-right: 0;
+  width: calc(100vw - 240px);
 }
 
-#messagesArea.bothClosed{
-    margin-left:40px;
-    margin-right:0;
-    width:calc(100vw - 40px);
+#messagesArea.bothClosed {
+  margin-left: 40px;
+  margin-right: 0;
+  width: calc(100vw - 40px);
 }
 .receivedMessage {
-  font-family:"Comfortaa";
+  font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
   max-width: 40%;
   background-color: white;
   border-radius: 10px;
   border-bottom-left-radius: 0;
-  white-space: normal; 
-  word-wrap: break-word; 
+  white-space: normal;
+  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
-.receivedMessage strong{
-  font-size:12px;
+.receivedMessage strong {
+  font-size: 12px;
 }
 .sentMessage {
-  font-family:"Comfortaa";
+  font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
   max-width: 40%;
@@ -241,8 +244,8 @@
   color: white;
   border-radius: 10px;
   border-bottom-right-radius: 0;
-  white-space: normal; 
-  word-wrap: break-word; 
+  white-space: normal;
+  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
@@ -253,7 +256,6 @@
   background-color: #124559;
   box-shadow: 0 -4px 8px 0 #ffffff13;
   padding: 10px;
-  
 }
 
 #directMessagesButton {
@@ -262,12 +264,12 @@
   border: none;
   color: white;
   font-size: 25px;
-  text-align:center;
+  text-align: center;
 }
 
-#directMessagesButton:hover{
-    transform:scale(1.1);
-    cursor:pointer;
+#directMessagesButton:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
 #logoutButtonArea {
@@ -284,8 +286,8 @@
 }
 
 #logoutButton {
-  position:absolute;
-  bottom:5px;
+  position: absolute;
+  bottom: 5px;
   background-color: transparent;
   font-family: "Comfortaa";
   border: none;
@@ -293,11 +295,9 @@
   font-size: 25px;
 }
 
-
-
 #logoutButton:hover {
   cursor: pointer;
-  transform:scale(1.1);
+  transform: scale(1.1);
 }
 
 .menuOverlay {
@@ -363,15 +363,14 @@
   outline: none;
 }
 
-#teamNameInput option{
-  color:black;
+#teamNameInput option {
+  color: black;
 }
 
-.selectMembersText{
-    color:white;
-    text-align:left;
-    margin-top:15px;
-
+.selectMembersText {
+  color: white;
+  text-align: left;
+  margin-top: 15px;
 }
 
 #noteText {
@@ -418,16 +417,14 @@
   margin-top: 10px;
 }
 
-
-.name{
-    font-family:"Panton";
-    font-size:20px;
-    margin-left:5px;
+.name {
+  font-family: "Panton";
+  font-size: 20px;
+  margin-left: 5px;
 }
 
-.email{
-    color:rgb(58, 58, 58);
-
+.email {
+  color: rgb(58, 58, 58);
 }
 .checkbox {
   width: 20px;
@@ -449,130 +446,130 @@
   transition: 0.3s ease;
 }
 
-#toggleSidebarButton{
-    position:absolute;
-    left:240px;
-    z-index:10;
-    border:none;
-    background-color:#124559;
-    padding:5px;
-    color:white;
-    border-bottom-right-radius: 10px;
-    transition: left 0.3s ease-in-out;
+#toggleSidebarButton {
+  position: absolute;
+  left: 240px;
+  z-index: 10;
+  border: none;
+  background-color: #124559;
+  padding: 5px;
+  color: white;
+  border-bottom-right-radius: 10px;
+  transition: left 0.3s ease-in-out;
 }
 
-#toggleSidebarButton:hover{
-    cursor:pointer;
-    background-color:#17556d;
+#toggleSidebarButton:hover {
+  cursor: pointer;
+  background-color: #17556d;
 }
 
 #toggleSidebarButton.closed {
-    left: 40px;
+  left: 40px;
 }
 
-#channelSidebar{
-    background-color:#124559;
-    list-style-type:none;
-    width:200px;
-    margin:0;
-    padding:0;
-    position:fixed;
-    top:0;
-    height:100vh;
-    right:0;
-    overflow-y:auto;
-    transition: width 0.3s ease-in-out;
+#channelSidebar {
+  background-color: #124559;
+  list-style-type: none;
+  width: 200px;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  right: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease-in-out;
 }
 
-#channelSidebar.closed{
-    width:0;
-    overflow:hidden;
+#channelSidebar.closed {
+  width: 0;
+  overflow: hidden;
 }
-#toggleChannelSidebarButton{
-    position:absolute;
-    right:200px;
-    z-index:11;
-    border:none;
-    background-color:#124559;
-    padding:5px;
-    color:white;
-    border-bottom-left-radius: 10px;
-    transition: right 0.3s ease-in-out;
+#toggleChannelSidebarButton {
+  position: absolute;
+  right: 200px;
+  z-index: 11;
+  border: none;
+  background-color: #124559;
+  padding: 5px;
+  color: white;
+  border-bottom-left-radius: 10px;
+  transition: right 0.3s ease-in-out;
 }
 
-#toggleChannelSidebarButton:hover{
-    cursor:pointer;
-    background-color:#17556d;
+#toggleChannelSidebarButton:hover {
+  cursor: pointer;
+  background-color: #17556d;
 }
 
 #toggleChannelSidebarButton.closed {
-    right: 0;
+  right: 0;
 }
 
-#channelList{
-    margin:0;
-    padding:0;
-    width:100%;
+#channelList {
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
-#channelHeader{
-    font-family:'Panton';
-    background-color:#124559;
-    font-size:20px;
-    display:block;
-    padding:10px;
-    color:white;
-    position:sticky;
-    z-index:10;
-    top:0;
-    box-shadow: 0 4px 8px 0 #ffffff13;
-    word-wrap: break-word;
-    overflow-wrap:break-word;
-    white-space: normal;
+#channelHeader {
+  font-family: "Panton";
+  background-color: #124559;
+  font-size: 20px;
+  display: block;
+  padding: 10px;
+  color: white;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  box-shadow: 0 4px 8px 0 #ffffff13;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
-#selectedTeamText{
-    font-family:'Comfortaa';
-    font-size:15px;
+#selectedTeamText {
+  font-family: "Comfortaa";
+  font-size: 15px;
 }
 
 #addUser {
-  font-size:15px;
+  font-size: 15px;
   transition: all 0.5s;
   text-align: center;
   border: none;
-  background-color:transparent;
-  color:white;
-  margin-right:5px;
+  background-color: transparent;
+  color: white;
+  margin-right: 5px;
 }
 
-#addUser:hover{
-  cursor:pointer;
-  transform:scale(1.1);
-  color:black;
+#addUser:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  color: black;
 }
 
-#createChannel{
-    font-size:15px;
-    font-family:'Comfortaa';
-    margin-top:10px;
+#createChannel {
+  font-size: 15px;
+  font-family: "Comfortaa";
+  margin-top: 10px;
 }
 
-#createChannel:hover{
-    text-decoration:underline;
-    cursor:pointer;
+#createChannel:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-#createChannel.teamNotSelected{
-    display:none;
+#createChannel.teamNotSelected {
+  display: none;
 }
 
-#createChannelHeader{
-    font-family:"Panton";
-    font-weight: normal;
-    color:white;
-    font-size:25px;
-    margin-bottom:15px;
+#createChannelHeader {
+  font-family: "Panton";
+  font-weight: normal;
+  color: white;
+  font-size: 25px;
+  margin-bottom: 15px;
 }
 
 .buttonContainer {
@@ -582,71 +579,71 @@
   margin-top: 15px;
 }
 
-#channelNameInput{
-    line-height:25px;
-    caret-color:white;
-    color:white;
-    border:none;
-    font-family:'Comfortaa';
-    background-color:transparent;
-    border-bottom:2px solid #598392;
+#channelNameInput {
+  line-height: 25px;
+  caret-color: white;
+  color: white;
+  border: none;
+  font-family: "Comfortaa";
+  background-color: transparent;
+  border-bottom: 2px solid #598392;
 }
 
-#channelNameInput::placeholder{
-    color:white;
+#channelNameInput::placeholder {
+  color: white;
 }
 
-#channelNameInput:focus{
-    outline:none;
+#channelNameInput:focus {
+  outline: none;
 }
 
-.selectMembersText{
-    color:white;
-    text-align:left;
-    margin-top:15px;
+.selectMembersText {
+  color: white;
+  text-align: left;
+  margin-top: 15px;
 }
 
-.noDms{
-  font-family:"Comfortaa";
-  color:white;
-  margin:10px;
+.noDms {
+  font-family: "Comfortaa";
+  color: white;
+  margin: 10px;
 }
 
-.noChannels{
-  font-family:"Comfortaa";
-  color:white;
-  padding:10px;
+.noChannels {
+  font-family: "Comfortaa";
+  color: white;
+  padding: 10px;
 }
 #channelSidebarMembers.open {
-  display:absolute;
-  font-family:'Comfortaa';
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 400px;
-    background-color: #124559;
-    padding: 15px;
-    color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    text-align: center;
+  display: absolute;
+  font-family: "Comfortaa";
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 400px;
+  background-color: #124559;
+  padding: 15px;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-align: center;
 }
-#channelSidebarMembers ul{
-  list-style-type:none;
+#channelSidebarMembers ul {
+  list-style-type: none;
 }
 
-#channelSidebarMembers.closed{
-  display:none;
+#channelSidebarMembers.closed {
+  display: none;
 }
 
 #channelSidebarMembers h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
 }
-#channelSidebarMembersOverlay{
+#channelSidebarMembersOverlay {
   font-family: "Comfortaa";
   position: fixed;
   top: 0;
@@ -659,71 +656,71 @@
   align-items: center;
   z-index: 999;
 }
-.closeButton{
-  position:absolute;
-  top:10px;
-  right:10px;
-  cursor:pointer;
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
-.closeButton:hover{
-  color:rgb(0, 0, 0);
-  transition:0.35s ease;
+.closeButton:hover {
+  color: rgb(0, 0, 0);
+  transition: 0.35s ease;
 }
 .memberListItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #1b9aaa;
-    border-radius: 5px;
-    padding: 8px;
-    margin-bottom: 8px;
-    font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1b9aaa;
+  border-radius: 5px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .memberListItem span {
-    flex: 1;
-    color: white;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  flex: 1;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .banButton {
-    background: red;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-left:5px;
+  background: red;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 5px;
 }
 
 .banButton:hover {
-    background: darkred;
-    transition:0.35s ease;
+  background: darkred;
+  transition: 0.35s ease;
 }
 
-.noTeams{
-  color:white;
-  font-family:'Comfortaa';
-  margin:10px;
+.noTeams {
+  color: white;
+  font-family: "Comfortaa";
+  margin: 10px;
 }
 
-#openMemberListButton{
-  color:#17556d;
-  font-size:30px;
-  margin-right:10px;
+#openMemberListButton {
+  color: #17556d;
+  font-size: 30px;
+  margin-right: 10px;
 }
 
-#openMemberListButton:hover{
-  color:#668a97;
-  transition:0.3s ease;
-  cursor:pointer;
+#openMemberListButton:hover {
+  color: #668a97;
+  transition: 0.3s ease;
+  cursor: pointer;
 }
 
-#editProfileOverlay{
+#editProfileOverlay {
   font-family: "Comfortaa";
   position: fixed;
   top: 0;
@@ -737,84 +734,84 @@
   z-index: 999;
 }
 
-#profileButton{
-  color:white;
-  font-size:25px;
+#profileButton {
+  color: white;
+  font-size: 25px;
 }
 
-#profileButton:hover{
-  transform:scale(1.1);
-  cursor:pointer;
+#profileButton:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 
-#editProfileMenu{
-  position:relative;
-  padding:10px;
-  width:1000px;
-  height:500px;
-  background-color:white;
-  border-radius:10px;
+#editProfileMenu {
+  position: relative;
+  padding: 10px;
+  width: 1000px;
+  height: 500px;
+  background-color: white;
+  border-radius: 10px;
 }
 
-#editProfileMenu h3{
+#editProfileMenu h3 {
   padding: 10px 10px 20px 10px;
-  border-bottom:1px solid #d1d1d1;
+  border-bottom: 1px solid #d1d1d1;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
-#closeButton{
-  position:absolute;
-  top:10px;
-  right:10px;
-  cursor:pointer;
+#closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 
-.infoBox{
-  display:flex;
+.infoBox {
+  display: flex;
   gap: 20px;
-  padding:30px 10px;
-  border-bottom:1px solid #d1d1d1;
+  padding: 30px 10px;
+  border-bottom: 1px solid #d1d1d1;
 }
 
-.inputGroup{
-  display:flex;
-  flex-direction:column;
-  flex:1;
-  min-width:150px;
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
 }
 
-.infoBox label{
-  font-size:15px;
-  font-weight:600;
-  margin-bottom:5px;
+.infoBox label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 5px;
 }
 
-.infoBox input{
-  padding:10px;
-  border-radius:8px;
-  background-color:#f1f1f1;
-  border:1px solid black;
-  font-family:"Comfortaa";
+.infoBox input {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f1f1f1;
+  border: 1px solid black;
+  font-family: "Comfortaa";
 }
 
-.infoBox input:disabled{
-  border:none;
-  background-color:#f1f1f1;
+.infoBox input:disabled {
+  border: none;
+  background-color: #f1f1f1;
 }
 
-#editButton{
-  margin-left:5px;
-  font-weight:400;
+#editButton {
+  margin-left: 5px;
+  font-weight: 400;
 }
 
-#editButton:hover{
-  cursor:pointer;
-  transform:scale(1.1);
-  transition:0.3s ease;
+#editButton:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: 0.3s ease;
 }
 
-.loadingScreen{
+.loadingScreen {
   position: fixed;
   top: 0;
   left: 0;
@@ -834,10 +831,14 @@
   border-color: #ffffff #0000;
   animation: l1 1s infinite;
 }
-@keyframes l1 {to{transform: rotate(.5turn)}}
+@keyframes l1 {
+  to {
+    transform: rotate(0.5turn);
+  }
+}
 
-.alert{
-  font-family:"Comfortaa";
+.alert {
+  font-family: "Comfortaa";
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -854,8 +855,8 @@
   opacity: 1;
 }
 
-.success{
-  font-family:"Comfortaa";
+.success {
+  font-family: "Comfortaa";
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -868,59 +869,59 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.success.show{
-  opacity:1;
+.success.show {
+  opacity: 1;
 }
 
 .leaveButton {
   background: rgb(218, 218, 218);
-  color:black;
+  color: black;
   border: none;
   padding: 5px 10px;
   font-size: 12px;
   cursor: pointer;
   border-radius: 5px;
-  margin-left:5px;
+  margin-left: 5px;
 }
 
 .leaveButton:hover {
   background: rgb(142, 142, 142);
-  color:white;
-  transition:0.35s ease;
+  color: white;
+  transition: 0.35s ease;
 }
 
-.message{
-  display:flex;
-  flex-direction:column;
-  width:100%;
+.message {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.message:hover{
-  background-color:rgb(208, 208, 208);
+.message:hover {
+  background-color: rgb(208, 208, 208);
 }
 
-.actionBox{
-  display:flex;
-  align-items:center;
+.actionBox {
+  display: flex;
+  align-items: center;
 }
 
-.replyButton:hover{
-  cursor:pointer;
-  transform:scale(1.2);
-  transition:ease 0.3s;
+.replyButton:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+  transition: ease 0.3s;
 }
 
-.replyingBox{
-  position:absolute;
-  font-family:"Comfortaa";
-  background-color:#aacedc;
-  bottom:100%;
-  left:50px;
-  right:50px;
-  width:calc(100% - 113px);
-  height:50px;
-  display:flex;
-  padding:8px;
+.replyingBox {
+  position: absolute;
+  font-family: "Comfortaa";
+  background-color: #aacedc;
+  bottom: 100%;
+  left: 50px;
+  right: 50px;
+  width: calc(100% - 113px);
+  height: 50px;
+  display: flex;
+  padding: 8px;
   border-radius: 5px 5px 0 0;
   justify-content: space-between;
 }
@@ -928,11 +929,11 @@
 .replyingBox span {
   margin: 0;
   font-size: 14px;
-  font-weight:bold;
+  font-weight: bold;
 }
-.replyingBox span p{
-  margin-top:5px;
-  font-weight:normal;
+.replyingBox span p {
+  margin-top: 5px;
+  font-weight: normal;
 }
 .closeReply {
   cursor: pointer;
@@ -940,45 +941,86 @@
   margin-left: 10px;
 }
 
-.closeReply:hover{
-  transition:scale(1.2);
+.closeReply:hover {
+  transition: scale(1.2);
 }
 
-.messageContent{
-  display:flex;
-  flex-direction:row;
-  width:100%
+.messageContent {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
-.replyMessage{
-  font-family:"Comfortaa";
-  font-size:10px;
+.replyMessage {
+  font-family: "Comfortaa";
+  font-size: 10px;
   padding: 10px;
   max-width: 40%;
-  margin:10px 5px 5px 5px;
-  color:#8b8b8b;
-  background-color:#d6d4d4;
+  margin: 10px 5px 5px 5px;
+  color: #8b8b8b;
+  background-color: #d6d4d4;
   border-radius: 10px;
-  white-space: pre-wrap; 
-  word-wrap: break-word; 
+  white-space: pre-wrap;
+  word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 .replyMessage.sent {
-  align-self: flex-end; 
+  align-self: flex-end;
 }
 
 .replyMessage.received {
   align-self: flex-start;
 }
 
-.replyMessageIndicatorReceived{
-  border-radius:10px;
-  background-color:#d6d4d4;
-  width:5px;
-  margin-left:10px;
-  height:85%;
-  margin-bottom:0;
+.replyMessageIndicatorReceived {
+  border-radius: 10px;
+  background-color: #d6d4d4;
+  width: 5px;
+  margin-left: 10px;
+  height: 85%;
+  margin-bottom: 0;
+}
+
+.replyMessageIndicatorSent {
+  border-radius: 10px;
+  background-color: #d6d4d4;
+  width: 5px;
+  margin-right: 10px;
+  height: 85%;
+  margin-bottom: 0;
+}
+
+#socketClientPopup {
+  position: fixed; /* Position it on top of the page */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Exact centering */
+  width: 80%; /* You can adjust this based on your needs */
+  max-width: 500px; /* Optional, to prevent it from becoming too wide */
+  background-color: white; /* White background for the pop-up */
+  padding: 20px; /* Space inside the pop-up */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow around the pop-up */
+  border-radius: 10px; /* Rounded corners for the pop-up */
+  z-index: 1000; /* Ensure it's on top of other elements */
+  display: flex;
+  flex-direction: column; /* Optional, based on your content */
+}
+
+
+#socketClientPopupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Semi-transparent background to create a dimmed effect */
+  z-index: 999; /* Behind the pop-up */
 }
 
 .replyMessageIndicatorSent{
@@ -1052,6 +1094,7 @@
   justify-content: center;
 }
 
+
 .requestList {
   list-style: none;
   padding: 0;
@@ -1116,3 +1159,10 @@
   transform: scale(1.1);
   cursor: pointer;
 }
+
+.reactions {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;}
+
+
