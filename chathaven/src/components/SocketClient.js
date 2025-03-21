@@ -55,7 +55,7 @@ const SocketClient = () => {
       <button onClick={() => updateStatus("unavailable")}>
         Set Unavailable
       </button>
-      <h3>All Users' Statuses</h3>
+      <h3>All Users&apos; Statuses</h3>
       <div style={{ display: "flex" }}>
         {/* Available Users Column */}
         <div>

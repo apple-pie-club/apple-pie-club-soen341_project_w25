@@ -43,7 +43,7 @@ export const SocketProvider = ({ children }) => {
     };
 
     fetchAllUsers();
-  }, [socket]);
+  }, [socket, setUserNames]);
 
   useEffect(() => {
     // Step 1 is to fetch the user Id from the API
@@ -111,7 +111,7 @@ export const SocketProvider = ({ children }) => {
         console.log("Disconnected from WebSocket");
       }
     };
-  }, [userId]);
+  }, [userId, setSocket, setUsersStatus, setStatus]);
 
   // useEffect to send status updates to the server whenever status changes
   useEffect(() => {
@@ -121,7 +121,7 @@ export const SocketProvider = ({ children }) => {
         socket.emit("message", userId, status); // Send the updated status to the server
       }
     }
-  }, [status, socket]); // Trigger this whenever 'status' or 'socket' changes
+  }, [status, socket, userId]); // Trigger this whenever 'status' or 'socket' changes
 
   // Function to send a user status update
   const updateStatus = (newStatus) => {

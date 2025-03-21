@@ -246,7 +246,7 @@ export default function DashboardPage() {
         document.removeEventListener("keydown", handleKeyPress);
       };
     }
-  }, [userId]); // Ensure the event listeners are set up when userId is available
+  }, [userId, resetUserActivity]); // Ensure the event listeners are set up when userId is available
 
   // Check for inactivity every 5 seconds and update status accordingly
   useEffect(() => {
@@ -257,7 +257,7 @@ export default function DashboardPage() {
     }, 5000); // Check every 5 seconds
 
     return () => clearInterval(interval); // Clean up interval on component unmount
-  }, [lastActiveTime, userId]);
+  }, [lastActiveTime, userId, handleUserPresence]);
 
   const handleLogout = async () => {
     // Emit status change to "unavailable" before logging out
@@ -275,7 +275,6 @@ export default function DashboardPage() {
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
       <div id="logoutButtonArea">
-
         <div
           id="profileButton"
           onClick={() => {
@@ -283,7 +282,6 @@ export default function DashboardPage() {
           }}
         >
           <FaUserCircle title="Your profile" />
-            
         </div>
         <div
           id="profileButton"
