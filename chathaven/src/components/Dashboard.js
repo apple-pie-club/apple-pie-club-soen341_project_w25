@@ -165,56 +165,56 @@ export default function DashboardPage() {
   const { userId, updateStatus } = useSocket(); // Access the userId and updateStatus from context
   const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Track last activity time
 
-  // Function to handle mouse movement or keyboard typing
-  const resetInactivityTimer = () => {
-    // Only update the lastActiveTime for the current user
-    setLastActiveTime((prevState) => ({
-      ...prevState,
-      [userId]: Date.now(),
-    }));
+  const handleUserPresence = (userId) => {
+    const currentTime = Date.now();
+    const userLastActiveTime = lastActiveTime[userId];
 
-    if (userId) {
-      console.log("User is active. Setting status to 'available'");
-      updateStatus("available"); // Update status to available immediately on activity
+    // If the user hasn't been active for more than 30 seconds, set them to away
+    if (userLastActiveTime && currentTime - userLastActiveTime > 30000) {
+      // 30 seconds of inactivity
+      updateStatus("away"); // Emit status update to server (status 'away')
+    } else {
+      updateStatus("available"); // Emit status update to server (status 'available')
     }
   };
 
-  // Set status to away after 30 seconds of inactivity
-  useEffect(() => {
-    const checkInactivity = () => {
-      const currentTime = Date.now();
-      if (userId && lastActiveTime[userId]) {
-        const timeDifference = currentTime - lastActiveTime[userId];
-        if (timeDifference > 30000) {
-          // 30 seconds of inactivity
-          console.log("User is inactive. Setting status to 'away'");
-          updateStatus("away"); // Update status to away if inactive
-        }
-      }
-    };
+  const resetUserActivity = (userId) => {
+    setLastActiveTime((prevState) => ({
+      ...prevState,
+      [userId]: Date.now(), // Reset the last active time for the user
+    }));
 
-    // Check inactivity every 5 seconds
-    const interval = setInterval(checkInactivity, 5000);
-
-    // Cleanup function to remove the interval when component unmounts
-    return () => {
-      clearInterval(interval);
-    };
-  }, [lastActiveTime, userId, updateStatus]); // Depends on lastActiveTime, userId, and updateStatus
+    // Call the function to update their presence status to available
+    handleUserPresence(userId);
+  };
 
   // Set up event listeners for mousemove and keypress to detect activity
   useEffect(() => {
-    // mouse movement
-    document.addEventListener("mousemove", resetInactivityTimer);
-    // keyboard input
-    document.addEventListener("keydown", resetInactivityTimer);
+    if (userId) {
+      const handleMouseMove = () => resetUserActivity(userId);
+      const handleKeyPress = () => resetUserActivity(userId);
 
-    // Cleanup the event listeners when the component unmounts
-    return () => {
-      document.removeEventListener("mousemove", resetInactivityTimer);
-      document.removeEventListener("keydown", resetInactivityTimer);
-    };
-  }, []); // Empty dependency array ensures the effect runs once on mount and cleans up on unmount
+      document.addEventListener("mousemove", handleMouseMove); // Track mouse movement
+      document.addEventListener("keydown", handleKeyPress); // Track keyboard input
+
+      // Cleanup event listeners when component unmounts
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("keydown", handleKeyPress);
+      };
+    }
+  }, [userId]); // Ensure the event listeners are set up when userId is available
+
+  // Check for inactivity every 5 seconds and update status accordingly
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (userId) {
+        handleUserPresence(userId); // Check and update status based on inactivity
+      }
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, [lastActiveTime, userId]);
 
   return (
     <div id="dashboardContainer">
