@@ -244,10 +244,10 @@ const handleApproveRequest = async (request) => {
         <div id="profileButton" onClick={()=> {
             setIsProfileMenuOpen(true)
             }}>
-            <FaUserCircle title="Your profile"/>
+            <FaUserCircle />
           </div>
           <DirectMessagesButton />
-          <LogoutButton/>
+          <LogoutButton />
           {user?.isChannelAdmin?.length > 0 && (
             <div style={{ position: 'relative' }}> 
               <button
@@ -261,7 +261,6 @@ const handleApproveRequest = async (request) => {
               </button>
             </div>
           )}
-
         </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
@@ -314,7 +313,6 @@ const handleApproveRequest = async (request) => {
 
       <button
         id="toggleSidebarButton"
-        data-testid="toggle-sidebar-button"
         onClick={handleToggleSidebar}
         className={sidebarOpen ? "open" : "closed"}
       >
@@ -323,7 +321,6 @@ const handleApproveRequest = async (request) => {
 
       <button
         id="toggleChannelSidebarButton"
-        data-testid="toggle-channel-sidebar-button"
         onClick={handleToggleChannelSidebar}
         className={channelSidebarOpen ? "open" : "closed"}
       >
