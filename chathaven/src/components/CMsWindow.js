@@ -356,7 +356,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                                 className="messageContent"
                                 style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}
                             >
-                                
+
                                 {isHovered && (
                                     <div className="actionBox">
                                         <FaReply
@@ -377,14 +377,14 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                                     <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
                                 </div>
 
-                                
+
                                 {showReactionPicker === index && (
                                     <div className="reactionPicker">
                                         <EmojiPicker onEmojiClick={(emoji) => addReaction(index, emoji.emoji)} />
                                     </div>
                                 )}
 
-                                
+
                                 <div className={`reactions ${isHovered ? "visible" : ""}`}>
                                     {msg.reactions &&
                                         Object.entries(msg.reactions).map(([emoji, count]) => (
@@ -416,7 +416,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     </div>
                 )}
 
-                {/* Emoji Picker Button */}
+
                 <button
                     onClick={() => setShowEmojiPicker((prev) => !prev)}
                     style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
@@ -424,13 +424,13 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     😀
                 </button>
 
-                {/* Emoji Picker Popup */}
+
                 {showEmojiPicker && (
                     <div style={{ position: "absolute", bottom: "50px", zIndex: 100 }}>
                         <EmojiPicker
                             onEmojiClick={handleEmojiSelect}
                             previewConfig={{ showPreview: false }}
-                            searchDisabled={false}
+                            searchDisabled={true}
                         />
                     </div>
                 )}
