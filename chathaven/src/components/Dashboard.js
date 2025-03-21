@@ -167,6 +167,7 @@ export default function DashboardPage() {
   // Logic for tracking the user's presence and changing their status accordingly
   const { userId, updateStatus } = useSocket(); // Access the userId and updateStatus from context
   const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Track last activity time
+  const userStatusUpdated = {};
 
   const handleUserPresence = (userId) => {
     const currentTime = Date.now();
@@ -174,12 +175,21 @@ export default function DashboardPage() {
 
     // If the user hasn't been active for more than 30 seconds, set them to away
     if (userLastActiveTime && currentTime - userLastActiveTime > 30000) {
-      // 30 seconds of inactivity
-      updateStatus("away"); // Emit status update to server (status 'away')
-      // POST last active time to the API when status changes to away
-      postLastActiveTime(userId, currentTime); // POST to API
+      // Check if the user's status is already set to away
+      if (!userStatusUpdated[userId]) {
+        // 30 seconds of inactivity
+        updateStatus("away"); // Emit status update to server (status 'away')
+
+        // POST last active time to the API when status changes to away
+        postLastActiveTime(userId, currentTime); // POST to API
+
+        // Set the flag to true to prevent updating last active time again
+        userStatusUpdated[userId] = true;
+      }
     } else {
       updateStatus("available"); // Emit status update to server (status 'available')
+      // Reset the flag to allow updates when they become inactive again
+      userStatusUpdated[userId] = false;
     }
   };
   // Function to POST the last active time to the API
