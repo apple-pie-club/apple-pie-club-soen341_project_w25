@@ -43,7 +43,7 @@ app.prepare().then(() => {
 
     // Listen for status updates from the user
     socket.on("message", (userId, message) => {
-      console.log(`User ${userId} updated status to:`, message);
+      console.log("User %s updated status to:", userId, message);
       usersStatus[userId] = message;
       io.emit("userStatusUpdate", userId, message); // Broadcast message to all users
     });

@@ -91,7 +91,7 @@ export const SocketProvider = ({ children }) => {
 
     // Listen for status updates from other users
     socketIo.on("userStatusUpdate", (userId, newStatus) => {
-      console.log(`User status for ${userId} is updated:`, newStatus);
+      console.log("User status for %s is updated:", userId, newStatus);
       setUsersStatus((prevState) => ({
         ...prevState,
         [userId]: newStatus, // Update the status of the user in the list
