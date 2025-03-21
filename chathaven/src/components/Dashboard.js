@@ -165,10 +165,10 @@ export default function DashboardPage() {
         <div id="profileButton" onClick={()=> {
             setIsProfileMenuOpen(true)
             }}>
-            <FaUserCircle />
+            <FaUserCircle title="Your profile"/>
           </div>
           <DirectMessagesButton />
-          <LogoutButton />
+          <LogoutButton/>
         </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
