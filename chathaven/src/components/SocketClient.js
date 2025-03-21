@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSocket } from "./SocketContext";
+import "./styles/SocketClient.css";
 
 const SocketClient = () => {
   const { socket, userId, status, usersStatus, userNames, updateStatus } =
@@ -92,13 +93,15 @@ const SocketClient = () => {
         {/* Unavailable Users Column */}
         <div>
           <h4>Unavailable</h4>
-          <ul>
-            {Object.keys(usersStatus).map((userId) =>
-              usersStatus[userId] === "unavailable" ? (
-                <li key={userId}>{userNames[userId] || userId}</li>
-              ) : null
-            )}
-          </ul>
+          <div className="scrollable-container">
+            <ul>
+              {Object.keys(usersStatus).map((userId) =>
+                usersStatus[userId] === "unavailable" ? (
+                  <li key={userId}>{userNames[userId] || userId}</li>
+                ) : null
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

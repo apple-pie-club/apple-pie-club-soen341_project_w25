@@ -16,6 +16,36 @@ export const SocketProvider = ({ children }) => {
   const [userNames, setUserNames] = useState({});
 
   useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch("/api/users", { method: "GET" });
+        const data = await response.json();
+        const usersMap = {};
+        data.forEach((user) => {
+          usersMap[user._id] = `${user.firstname} ${user.lastname}`;
+        });
+        setUserNames(usersMap); // Store all user names in state
+
+        // Loop through the fetched users and set their status to "unavailable"
+        if (socket && socket.connected) {
+          // Loop through the fetched users and set their status to "unavailable"
+          data.forEach((user) => {
+            const userId = user._id; // Assuming _id is the user ID
+            console.log(
+              `Emitting userStatusUpdate for ${userId} with status unavailable`
+            );
+            socket.emit("message", userId, "unavailable");
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchAllUsers();
+  }, [socket]);
+
+  useEffect(() => {
     // Step 1 is to fetch the user Id from the API
     const fetchUserId = async () => {
       try {
@@ -66,6 +96,7 @@ export const SocketProvider = ({ children }) => {
         ...prevState,
         [userId]: newStatus, // Update the status of the user in the list
       }));
+      console.log("Updated usersStatus:", newStatus);
     });
 
     // Handle WebSocket errors
@@ -81,24 +112,6 @@ export const SocketProvider = ({ children }) => {
       }
     };
   }, [userId]);
-
-  useEffect(() => {
-    const fetchAllUsers = async () => {
-      try {
-        const response = await fetch("/api/users", { method: "GET" });
-        const data = await response.json();
-        const usersMap = {};
-        data.forEach((user) => {
-          usersMap[user._id] = `${user.firstname} ${user.lastname}`;
-        });
-        setUserNames(usersMap); // Store all user names in state
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchAllUsers();
-  }, []);
 
   // useEffect to send status updates to the server whenever status changes
   useEffect(() => {
