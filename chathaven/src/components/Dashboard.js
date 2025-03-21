@@ -275,13 +275,15 @@ export default function DashboardPage() {
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
       <div id="logoutButtonArea">
+
         <div
           id="profileButton"
           onClick={() => {
             setIsProfileMenuOpen(true);
           }}
         >
-          <FaUserCircle />
+          <FaUserCircle title="Your profile" />
+            
         </div>
         <div
           id="profileButton"
