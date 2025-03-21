@@ -208,9 +208,10 @@ export default function DashboardPage() {
   };
 
   const resetUserActivity = (userId) => {
+    const currentTime = Date.now();
     setLastActiveTime((prevState) => ({
       ...prevState,
-      [userId]: Date.now(), // Reset the last active time for the user
+      [userId]: currentTime, // Reset the last active time for the user
     }));
 
     // Call the function to update their presence status to available
