@@ -14,6 +14,7 @@ import CMsWindow from "./CMsWindow";
 import AddUserToChannelMenu from "./AddUserToChannelMenu";
 import EditProfileMenu from "./EditProfileMenu";
 import SocketClient from "./SocketClient";
+import { useSocket } from "./SocketContext";
 export default function DashboardPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [teams, setTeams] = useState([]);
@@ -159,6 +160,55 @@ export default function DashboardPage() {
         prevChannels.filter((channel) => channel._id !== channelId)
       );
   };
+
+  // Logic for tracking the user's presence and changing their status accordingly
+  const { userId, updateStatus } = useSocket(); // Access the userId and updateStatus from context
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Track last activity time
+
+  // Function to handle mouse movement or keyboard typing
+  const resetInactivityTimer = () => {
+    setLastActiveTime(Date.now()); // Reset the last active time
+    if (userId) {
+      console.log("User is active. Setting status to 'available'");
+      updateStatus("available"); // Update status to available immediately on activity
+    }
+  };
+
+  // Set status to away after 30 seconds of inactivity
+  useEffect(() => {
+    const checkInactivity = () => {
+      const currentTime = Date.now();
+      if (currentTime - lastActiveTime > 30000) {
+        // 30 seconds of inactivity
+        if (userId) {
+          console.log("User is inactive. Setting status to 'away'");
+          updateStatus("away"); // Update status to away if inactive
+        }
+      }
+    };
+
+    // Check inactivity every 5 seconds
+    const interval = setInterval(checkInactivity, 5000);
+
+    // Cleanup function to remove the interval when component unmounts
+    return () => {
+      clearInterval(interval);
+    };
+  }, [lastActiveTime, userId, updateStatus]); // Depends on lastActiveTime, userId, and updateStatus
+
+  // Set up event listeners for mousemove and keypress to detect activity
+  useEffect(() => {
+    // mouse movement
+    document.addEventListener("mousemove", resetInactivityTimer);
+    // keyboard input
+    document.addEventListener("keydown", resetInactivityTimer);
+
+    // Cleanup the event listeners when the component unmounts
+    return () => {
+      document.removeEventListener("mousemove", resetInactivityTimer);
+      document.removeEventListener("keydown", resetInactivityTimer);
+    };
+  }, []); // Empty dependency array ensures the effect runs once on mount and cleans up on unmount
 
   return (
     <div id="dashboardContainer">
