@@ -8,7 +8,7 @@ import "./styles/Dashboard.css";
 import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
 import EmojiPicker from "emoji-picker-react";
 
-export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
+export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel }) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -216,11 +216,12 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const showErrorMessage = (message) => {
         setError(message);
         setShowError(true);
-
+        
         setTimeout(() => {
             setShowError(false);
         }, 3000);
     };
+
     const handleEmojiSelect = (emojiObject) => {
         setMessage((prevMessage) => prevMessage + emojiObject.emoji);
     };
@@ -248,8 +249,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
         setShowReactionPicker(null); // Close picker after selecting an emoji
     };
-
-
 
     const handleLeaveChannel = async () => {
         if (!selectedChannel || !selectedChannel._id) {
@@ -286,35 +285,35 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
     return (
         <div id="messageWindow">
-            <div id="channelSidebarMembersOverlay"style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
-            <div id="channelSidebarMembers" className={isChannelMemberListOpen? "open":"closed"}>
-                <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3> 
-                <ul>
-                    {members.length > 0 ? (
-                        members.map((memberId) => (
-                            <li key={memberId} className="memberListItem">
-                                <span>{users[memberId] || `Unknown User (${memberId})`}</span>
-                                {loggedInUserId === memberId ? 
-                                (<button className="leaveButton" onClick={handleLeaveChannel} title="Leave channel">
-                                    <MdExitToApp /> Leave
-                                </button>) :
-                            
-                                ((user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
-                                    <button
-                                        className="banButton"
-                                        onClick={() => handleBanUser(memberId)}
-                                        title="Ban user"
-                                    >
-                                        <FaUserSlash /> Ban
-                                    </button>
-                                ))}
-                            </li>
-                        ))
-                    ) : (
-                        <li>No members found.</li>
-                    )}
-                </ul>
-            </div>
+            <div id="channelSidebarMembersOverlay" style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
+                <div id="channelSidebarMembers" className={isChannelMemberListOpen ? "open" : "closed"}>
+                    <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3>
+                    <ul>
+                        {members.length > 0 ? (
+                            members.map((memberId) => (
+                                <li key={memberId} className="memberListItem">
+                                    <span>{users[memberId] || `Unknown User (${memberId})`}</span>
+                                    {loggedInUserId === memberId ?
+                                        (<button className="leaveButton" onClick={handleLeaveChannel} title="Leave channel">
+                                            <MdExitToApp /> Leave
+                                        </button>) :
+
+                                        ((user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
+                                            <button
+                                                className="banButton"
+                                                onClick={() => handleBanUser(memberId)}
+                                                title="Ban user"
+                                            >
+                                                <FaUserSlash /> Ban
+                                            </button>
+                                        ))}
+                                </li>
+                            ))
+                        ) : (
+                            <li>No members found.</li>
+                        )}
+                    </ul>
+                </div>
             </div>
 
 
@@ -322,53 +321,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
-
-  {selectedTeam && !selectedChannel ? (
-    <div className="teamNameDisplay">
-      <h2>{selectedTeam.teamName}</h2>
-      <p>Select a channel to start messaging.</p>
-      <p>Want to join a channel? Request to join a channel in this team!</p>
-      <button className="button" onClick={() => {
-        console.log("Request to Join button clicked");
-        setIsRequestModalOpen(true)}}>
-        Request to Join
-       </button>
-    </div>
-  ) : selectedChannel ? (
-    <div className="messagesContainer">
-      {messages.length > 0 ? (
-        messages.map((msg, index) => {
-          const senderName = users[msg.sender] || "Unknown User";
-          const isHovered = hoveredMessageIndex === index;
-          const replyMessage = msg.reply;
-
-          return (
-            <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-              {replyMessage && (
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                  {msg.sender !== loggedInUserId && <div className="replyMessageIndicatorReceived"></div>}
-                  <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                    <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
-                  </div>
-                  {msg.sender === loggedInUserId && <div className="replyMessageIndicatorSent"></div>}
-                </div>
-              )}
-              <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                {isHovered && msg.sender === loggedInUserId && (
-                  <div className="actionBox">
-                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
-                  </div>
-                )}
-                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
-                  <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
-                </div>
-                {isHovered && msg.sender !== loggedInUserId && (
-                  <div className="actionBox">
-                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
-                  </div>
-                )}
-              </div>
-{selectedTeam && !selectedChannel ? (
+            {selectedTeam && !selectedChannel ? (
   <div className="teamNameDisplay">
     <h2>{selectedTeam.teamName}</h2>
     <p>Select a channel to start messaging.</p>
@@ -505,19 +458,16 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     <p>Select a team to get started.</p>
   </div>
 )}
-</div>
-<RequestToJoinChannelMenu
-        isOpen={isRequestModalOpen}
-        onClose={() => {
-            console.log("Closing Request to Join Modal");
-            setIsRequestModalOpen(false)}}
-        selectedTeam={selectedTeam}
-        userId={loggedInUserId}
-      />
-    
-
-
-
+            </div>
+            <RequestToJoinChannelMenu
+                isOpen={isRequestModalOpen}
+                onClose={() => {
+                    console.log("Closing Request to Join Modal");
+                    setIsRequestModalOpen(false)
+                }}
+                selectedTeam={selectedTeam}
+                userId={loggedInUserId}
+            />
 
 
             {/* Message Input */}
@@ -526,9 +476,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
                 {reply && (
                     <div className="replyingBox">
-                        <span>Replying to {users[reply.sender]}:
-                            <p>{reply.text.substring(0, 70)}{reply.text.length > 71 ? "..." : ""}</p>
-                        </span>
+                        <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0, 70)}{reply.text.length > 71 ? "..." : ""}</p></span>
                         <RxCross2 className="closeReply" onClick={() => setReply(null)} />
                     </div>
                 )}
