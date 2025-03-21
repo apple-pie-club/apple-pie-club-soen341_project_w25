@@ -173,8 +173,37 @@ export default function DashboardPage() {
     if (userLastActiveTime && currentTime - userLastActiveTime > 30000) {
       // 30 seconds of inactivity
       updateStatus("away"); // Emit status update to server (status 'away')
+      // POST last active time to the API when status changes to away
+      postLastActiveTime(userId, currentTime); // POST to API
     } else {
       updateStatus("available"); // Emit status update to server (status 'available')
+    }
+  };
+  // Function to POST the last active time to the API
+  const postLastActiveTime = async (userId, lastActiveTime) => {
+    try {
+      const response = await fetch("/api/lastactivetime", {
+        method: "POST",
+        body: JSON.stringify({
+          userId,
+          lastActiveTime,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update last active time");
+      }
+
+      // if necessary for debugging
+      const data = await response.json();
+      console.log("API response:", data);
+
+      // Optionally handle the response here, such as updating the state or showing a success message
+    } catch (error) {
+      console.error("Error updating last active time:", error);
     }
   };
 
