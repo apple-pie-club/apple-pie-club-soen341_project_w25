@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import "./styles/Dashboard.css";
 import { CiLogout } from "react-icons/ci";
 
@@ -10,5 +10,6 @@ export default function LogoutButton() {
     router.push("/login");
   };
 
-  return <button id="logoutButton"onClick={handleLogout}><CiLogout /></button>;
+  return <button id="logoutButton" data-testid="logout-button" onClick={handleLogout} title="Logout"><CiLogout /></button>;
+
 }
