@@ -6,6 +6,7 @@ const SocketClient = () => {
   const [socket, setSocket] = useState(null);
   const [usersStatus, setUsersStatus] = useState({});
   const [userId, setUserId] = useState(null);
+  const [userNames, setUserNames] = useState({});
 
   useEffect(() => {
     // Step 1 is to fetch the user Id from the API
@@ -74,6 +75,24 @@ const SocketClient = () => {
     };
   }, [userId]);
 
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch("/api/users", { method: "GET" });
+        const data = await response.json();
+        const usersMap = {};
+        data.forEach((user) => {
+          usersMap[user._id] = `${user.firstname} ${user.lastname}`;
+        });
+        setUserNames(usersMap); // Store all user names in state
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchAllUsers();
+  }, []);
+
   // useEffect to send status updates to the server whenever status changes
   useEffect(() => {
     if (userId) {
@@ -109,7 +128,7 @@ const SocketClient = () => {
           <ul>
             {Object.keys(usersStatus).map((userId) =>
               usersStatus[userId] === "available" ? (
-                <li key={userId}>{userId}</li>
+                <li key={userId}>{userNames[userId] || userId}</li>
               ) : null
             )}
           </ul>
@@ -121,7 +140,7 @@ const SocketClient = () => {
           <ul>
             {Object.keys(usersStatus).map((userId) =>
               usersStatus[userId] === "away" ? (
-                <li key={userId}>{userId}</li>
+                <li key={userId}>{userNames[userId] || userId}</li>
               ) : null
             )}
           </ul>
@@ -133,7 +152,7 @@ const SocketClient = () => {
           <ul>
             {Object.keys(usersStatus).map((userId) =>
               usersStatus[userId] === "unavailable" ? (
-                <li key={userId}>{userId}</li>
+                <li key={userId}>{userNames[userId] || userId}</li>
               ) : null
             )}
           </ul>
