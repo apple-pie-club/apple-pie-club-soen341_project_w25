@@ -989,3 +989,102 @@
   height:85%;
   margin-bottom:0;
 }
+
+
+/* Remove the extra blue highlight on emoji buttons */
+.EmojiPickerReact button {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.EmojiPickerReact .epr-body {
+    margin-top: -60px !important; 
+}
+.reactButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 8px;
+}
+
+.reactionPicker {
+    position: absolute;
+    bottom: 30px;
+    z-index: 100;
+    background: white;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.reactions {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.reaction {
+    background: #f0f0f0;
+    padding: 3px 6px;
+    border-radius: 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+/* Styling for the action box */
+/* Styling for the message content */
+.messageContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+/* Action Box for reply and reaction buttons */
+.actionBox {
+    display: flex;
+    gap: 10px;  /* Space between the reply button and reaction button */
+    align-items: center;
+}
+
+/* Align reaction button to opposite side based on sender */
+.messageContent .actionBox {
+    flex-direction: row;
+}
+
+/* Change the reaction button position based on who sent the message */
+.messageContent .actionBox {
+    flex-direction: row-reverse; /* For messages sent by the logged-in user */
+}
+
+/* Reaction Button */
+.reactButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* Reactions display container */
+.reactions {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+/* Show reactions when hovered */
+.message:hover .reactions {
+    visibility: visible;
+}
+
+/* Styling for the emoji picker */
+.reactionPicker {
+    position: absolute;
+    bottom: 30px;
+    z-index: 100;
+    background: white;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
