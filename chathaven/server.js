@@ -23,23 +23,41 @@ app.prepare().then(() => {
     },
   });
 
+  const usersStatus = {}; // Object to store the status of each user by their userId
+
   // Listen for incoming connections and handle events
   io.on("connection", (socket) => {
     console.log("A new client connected");
 
-    // Send a message to the client when they connect
-    socket.emit("status", "available");
+    // Send the current statuses of all users to the new client
+    socket.emit("initialUserStatus", usersStatus); // Emit current statuses to the newly connected client
 
-    // Listen for messages from the client
-    socket.on("message", (message) => {
-      console.log("Received message:", message);
-      io.emit("status", message); // Broadcast message to all clients
+    // Listen for the user's id when they connect (via frontend)
+    socket.on("userId", (userId) => {
+      console.log("User connected with ID:", userId);
+      usersStatus[userId] = "available"; // Set initial status to "available"
+
+      // Send initial status to the user
+      socket.emit("status", "available");
+    });
+
+    // Listen for status updates from the user
+    socket.on("message", (userId, message) => {
+      console.log(`User ${userId} updated status to:`, message);
+      usersStatus[userId] = message;
+      io.emit("userStatusUpdate", userId, message); // Broadcast message to all users
     });
 
     // Handle disconnection
     socket.on("disconnect", () => {
       console.log("A client disconnected");
-      io.emit("status", "unavailable"); // Notify all clients about the disconnection
+      // Only update the status of the user who disconnected
+      for (let userId in usersStatus) {
+        if (usersStatus[userId] === socket.id) {
+          usersStatus[userId] = "unavailable"; // Mark user as unavailable
+          io.emit("userStatusUpdate", userId, "unavailable"); // Notify all clients
+        }
+      }
     });
   });
 
