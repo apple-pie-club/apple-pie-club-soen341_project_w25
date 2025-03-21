@@ -167,7 +167,12 @@ export default function DashboardPage() {
 
   // Function to handle mouse movement or keyboard typing
   const resetInactivityTimer = () => {
-    setLastActiveTime(Date.now()); // Reset the last active time
+    // Only update the lastActiveTime for the current user
+    setLastActiveTime((prevState) => ({
+      ...prevState,
+      [userId]: Date.now(),
+    }));
+
     if (userId) {
       console.log("User is active. Setting status to 'available'");
       updateStatus("available"); // Update status to available immediately on activity
@@ -178,9 +183,10 @@ export default function DashboardPage() {
   useEffect(() => {
     const checkInactivity = () => {
       const currentTime = Date.now();
-      if (currentTime - lastActiveTime > 30000) {
-        // 30 seconds of inactivity
-        if (userId) {
+      if (userId && lastActiveTime[userId]) {
+        const timeDifference = currentTime - lastActiveTime[userId];
+        if (timeDifference > 30000) {
+          // 30 seconds of inactivity
           console.log("User is inactive. Setting status to 'away'");
           updateStatus("away"); // Update status to away if inactive
         }
