@@ -4,7 +4,7 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md";
-import { FaUserCircle, FaUserPlus } from "react-icons/fa";
+import { FaUserCircle, FaUserPlus, FaModx } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import LogoutButton from "./LogoutButton";
 import DirectMessagesButton from "./DirectMessagesButton";
@@ -32,6 +32,7 @@ export default function DashboardPage() {
   const [channelToModify, setChannelToModify] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const router = useRouter();
+  const [isSocketClientVisible, setSocketClientVisible] = useState(false);
   // Fetch user details (including role)
   useEffect(() => {
     fetch("/api/user", { method: "GET", credentials: "include" })
@@ -262,7 +263,6 @@ export default function DashboardPage() {
 
   return (
     <div id="dashboardContainer">
-      <SocketClient />
       {/* Sidebar with admin check for Create Team */}
       <div id="logoutButtonArea">
         <div
@@ -273,6 +273,15 @@ export default function DashboardPage() {
         >
           <FaUserCircle />
         </div>
+        <div
+          id="profileButton"
+          onClick={() => {
+            setSocketClientVisible(true);
+          }}
+        >
+          <FaModx />
+        </div>
+
         <DirectMessagesButton />
         <LogoutButton handleLogout={handleLogout} />
       </div>
@@ -330,6 +339,27 @@ export default function DashboardPage() {
           isOpen={isProfileMenuOpen}
           onClose={() => setIsProfileMenuOpen(false)}
         />
+      )}
+      {isSocketClientVisible && (
+        <>
+          {/* Overlay to dim the background */}
+          <div
+            id="socketClientPopupOverlay"
+            onClick={() => setSocketClientVisible(false)}
+          ></div>
+
+          {/* Pop-up container for SocketClient */}
+          <div id="socketClientPopup">
+            <SocketClient />
+            {/* Optional Close Button */}
+            <div
+              id="closeButton"
+              onClick={() => setSocketClientVisible(false)} // Hide SocketClient when clicked
+            >
+              Close
+            </div>
+          </div>
+        </>
       )}
 
       <button
