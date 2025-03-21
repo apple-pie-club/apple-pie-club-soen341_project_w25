@@ -49,7 +49,7 @@ const SocketClient = () => {
 
   return (
     <div>
-      <p>User Status: {status}</p>
+      <p>User Status: {usersStatus[userId]}</p>
       <button onClick={() => updateStatus("available")}>Set Available</button>
       <button onClick={() => updateStatus("unavailable")}>
         Set Unavailable
