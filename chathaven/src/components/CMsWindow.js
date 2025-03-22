@@ -5,10 +5,10 @@ import { HiQuestionMarkCircle } from "react-icons/hi2";
 import { MdExitToApp } from "react-icons/md";
 import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
-import EmojiPicker from "emoji-picker-react";
+import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
 
 
-export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveChannel }) {
+export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
     const [messages, setMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [loggedInUserId, setLoggedInUserId] = useState(null);
@@ -21,9 +21,10 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
     const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null);
     const [reply, setReply] = useState(null);
     const listRef = useRef(null);
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [showReactionPicker, setShowReactionPicker] = useState(null);
-
+    const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+    const inputRef = useRef(null);
+    const [user, setUser] = useState(null);
+    const bottomRef = useRef(null);
 
     // Fetch all users
     useEffect(() => {
@@ -61,6 +62,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 const data = await response.json();
                 console.log("Logged-in User:", data);
                 setLoggedInUserId(data._id);
+                setUser(data);
 
                 if (data.isChannelAdmin) {
                     setIsChannelAdmin(true);
@@ -104,7 +106,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                     headers: { "Content-Type": "application/json" },
                 });
 
-                if (!response.ok) throw new Error(`Error fetching messages: ${response.status}`);
+                if (!response.ok) throw new Error(`Failed to fetch messages: ${response.status}`);
 
                 const data = await response.json();
                 console.log("Messages fetched:", data);
@@ -118,8 +120,8 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
     }, [selectedChannel]);
 
     useEffect(() => {
-        listRef.current?.lastElementChild?.scrollIntoView()
-    }, [messages]);
+        bottomRef.current?.scrollIntoView();
+      }, [messages]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!message.trim()) return;
@@ -137,7 +139,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ channelId, text: message, reply: reply }),
+                body: JSON.stringify({ channelId, text: message , reply: reply}),
             });
 
             const result = await response.json();
@@ -158,7 +160,7 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
         }
     };
 
-    const handleOpenChannelMemberList = () => {
+    const handleOpenChannelMemberList = () =>{
         setIsChannelMemberListOpen((prev) => !prev);
     };
 
@@ -201,68 +203,40 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
         }
     };
 
-    const showSuccessMessage = () => {
+    const showSuccessMessage = ()=>{
         setShowSuccess(true);
-
-        setTimeout(() => {
-            setShowSuccess(false);
+    
+        setTimeout(() =>{
+          setShowSuccess(false);
         }, 3000);
-    };
+      };
 
-    const showErrorMessage = (message) => {
+      const showErrorMessage = (message) => {
         setError(message);
         setShowError(true);
-
+        
         setTimeout(() => {
-            setShowError(false);
+          setShowError(false);
         }, 3000);
-    };
-    const handleEmojiSelect = (emojiObject) => {
-        setMessage((prevMessage) => prevMessage + emojiObject.emoji);
-    };
-
-    // Toggle the reaction picker for a specific message
-    const toggleReactionPicker = (index) => {
-        setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
-    };
-
-    // Add a reaction to a message
-    const addReaction = (index, emoji) => {
-        setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
-
-            // Initialize reactions if not present
-            if (!newMessages[index].reactions) {
-                newMessages[index].reactions = {};
-            }
-
-            // Increment reaction count or add new reaction
-            newMessages[index].reactions[emoji] = (newMessages[index].reactions[emoji] || 0) + 1;
-
-            return newMessages;
-        });
-
-        setShowReactionPicker(null); // Close picker after selecting an emoji
-    };
+      };
 
 
-
-    const handleLeaveChannel = async () => {
-        if (!selectedChannel || !selectedChannel._id) {
+    const handleLeaveChannel = async() =>{
+        if(!selectedChannel || !selectedChannel._id){
             console.error("Error: selectedChannel is null or missing _id.");
             return;
         }
 
-        try {
+        try{
             const response = await fetch("/api/channels", {
                 method: "DELETE",
                 credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ channelId: selectedChannel._id }),
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify({ channelId: selectedChannel._id}),
             });
 
             const result = await response.json();
-            if (!response.ok) {
+            if(!response.ok){
                 console.error(`Error leaving channel: ${result.error}`);
                 showErrorMessage(result.error);
                 return;
@@ -270,11 +244,11 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
 
             showSuccessMessage();
 
-            setMembers((prevMembers) => prevMembers.filter((member => member !== loggedInUserId)));
+            setMembers((prevMembers) => prevMembers.filter((member => member!== loggedInUserId)));
 
             onLeaveChannel(selectedChannel._id);
             setIsChannelMemberListOpen(false);
-        } catch (error) {
+        } catch (error){
             console.error("Error leaving channel: ", error);
             showErrorMessage("An error occurred. Please try again.");
         }
@@ -282,191 +256,146 @@ export default function CMsWindow({ selectedChannel, messageAreaClass, onLeaveCh
 
     return (
         <div id="messageWindow">
-            <div id="channelSidebarMembersOverlay" style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
-                <div id="channelSidebarMembers" className={isChannelMemberListOpen ? "open" : "closed"}>
-                    <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3>
-                    <ul>
-                        {members.length > 0 ? (
-                            members.map((memberId) => (
-                                <li key={memberId} className="memberListItem">
-                                    <span>{users[memberId] || `Unknown User (${memberId})`}</span>
-                                    {loggedInUserId === memberId ?
-                                        (<button className="leaveButton" onClick={handleLeaveChannel} title="Leave channel">
-                                            <MdExitToApp /> Leave
-                                        </button>) :
-
-                                        (isChannelAdmin && (
-                                            <button
-                                                className="banButton"
-                                                onClick={() => handleBanUser(memberId)}
-                                                title="Ban user"
-                                            >
-                                                <FaUserSlash /> Ban
-                                            </button>
-                                        ))}
-                                </li>
-                            ))
-                        ) : (
-                            <li>No members found.</li>
-                        )}
-                    </ul>
-                </div>
+            <div id="channelSidebarMembersOverlay"style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
+            <div id="channelSidebarMembers" className={isChannelMemberListOpen? "open":"closed"}>
+                <h3>Channel Members <RxCross2 className="closeButton" onClick={handleOpenChannelMemberList} /></h3> 
+                <ul>
+                    {members.length > 0 ? (
+                        members.map((memberId) => (
+                            <li key={memberId} className="memberListItem">
+                                <span>{users[memberId] || `Unknown User (${memberId})`}</span>
+                                {loggedInUserId === memberId ? 
+                                (<button className="leaveButton" onClick={handleLeaveChannel} title="Leave channel">
+                                    <MdExitToApp /> Leave
+                                </button>) :
+                            
+                                ((user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
+                                    <button
+                                        className="banButton"
+                                        onClick={() => handleBanUser(memberId)}
+                                        title="Ban user"
+                                    >
+                                        <FaUserSlash /> Ban
+                                    </button>
+                                ))}
+                            </li>
+                        ))
+                    ) : (
+                        <li>No members found.</li>
+                    )}
+                </ul>
             </div>
-
-
+            </div>
 
 
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
-                {messages.map((msg, index) => {
-                    const senderName = users[msg.sender] || "Unknown User";
-                    const isHovered = hoveredMessageIndex === index;
-                    const replyMessage = msg.reply;
-                    return (
-                        <div
-                            className="message"
-                            key={index}
-                            onMouseEnter={() => setHoveredMessageIndex(index)}
-                            onMouseLeave={() => setHoveredMessageIndex(null)}
-                        >
-                            {replyMessage && (
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start'
-                                    }}
-                                >
-                                    {msg.sender !== loggedInUserId && (
-                                        <div className="replyMessageIndicatorReceived"></div>
-                                    )}
-                                    <div
-                                        className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`}
-                                        style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}
-                                    >
-                                        <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
-                                    </div>
-                                    {msg.sender === loggedInUserId && (
-                                        <div className="replyMessageIndicatorSent"></div>
-                                    )}
-                                </div>
-                            )}
-                            <div
-                                className="messageContent"
-                                style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}
-                            >
+  {selectedTeam && !selectedChannel ? (
+    <div className="teamNameDisplay">
+      <h2>{selectedTeam.teamName}</h2>
+      <p>Select a channel to start messaging.</p>
+      <p>Want to join a channel? Request to join a channel in this team!</p>
+      <button className="button" onClick={() => {
+        console.log("Request to Join button clicked");
+        setIsRequestModalOpen(true)}}>
+        Request to Join
+       </button>
+    </div>
+  ) : selectedChannel ? (
+    <div className="messagesContainer">
+      {messages.length > 0 ? (
+        messages.map((msg, index) => {
+          const senderName = users[msg.sender] || "Unknown User";
+          const isHovered = hoveredMessageIndex === index;
+          const replyMessage = msg.reply;
 
-                                {isHovered && (
-                                    <div className="actionBox">
-                                        <FaReply
-                                            className="replyButton"
-                                            onClick={() => setReply(msg)}
-                                        />
-                                        <button className="reactButton" onClick={() => toggleReactionPicker(index)}>
-                                            😀
-                                        </button>
-                                    </div>
-                                )}
-
-                                <div
-                                    key={index}
-                                    className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"}
-                                    style={{ marginTop: replyMessage ? '0px' : '10px' }}
-                                >
-                                    <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
-                                </div>
-
-
-                                {showReactionPicker === index && (
-                                    <div className="reactionPicker">
-                                        <EmojiPicker onEmojiClick={(emoji) => addReaction(index, emoji.emoji)} />
-                                    </div>
-                                )}
-
-
-                                <div className={`reactions ${isHovered ? "visible" : ""}`}>
-                                    {msg.reactions &&
-                                        Object.entries(msg.reactions).map(([emoji, count]) => (
-                                            <span key={emoji} className="reaction">
-                                                {emoji} {count}
-                                            </span>
-                                        ))}
-                                </div>
-                            </div>
-                        </div>
-                    );
-                })}
+          return (
+            <div className="message" key={index} ref={isLast ? bottomRef : null} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+              {replyMessage && (
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                  {msg.sender !== loggedInUserId && <div className="replyMessageIndicatorReceived"></div>}
+                  <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                    <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
+                  </div>
+                  {msg.sender === loggedInUserId && <div className="replyMessageIndicatorSent"></div>}
+                </div>
+              )}
+              <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
+                {isHovered && msg.sender === loggedInUserId && (
+                  <div className="actionBox">
+                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
+                  </div>
+                )}
+                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
+                  <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
+                </div>
+                {isHovered && msg.sender !== loggedInUserId && (
+                  <div className="actionBox">
+                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
+                  </div>
+                )}
+              </div>
             </div>
-
-
-
-
+          );
+        })
+      ) : (
+        <p>No messages yet.</p>
+      )}
+    </div>
+  ) : (
+    <div className="defaultMessageArea">
+      <p>Select a team to get started.</p>
+    </div>
+  )}
+</div>
+<RequestToJoinChannelMenu
+        isOpen={isRequestModalOpen}
+        onClose={() => {
+            console.log("Closing Request to Join Modal");
+            setIsRequestModalOpen(false)}}
+        selectedTeam={selectedTeam}
+        userId={loggedInUserId}
+      />
+    
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
-                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList} title="Channel Members" />
-
+                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList}/>
                 {reply && (
                     <div className="replyingBox">
-                        <span>Replying to {users[reply.sender]}:
-                            <p>{reply.text.substring(0, 70)}{reply.text.length > 71 ? "..." : ""}</p>
-                        </span>
-                        <RxCross2 className="closeReply" onClick={() => setReply(null)} />
+                        <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
+                        <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
-                )}
-
-
-                <button
-                    onClick={() => setShowEmojiPicker((prev) => !prev)}
-                    style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
-                >
-                    😀
-                </button>
-
-
-                {showEmojiPicker && (
-                    <div style={{ position: "absolute", bottom: "50px", zIndex: 100 }}>
-                        <EmojiPicker
-                            onEmojiClick={handleEmojiSelect}
-                            previewConfig={{ showPreview: false }}
-                            searchDisabled={true}
-                        />
-                    </div>
-                )}
-
-
-
-
+                )
+                }
                 <input
+                    ref={inputRef}
                     type="text"
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => {
+                    onKeyPress={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
                             handleSendMessage();
                         }
                     }}
                 />
-
                 <button onClick={handleSendMessage}>
                     <FaArrowUp />
                 </button>
             </div>
 
-
-            {showError &&
-                <div className={`alert ${showError ? "show" : ""}`}>
-                    <p className="error">{error}</p>
-                </div>
+            {showError && 
+            <div className={`alert ${showError ? "show" : ""}`}>
+                <p className="error">{error}</p>
+            </div>
             }
 
             {showSuccess &&
-                <div className={`success ${showSuccess ? "show" : ""}`}>
-                    <p className="successMessage">Successfully left channel.</p>
-                </div>
+            <div className={`success ${showSuccess ? "show" : ""}`}>
+                <p className="successMessage">Successfully left channel.</p>
+            </div>
             }
 
         </div>

@@ -30,13 +30,13 @@ export default async function handler(req, res){
 
             let channels;
             if (user.isGlobalAdmin) {
-                console.log(`🔹 Global Admin. Fetching ALL channels in team ${teamId}...`);
+                console.log(`Global Admin. Fetching ALL channels in team ${teamId}...`);
                 channels = await Channel.find({ teamId });
             } else {
-                console.log(`🔹 Regular user. Fetching ONLY assigned channels in team ${teamId}...`);
+                console.log(`Regular user. Fetching ONLY assigned channels in team ${teamId}...`);
                 channels = await Channel.find({ teamId, members: userId });
                 if (!channels.length) {
-                    console.warn(`⚠️ No channels found for user: ${userId}`);
+                    console.warn(` No channels found for user: ${userId}`);
                 }
             }
             
@@ -181,7 +181,7 @@ export default async function handler(req, res){
                 $push: { members: userIdToAdd }
             });
 
-            console.log(`✅ User ${userIdToAdd} added to channel ${channelId}`);
+            console.log(`User ${userIdToAdd} added to channel ${channelId}`);
             return res.status(200).json({ message: "User added to channel successfully" });
     
         } catch (error) {
