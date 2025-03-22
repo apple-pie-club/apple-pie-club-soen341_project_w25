@@ -356,74 +356,64 @@ const handleApproveRequest = async (request) => {
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
       <div id="logoutButtonArea">
-        <div 
-          id="profileButton" 
-          onClick={()=> {
-            setIsProfileMenuOpen(true)
-           }}
-        >
-            <FaUserCircle title="Your profile" />
-          </div>
-          <DirectMessagesButton />
-          <LogoutButton />
-          {user?.isChannelAdmin?.length > 0 && (
-            <div style={{ position: 'relative' }}> 
-              <button
-                id="openModalButton"
-                onClick={() => setSeeRequestsModal(true)} 
-              >
-                <VscRequestChanges/>
-                {relevantRequests.length > 0 && ( 
-                  <span className="notificationBadge">{relevantRequests.length}</span>
-                )}
-              </button>
-            </div>
-          )}
+        <div id="profileButton" onClick={()=> {setIsProfileMenuOpen(true)}}>
+          <FaUserCircle title="Your profile" />
         </div>
-        <div
-          id="profileButton"
-          onClick={() => {
-            setSocketClientVisible(true);
-          }}
-        >
-          <FaModx />
-        </div>
-
-        <DirectMessagesButton />
+        <DirectMessagesButton/>
         <LogoutButton handleLogout={handleLogout} />
+        {user?.isChannelAdmin?.length > 0 && 
+        (
+        <div style={{ position: 'relative' }}> 
+          <button id="openModalButton" onClick={() => setSeeRequestsModal(true)}>
+            <VscRequestChanges/>
+            {relevantRequests.length > 0 && 
+            ( 
+              <span className="notificationBadge">{relevantRequests.length}</span>
+            )
+            }
+          </button>
+        </div>
+        )
+        }
       </div>
-      <div
-        id="sidebar"
-        className={sidebarOpen ? "open" : "closed"}
-        key={user?._id}
-      >
+      <div id="profileButton" onClick={() => {setSocketClientVisible(true);}}>
+        <FaModx />
+      </div>
+        
+      <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
           <li id="teamHeader">
             TEAMS <br />
-            {loadingUser ? (
+            {loadingUser ? 
+            (
               <p>Loading...</p>
-            ) : user?.isGlobalAdmin ? (
-              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
-                <FaPlus /> Create Team
-              </div>
-            ) : (
+            ) : user?.isGlobalAdmin ? 
+            (
+            <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
+              <FaPlus /> Create Team
+            </div>
+            ) : 
+            (
               <></>
             )}
           </li>
 
-          {teams.length > 0 ? (
-            teams.map((team) => (
-              <li
-                key={team._id}
-                className="teamName"
-                onClick={() => handleTeamSelect(team)}
-              >
-                {team.teamName}
+          {teams.length > 0 ? 
+            (
+              teams.map((team) => 
+                (
+                <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>
+                  {team.teamName}
+                </li>
+                )
+              )
+            ) : 
+            (
+              <li className="noTeams">
+                No teams yet
               </li>
-            ))
-          ) : (
-            <li className="noTeams">No teams yet</li>
-          )}
+            )
+          }
         </ul>
       </div>
         
@@ -436,15 +426,18 @@ const handleApproveRequest = async (request) => {
         selectedTeam={selectedTeam}
         onAddUser={handleAddUserToChannel}
       />
-      {isProfileMenuOpen && (
+      {isProfileMenuOpen && 
+      (
         <EditProfileMenu
           user={user}
           setUser={setUser}
           isOpen={isProfileMenuOpen}
           onClose={() => setIsProfileMenuOpen(false)}
         />
-      )}
-      {isSocketClientVisible && (
+      )
+      }
+      {isSocketClientVisible && 
+      (
         <>
           {/* Overlay to dim the background */}
           <div
@@ -462,9 +455,10 @@ const handleApproveRequest = async (request) => {
             >
               Close
             </div>
-          </div>
+        </div>
         </>
-      )}
+      )
+      }
 
       <button
         id="toggleSidebarButton"
@@ -567,32 +561,44 @@ const handleApproveRequest = async (request) => {
         </div>
       )}
 
-      {seeRequestsModal && (
-        <div className="menuOverlay">
-        <div className="menuContent">
-          <h3 id="createChannelHeader">Join Requests</h3>
-          <ul className="requestList">
-  {relevantRequests.length === 0 ? (
-    <li>No join requests at this time.</li>
-  ) : (
-    relevantRequests.map((req, index) => (
-      <li key={index}>
-        {req.teamId.teamName} - {req.channelId.name} - {req.userId.firstname} {req.userId.lastname}
-        <button className="approve" onClick={() => handleApproveRequest(req)}><FaCheckSquare /></button>
-        <button className="reject" onClick={() => handleRejectRequest(req)}><FaSquareXmark /></button>
-      </li>
-    ))
-  )}
-</ul>
-          <div className="buttonContainer">
-            <button className="button" onClick={() => setSeeRequestsModal(false)}>
-              Close
-              </button>
+      {
+        seeRequestsModal && 
+        (
+          <div className="menuOverlay">
+            <div className="menuContent">
+              <h3 id="createChannelHeader">Join Requests</h3>
+              <ul className="requestList">
+              {
+                relevantRequests.length === 0 ? 
+              (
+              <li>No join requests at this time.</li>
+              ) : 
+              (
+                relevantRequests.map((req, index) => 
+                (
+                  <li key={index}>
+                    {req.teamId.teamName} - {req.channelId.name} - {req.userId.firstname} {req.userId.lastname}
+                  <button className="approve" onClick={() => handleApproveRequest(req)}>
+                    <FaCheckSquare />
+                  </button>
+                  <button className="reject" onClick={() => handleRejectRequest(req)}>
+                    <FaSquareXmark />
+                  </button>
+                </li>
+                )
+                )
+              )
+              }
+              </ul>
+              <div className="buttonContainer">
+                <button className="button" onClick={() => setSeeRequestsModal(false)}>
+                  Close
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
+        )
+      }
     </div>
-  );
-}
+
+)}
