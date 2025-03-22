@@ -24,6 +24,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
     const inputRef = useRef(null);
     const [user, setUser] = useState(null);
+    const bottomRef = useRef(null);
 
     // Fetch all users
     useEffect(() => {
@@ -119,8 +120,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     }, [selectedChannel]);
 
     useEffect(() => {
-        listRef.current?.lastElementChild?.scrollIntoView()
-    }, [messages]);
+        bottomRef.current?.scrollIntoView();
+      }, [messages]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!message.trim()) return;
@@ -309,7 +310,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
           const replyMessage = msg.reply;
 
           return (
-            <div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
+            <div className="message" key={index} ref={isLast ? bottomRef : null} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
               {replyMessage && (
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
                   {msg.sender !== loggedInUserId && <div className="replyMessageIndicatorReceived"></div>}
