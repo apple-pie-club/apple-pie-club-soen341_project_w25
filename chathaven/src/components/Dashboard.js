@@ -462,6 +462,7 @@ const handleApproveRequest = async (request) => {
 
       <button
         id="toggleSidebarButton"
+        data-testid="toggle-sidebar-button"
         onClick={handleToggleSidebar}
         className={sidebarOpen ? "open" : "closed"}
       >
