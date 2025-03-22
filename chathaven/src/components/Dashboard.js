@@ -475,6 +475,7 @@ const handleApproveRequest = async (request) => {
 
       <button
         id="toggleChannelSidebarButton"
+        data-testid="toggle-channel-sidebar-button"
         onClick={handleToggleChannelSidebar}
         className={channelSidebarOpen ? "open" : "closed"}
       >
