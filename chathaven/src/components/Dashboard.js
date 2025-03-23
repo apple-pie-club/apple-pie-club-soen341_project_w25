@@ -384,9 +384,6 @@ const handleApproveRequest = async (request) => {
         )
         }
       </div>
-      <div id="profileButton" onClick={() => {setSocketClientVisible(true);}}>
-        <FaModx />
-      </div>
         
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
