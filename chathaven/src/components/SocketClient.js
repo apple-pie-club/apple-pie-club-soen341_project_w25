@@ -49,58 +49,81 @@ const SocketClient = () => {
   }, [socket, userId]);
 
   return (
-    <div>
-      <p>User Status: {usersStatus[userId]}</p>
-      <button onClick={() => updateStatus("available")}>Set Available</button>
-      <button onClick={() => updateStatus("unavailable")}>
-        Set Unavailable
-      </button>
-      <h3>All Users&apos; Statuses</h3>
-      <div style={{ display: "flex" }}>
-        {/* Available Users Column */}
-        <div>
-          <h4>Available</h4>
-          <ul>
-            {Object.keys(usersStatus).map((userId) =>
-              usersStatus[userId] === "available" ? (
-                <li key={userId}>{userNames[userId] || userId}</li>
-              ) : null
-            )}
-          </ul>
+    <div className="wholebody">
+      <div className="personal">
+        <div id="userstatus">
+          <p>Your user status: {usersStatus[userId]}</p>
         </div>
-
-        {/* Away Users Column */}
-        <div>
-          <h4>Away</h4>
-          <ul>
-            {Object.keys(usersStatus).map((userId) =>
-              usersStatus[userId] === "away" ? (
-                <li key={userId}>
-                  {userNames[userId] || userId}
-                  {lastActiveTimeMap[userId] && (
-                    <span>
-                      {" "}
-                      (Last active:{" "}
-                      {new Date(lastActiveTimeMap[userId]).toLocaleString()})
-                    </span>
-                  )}
-                </li>
-              ) : null
-            )}
-          </ul>
+        <div id="userbuttonContainer">
+          <button id="userbuttons" onClick={() => updateStatus("available")}>
+            Set Status to Available
+          </button>
+          <button id="userbuttons" onClick={() => updateStatus("unavailable")}>
+            Set Status to Unavailable
+          </button>
         </div>
+      </div>
+      <div className="public">
+        <div id="otherusersstatus">
+          <p>All Users&apos; Statuses</p>
+        </div>
+        <div className="categories">
+          {/* Available Users Column */}
+          <div id="category">
+            <div id="titleOfCategory">
+              <p>Available</p>
+            </div>
+            <div id="categoryList">
+              <ul id="categoryItem">
+                {Object.keys(usersStatus).map((userId) =>
+                  usersStatus[userId] === "available" ? (
+                    <li key={userId}>{userNames[userId] || userId}</li>
+                  ) : null
+                )}
+              </ul>
+            </div>
+          </div>
 
-        {/* Unavailable Users Column */}
-        <div>
-          <h4>Unavailable</h4>
-          <div className="scrollable-container">
-            <ul>
-              {Object.keys(usersStatus).map((userId) =>
-                usersStatus[userId] === "unavailable" ? (
-                  <li key={userId}>{userNames[userId] || userId}</li>
-                ) : null
-              )}
-            </ul>
+          {/* Away Users Column */}
+          <div id="category">
+            <div id="titleOfCategory">
+              <p>Away</p>
+            </div>
+            <div id="categoryList">
+              <ul id="categoryItem">
+                {Object.keys(usersStatus).map((userId) =>
+                  usersStatus[userId] === "away" ? (
+                    <li key={userId}>
+                      {userNames[userId] || userId}
+                      {lastActiveTimeMap[userId] && (
+                        <span>
+                          {" "}
+                          (Last active:{" "}
+                          {new Date(lastActiveTimeMap[userId]).toLocaleString()}
+                          )
+                        </span>
+                      )}
+                    </li>
+                  ) : null
+                )}
+              </ul>
+            </div>
+          </div>
+
+          {/* Unavailable Users Column */}
+          <div id="category">
+            <div id="titleOfCategory">
+              <p>Unavailable</p>
+            </div>
+            <div id="categoryList">
+              <ul id="categoryItem">
+                {Object.keys(usersStatus).map((userId) =>
+                  usersStatus[userId] === "unavailable" ? (
+                    <li key={userId}>{userNames[userId] || userId}</li>
+                  ) : null
+                )}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
