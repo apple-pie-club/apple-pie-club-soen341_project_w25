@@ -359,6 +359,14 @@ const handleApproveRequest = async (request) => {
         <div id="profileButton" onClick={()=> {setIsProfileMenuOpen(true)}}>
           <FaUserCircle title="Your profile" />
         </div>
+        <div
+           id="profileButton"
+           onClick={() => {
+             setSocketClientVisible(true);
+           }}
+         >
+           <FaModx />
+         </div>
         <DirectMessagesButton/>
         <LogoutButton handleLogout={handleLogout} />
         {user?.isChannelAdmin?.length > 0 && 
