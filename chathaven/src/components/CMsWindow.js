@@ -6,6 +6,7 @@ import { MdExitToApp } from "react-icons/md";
 import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
+import EmojiPicker from "emoji-picker-react";
 
 
 export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
@@ -25,6 +26,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const inputRef = useRef(null);
     const [user, setUser] = useState(null);
     const bottomRef = useRef(null);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [showReactionPicker, setShowReactionPicker] = useState(null);
 
     // Fetch all users
     useEffect(() => {
@@ -219,6 +222,34 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
           setShowError(false);
         }, 3000);
       };
+    
+    const handleEmojiSelect = (emojiObject) => {
+        setMessage((prevMessage) => prevMessage + emojiObject.emoji);
+    };
+
+    // Toggle the reaction picker for a specific message
+    const toggleReactionPicker = (index) => {
+        setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    // Add a reaction to a message
+    const addReaction = (index, emoji) => {
+        setMessages((prevMessages) => {
+            const newMessages = [...prevMessages];
+
+            // Initialize reactions if not present
+            if (!newMessages[index].reactions) {
+                newMessages[index].reactions = {};
+            }
+
+            // Increment reaction count or add new reaction
+            newMessages[index].reactions[emoji] = (newMessages[index].reactions[emoji] || 0) + 1;
+
+            return newMessages;
+        });
+
+        setShowReactionPicker(null); // Close picker after selecting an emoji
+    };
 
 
     const handleLeaveChannel = async() =>{
@@ -290,63 +321,143 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
-  {selectedTeam && !selectedChannel ? (
-    <div className="teamNameDisplay">
-      <h2>{selectedTeam.teamName}</h2>
-      <p>Select a channel to start messaging.</p>
-      <p>Want to join a channel? Request to join a channel in this team!</p>
-      <button className="button" onClick={() => {
+            {selectedTeam && !selectedChannel ? (
+  <div className="teamNameDisplay">
+    <h2>{selectedTeam.teamName}</h2>
+    <p>Select a channel to start messaging.</p>
+    <p>Want to join a channel? Request to join a channel in this team!</p>
+    <button
+      className="button"
+      onClick={() => {
         console.log("Request to Join button clicked");
-        setIsRequestModalOpen(true)}}>
-        Request to Join
-       </button>
-    </div>
-  ) : selectedChannel ? (
-    <div className="messagesContainer">
-      {messages.length > 0 ? (
-        messages.map((msg, index) => {
-          const senderName = users[msg.sender] || "Unknown User";
-          const isHovered = hoveredMessageIndex === index;
-          const replyMessage = msg.reply;
+        setIsRequestModalOpen(true);
+      }}
+    >
+      Request to Join
+    </button>
+  </div>
+) : selectedChannel ? (
+  <div className="messagesContainer">
+    {messages.length > 0 ? (
+      messages.map((msg, index) => {
+        const senderName = users[msg.sender] || "Unknown User";
+        const isHovered = hoveredMessageIndex === index;
+        const replyMessage = msg.reply;
 
-          return (
-            <div className="message" key={index} ref={isLast ? bottomRef : null} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-              {replyMessage && (
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                  {msg.sender !== loggedInUserId && <div className="replyMessageIndicatorReceived"></div>}
-                  <div className={`replyMessage ${msg.sender === loggedInUserId ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                    <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
-                  </div>
-                  {msg.sender === loggedInUserId && <div className="replyMessageIndicatorSent"></div>}
-                </div>
-              )}
-              <div className="messageContent" style={{ justifyContent: msg.sender === loggedInUserId ? 'flex-end' : 'flex-start' }}>
-                {isHovered && msg.sender === loggedInUserId && (
-                  <div className="actionBox">
-                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
-                  </div>
+        return (
+          <div
+            className="message"
+            key={index}
+            onMouseEnter={() => setHoveredMessageIndex(index)}
+            onMouseLeave={() => setHoveredMessageIndex(null)}
+          >
+            {replyMessage && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent:
+                    msg.sender === loggedInUserId ? "flex-end" : "flex-start",
+                }}
+              >
+                {msg.sender !== loggedInUserId && (
+                  <div className="replyMessageIndicatorReceived"></div>
                 )}
-                <div key={index} className={msg.sender === loggedInUserId ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
-                  <span>{msg.sender !== loggedInUserId && <strong>{senderName}: <br /></strong>} {msg.text}</span>
+                <div
+                  className={`replyMessage ${
+                    msg.sender === loggedInUserId ? "sent" : "received"
+                  }`}
+                  style={{
+                    justifyContent:
+                      msg.sender === loggedInUserId ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <p>
+                    {users[replyMessage.sender]}: <br />
+                    {replyMessage.text}
+                  </p>
                 </div>
-                {isHovered && msg.sender !== loggedInUserId && (
-                  <div className="actionBox">
-                    <FaReply className="replyButton" onClick={() => {setReply(msg); inputRef.current?.focus();}} />
-                  </div>
+                {msg.sender === loggedInUserId && (
+                  <div className="replyMessageIndicatorSent"></div>
                 )}
               </div>
+            )}
+
+            <div
+              className="messageContent"
+              style={{
+                justifyContent:
+                  msg.sender === loggedInUserId ? "flex-end" : "flex-start",
+              }}
+            >
+              {isHovered && (
+                <div className="actionBox">
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                  />
+                  <button
+                    className="reactButton"
+                    onClick={() => toggleReactionPicker(index)}
+                  >
+                    😀
+                  </button>
+                </div>
+              )}
+
+              <div
+                className={
+                  msg.sender === loggedInUserId
+                    ? "sentMessage"
+                    : "receivedMessage"
+                }
+                style={{ marginTop: replyMessage ? "0px" : "10px" }}
+              >
+                <span>
+                  {msg.sender !== loggedInUserId && (
+                    <strong>
+                      {senderName}: <br />
+                    </strong>
+                  )}
+                  {msg.text}
+                </span>
+              </div>
+
+              {showReactionPicker === index && (
+                <div className="reactionPicker">
+                  <EmojiPicker
+                    onEmojiClick={(emoji) =>
+                      addReaction(index, emoji.emoji)
+                    }
+                  />
+                </div>
+              )}
+
+              <div className={`reactions ${isHovered ? "visible" : ""}`}>
+                {msg.reactions &&
+                  Object.entries(msg.reactions).map(([emoji, count]) => (
+                    <span key={emoji} className="reaction">
+                      {emoji} {count}
+                    </span>
+                  ))}
+              </div>
             </div>
-          );
-        })
-      ) : (
-        <p>No messages yet.</p>
-      )}
-    </div>
-  ) : (
-    <div className="defaultMessageArea">
-      <p>Select a team to get started.</p>
-    </div>
-  )}
+          </div>
+        );
+      })
+    ) : (
+      <p>No messages yet.</p>
+    )}
+  </div>
+) : (
+  <div className="defaultMessageArea">
+    <p>Select a team to get started.</p>
+  </div>
+)}
 </div>
 <RequestToJoinChannelMenu
         isOpen={isRequestModalOpen}
@@ -360,21 +471,36 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
-                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList}/>
+                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList} title="Channel Members" />
                 {reply && (
                     <div className="replyingBox">
                         <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
                         <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
-                )
-                }
-                <input
+                )}
+                <button
+                     onClick={() => setShowEmojiPicker((prev) => !prev)}
+                     style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
+                 >
+                     😀
+                 </button>
+                {showEmojiPicker && (
+                    <div style={{position: "absolute", bottom: "50px", zIndex: 100}}>
+                        <EmojiPicker 
+                        onEmojiClick={handleEmojiSelect}
+                        previewConfig={{showPreview:false}}
+                        searchDisabled={true}
+                        />
+                    </div>
+                )}
+            </div>
+            <input
                     ref={inputRef}
                     type="text"
                     placeholder="Type a message..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={(e) => {
+                    onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
                             handleSendMessage();
@@ -384,7 +510,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                 <button onClick={handleSendMessage}>
                     <FaArrowUp />
                 </button>
-            </div>
 
             {showError && 
             <div className={`alert ${showError ? "show" : ""}`}>
