@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { RxCross2 } from "react-icons/rx";
 import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
@@ -366,7 +367,7 @@ export default function DashboardPage() {
               id="closeButton"
               onClick={() => setSocketClientVisible(false)} // Hide SocketClient when clicked
             >
-              Close
+              <RxCross2 />
             </div>
           </div>
         </>

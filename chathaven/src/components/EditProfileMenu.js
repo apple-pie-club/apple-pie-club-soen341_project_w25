@@ -3,14 +3,14 @@ import "./styles/Dashboard.css";
 import { RxCross2 } from "react-icons/rx";
 import { FiEdit } from "react-icons/fi";
 
-export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
-  const[editMode, setEditMode] = useState(false);
+export default function EditProfileMenu({ user, setUser, isOpen, onClose }) {
+  const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     firstname: user.firstname,
     lastname: user.lastname,
     email: user.email,
-    oldPassword:"",
-    newPassword:"",
+    oldPassword: "",
+    newPassword: "",
   });
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
@@ -26,18 +26,18 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
     });
   }, [user]);
 
-  const turnOnEditMode = () =>{
+  const turnOnEditMode = () => {
     setEditMode(true);
   };
 
-  const turnOffEditMode = () =>{
+  const turnOffEditMode = () => {
     setEditMode(false);
-  }
+  };
 
   const showErrorMessage = (message) => {
     setError(message);
     setShowError(true);
-  
+
     setFormData({
       firstname: user.firstname,
       lastname: user.lastname,
@@ -45,22 +45,22 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
       oldPassword: "",
       newPassword: "",
     });
-    
+
     setTimeout(() => {
       setShowError(false);
     }, 3000);
   };
 
-  const showSuccessMessage = ()=>{
+  const showSuccessMessage = () => {
     setShowSuccess(true);
 
-    setTimeout(() =>{
+    setTimeout(() => {
       setShowSuccess(false);
     }, 3000);
   };
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validateEmail = (email) => {
@@ -111,60 +111,121 @@ export default function EditProfileMenu({user, setUser, isOpen, onClose}) {
     }
   };
 
-  if(!isOpen) return null;
-  
+  if (!isOpen) return null;
+
   return (
     <div id="editProfileOverlay" style={{ display: isOpen ? "flex" : "none" }}>
-      <div id="editProfileMenu" >
+      <div id="editProfileMenu">
         <RxCross2 id="closeButton" onClick={onClose} />
-        <h3>Your Profile <FiEdit id="editButton" data-testid="edit-button" onClick={turnOnEditMode}/></h3>
+        <h3>
+          Your Profile{" "}
+          <FiEdit
+            id="editButton"
+            data-testid="edit-button"
+            onClick={turnOnEditMode}
+          />
+        </h3>
         <form id="userInfo" onSubmit={handleSubmit}>
           <div className="infoBox">
             <div className="inputGroup">
-              <label>First name</label> <input name="firstname" type="text" value={formData.firstname} onChange={handleChange} disabled={!editMode}></input>
+              <label>First name</label>{" "}
+              <input
+                name="firstname"
+                type="text"
+                value={formData.firstname}
+                onChange={handleChange}
+                disabled={!editMode}
+              ></input>
             </div>
             <div className="inputGroup">
-              <label>Last name</label> <input name="lastname" type="text" value={formData.lastname} onChange={handleChange} disabled={!editMode}></input>
+              <label>Last name</label>{" "}
+              <input
+                name="lastname"
+                type="text"
+                value={formData.lastname}
+                onChange={handleChange}
+                disabled={!editMode}
+              ></input>
             </div>
           </div>
 
-          {editMode?
-          <div className="infoBox">
-          <div className="inputGroup">
-            <label>Email</label><input name="email" type="text" value={formData.email} onChange={handleChange} disabled={!editMode}></input>
-            <label style={{marginTop:20 +'px'}}>Password</label><input name="oldPassword" type="password" placeholder="Enter old password" value={formData.oldPassword} onChange={handleChange} disabled={!editMode} style={{marginBottom:10 +'px'}}></input>
-            <input name="newPassword" type="password" placeholder="Enter new password" value={formData.newPassword} onChange={handleChange} disabled={!editMode}></input>
-          </div>
-        </div>
-            :
-          <div className="infoBox">
-            <div className="inputGroup">
-              <label>Email</label><input name="email" type="text" value={formData.email} disabled={!editMode}></input>
+          {editMode ? (
+            <div className="infoBox">
+              <div className="inputGroup">
+                <label>Email</label>
+                <input
+                  name="email"
+                  type="text"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                ></input>
+                <label style={{ marginTop: 20 + "px" }}>Password</label>
+                <input
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Enter old password"
+                  value={formData.oldPassword}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                  style={{ marginBottom: 10 + "px" }}
+                ></input>
+                <input
+                  name="newPassword"
+                  type="password"
+                  placeholder="Enter new password"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  disabled={!editMode}
+                ></input>
+              </div>
             </div>
-            
-            <div className="inputGroup">
-              <label>Password</label><input name="password" type="password" placeholder="********" disabled={!editMode}></input>
-            </div>
-          </div>
-          }
+          ) : (
+            <div className="infoBox">
+              <div className="inputGroup">
+                <label>Email</label>
+                <input
+                  name="email"
+                  type="text"
+                  value={formData.email}
+                  disabled={!editMode}
+                ></input>
+              </div>
 
-        {editMode && 
-        (<div id="buttonGroup">
-          <button className="button" type="submit">Save changes</button>
-          <button className="button" onClick={turnOffEditMode}>Cancel</button>
-        </div>)
-        }
+              <div className="inputGroup">
+                <label>Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="********"
+                  disabled={!editMode}
+                ></input>
+              </div>
+            </div>
+          )}
+
+          {editMode && (
+            <div id="buttonGroup">
+              <button className="button" type="submit">
+                Save changes
+              </button>
+              <button className="button" onClick={turnOffEditMode}>
+                Cancel
+              </button>
+            </div>
+          )}
         </form>
-        {showError && 
-        <div className={`alert ${showError ? "show" : ""}`}>
-          <p className="error">{error}</p>
-        </div>}
+        {showError && (
+          <div className={`alert ${showError ? "show" : ""}`}>
+            <p className="error">{error}</p>
+          </div>
+        )}
 
-        {showSuccess &&
-        <div className={`success ${showSuccess ? "show" : ""}`}>
-          <p className="successMessage">User information updated</p>
-        </div>
-        }
+        {showSuccess && (
+          <div className={`success ${showSuccess ? "show" : ""}`}>
+            <p className="successMessage">User information updated</p>
+          </div>
+        )}
       </div>
     </div>
   );
