@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import {
   MdKeyboardDoubleArrowLeft,
@@ -13,11 +13,16 @@ import CreateTeamMenu from "./CreateTeamMenu";
 import CreateChannelMenu from "./CreateChannelMenu";
 import CMsWindow from "./CMsWindow";
 import AddUserToChannelMenu from "./AddUserToChannelMenu";
+import { VscRequestChanges } from "react-icons/vsc";
+import { FaCheckSquare } from "react-icons/fa";
+import { FaSquareXmark } from "react-icons/fa6";
 import EditProfileMenu from "./EditProfileMenu";
 import SocketClient from "./SocketClient";
 import { useSocket } from "./SocketContext";
 import { useRouter } from "next/router";
 export default function DashboardPage() {
+
+  const [seeRequestsModal, setSeeRequestsModal] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [teams, setTeams] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -32,8 +37,10 @@ export default function DashboardPage() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [channelToModify, setChannelToModify] = useState(null);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [relevantRequests, setRelevantRequests] = useState([]); 
   const router = useRouter();
   const [isSocketClientVisible, setSocketClientVisible] = useState(false);
+
   // Fetch user details (including role)
   useEffect(() => {
     fetch("/api/user", { method: "GET", credentials: "include" })
@@ -78,8 +85,38 @@ export default function DashboardPage() {
     }
   }, [selectedTeam, loadingUser]);
 
+
+  useEffect(() => {
+    const fetchJoinRequests = async () => {
+      try {
+        const res = await fetch("/api/channel-requests", {
+          method: "GET",
+          credentials: "include",
+        });
+        const requests = await res.json();
+        console.log("All Join Requests:", requests);
+        const adminChannelIds = user?.isChannelAdmin || [];
+        
+        const filteredRequests = requests.filter(req =>
+          adminChannelIds.some(adminId => adminId.toString() === req.channelId._id.toString())
+        );
+
+        console.log("Relevant Join Requests (User is Admin):", filteredRequests);
+        setRelevantRequests(filteredRequests);
+      } catch (error) {
+        console.error("Error fetching join requests:", error);
+      }
+    };
+
+    if (user?.isChannelAdmin?.length > 0) {
+      fetchJoinRequests();
+    }
+  }, [user]);
+
   const handleTeamSelect = (team) => {
+    console.log("Selected Team:", team);
     setSelectedTeam(team);
+    setSelectedChannel(null);
     console.log("Selected Team:", team);
   };
 
@@ -113,6 +150,48 @@ export default function DashboardPage() {
     } catch (error) {
       console.error("Failed to add user to channel:", error);
       alert("An error occurred. Please try again.");
+    }
+  };
+
+const handleApproveRequest = async (request) => {
+  try {
+    const res = await fetch(`/api/channel-requests`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requestId: request._id }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      alert(`Error: ${data.error || "Unknown error occurred"}`);
+      return;
+    }
+
+    setTimeout(() => {
+      alert("User has been added to the channel.");
+      setRelevantRequests(prev => prev.filter(req => req._id !== request._id));
+    }, 0);
+  } catch (error) {
+    console.error("Failed to approve request:", error);
+    alert("Something went wrong approving the request.");
+  }
+};
+
+  const handleRejectRequest = async (request) => {
+    try {
+      await fetch(`/api/channel-requests`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: request._id }),
+      });
+      setTimeout(() => {
+        alert("Request has been rejected.");
+        setRelevantRequests(prevRequests => prevRequests.filter(req => req._id !== request._id));
+      }, 0);
+    } catch (error) {
+      console.error("Failed to reject request:", error);
     }
   };
 
@@ -272,70 +351,80 @@ export default function DashboardPage() {
     router.push("/login");
   };
 
+  
+
   return (
     <div id="dashboardContainer">
       {/* Sidebar with admin check for Create Team */}
       <div id="logoutButtonArea">
-        <div
-          id="profileButton"
-          onClick={() => {
-            setIsProfileMenuOpen(true);
-          }}
-        >
+        <div id="profileButton" onClick={()=> {setIsProfileMenuOpen(true)}}>
           <FaUserCircle title="Your profile" />
         </div>
         <div
-          id="profileButton"
-          onClick={() => {
-            setSocketClientVisible(true);
-          }}
-        >
-          <FaModx />
-        </div>
-
-        <DirectMessagesButton />
+           id="profileButton"
+           onClick={() => {
+             setSocketClientVisible(true);
+           }}
+         >
+           <FaModx />
+         </div>
+        <DirectMessagesButton/>
         <LogoutButton handleLogout={handleLogout} />
+        {user?.isChannelAdmin?.length > 0 && 
+        (
+        <div style={{ position: 'relative' }}> 
+          <button id="openModalButton" onClick={() => setSeeRequestsModal(true)}>
+            <VscRequestChanges/>
+            {relevantRequests.length > 0 && 
+            ( 
+              <span className="notificationBadge">{relevantRequests.length}</span>
+            )
+            }
+          </button>
+        </div>
+        )
+        }
       </div>
-      <div
-        id="sidebar"
-        className={sidebarOpen ? "open" : "closed"}
-        key={user?._id}
-      >
+        
+      <div id="sidebar" className={sidebarOpen ? "open" : "closed"} key={user?._id}>
         <ul id="teamList">
           <li id="teamHeader">
             TEAMS <br />
-            {loadingUser ? (
+            {loadingUser ? 
+            (
               <p>Loading...</p>
-            ) : user?.isGlobalAdmin ? ( // Check isGlobalAdmin instead of role
-              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
-                <FaPlus /> Create Team
-              </div>
-            ) : (
+            ) : user?.isGlobalAdmin ? 
+            (
+            <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
+              <FaPlus /> Create Team
+            </div>
+            ) : 
+            (
               <></>
             )}
           </li>
 
-          {teams.length > 0 ? (
-            teams.map((team) => (
-              <li
-                key={team._id}
-                className="teamName"
-                onClick={() => handleTeamSelect(team)}
-              >
-                {team.teamName}
+          {teams.length > 0 ? 
+            (
+              teams.map((team) => 
+                (
+                <li key={team._id} className="teamName" onClick={() => handleTeamSelect(team)}>
+                  {team.teamName}
+                </li>
+                )
+              )
+            ) : 
+            (
+              <li className="noTeams">
+                No teams yet
               </li>
-            ))
-          ) : (
-            <li className="noTeams">No teams yet</li>
-          )}
+            )
+          }
         </ul>
       </div>
-
-      <CMsWindow
-        selectedChannel={selectedChannel}
-        messageAreaClass={getMessageAreaClass()}
-        onLeaveChannel={handleChannelLeave}
-      />
+        
+      <CMsWindow selectedTeam={selectedTeam} selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()} onLeaveChannel={handleChannelLeave}/>
+      
       <AddUserToChannelMenu
         isOpen={isUserModalOpen}
         onClose={() => setIsUserModalOpen(false)}
@@ -343,15 +432,18 @@ export default function DashboardPage() {
         selectedTeam={selectedTeam}
         onAddUser={handleAddUserToChannel}
       />
-      {isProfileMenuOpen && (
+      {isProfileMenuOpen && 
+      (
         <EditProfileMenu
           user={user}
           setUser={setUser}
           isOpen={isProfileMenuOpen}
           onClose={() => setIsProfileMenuOpen(false)}
         />
-      )}
-      {isSocketClientVisible && (
+      )
+      }
+      {isSocketClientVisible && 
+      (
         <>
           {/* Overlay to dim the background */}
           <div
@@ -369,9 +461,10 @@ export default function DashboardPage() {
             >
               <RxCross2 />
             </div>
-          </div>
+        </div>
         </>
-      )}
+      )
+      }
 
       <button
         id="toggleSidebarButton"
@@ -475,6 +568,45 @@ export default function DashboardPage() {
           <div className="loader"></div>
         </div>
       )}
+
+      {
+        seeRequestsModal && 
+        (
+          <div className="menuOverlay">
+            <div className="menuContent">
+              <h3 id="createChannelHeader">Join Requests</h3>
+              <ul className="requestList">
+              {
+                relevantRequests.length === 0 ? 
+              (
+              <li>No join requests at this time.</li>
+              ) : 
+              (
+                relevantRequests.map((req, index) => 
+                (
+                  <li key={index}>
+                    {req.teamId.teamName} - {req.channelId.name} - {req.userId.firstname} {req.userId.lastname}
+                  <button className="approve" onClick={() => handleApproveRequest(req)}>
+                    <FaCheckSquare />
+                  </button>
+                  <button className="reject" onClick={() => handleRejectRequest(req)}>
+                    <FaSquareXmark />
+                  </button>
+                </li>
+                )
+                )
+              )
+              }
+              </ul>
+              <div className="buttonContainer">
+                <button className="button" onClick={() => setSeeRequestsModal(false)}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
-  );
-}
+
+)}
