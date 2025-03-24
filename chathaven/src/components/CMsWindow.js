@@ -493,7 +493,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                         />
                     </div>
                 )}
-            </div>
+            
             <input
                     ref={inputRef}
                     type="text"
@@ -510,7 +510,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                 <button onClick={handleSendMessage}>
                     <FaArrowUp />
                 </button>
-
+                </div>
             {showError && 
             <div className={`alert ${showError ? "show" : ""}`}>
                 <p className="error">{error}</p>
