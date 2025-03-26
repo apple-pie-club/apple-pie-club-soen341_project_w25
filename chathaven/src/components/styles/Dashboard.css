@@ -1163,7 +1163,8 @@
 .reactions {
     display: flex;
     gap: 5px;
-    margin-top: 5px;}
+    margin-top: 5px;
+  }
 
 /* Remove the extra blue highlight on emoji buttons */
 .EmojiPickerReact button {
@@ -1184,6 +1185,14 @@
   margin-left: 8px;
 }
 
+.reactButton:hover{
+  transform:scale(1.2);
+  background:none;
+  border:none;
+  box-shadow:none;
+  outline:none;
+  transition:0.3s ease;
+}
 .reactionPicker {
   position: absolute;
   bottom: 30px;
