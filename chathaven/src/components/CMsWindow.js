@@ -25,7 +25,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
     const inputRef = useRef(null);
     const [user, setUser] = useState(null);
-    const bottomRef = useRef(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [showReactionPicker, setShowReactionPicker] = useState(null);
 
@@ -123,8 +122,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     }, [selectedChannel]);
 
     useEffect(() => {
-        bottomRef.current?.scrollIntoView();
-      }, [messages]);
+      if(messages.length > 0 && inputRef.current){
+        inputRef.current?.scrollIntoView({behavior: "smooth"});
+      }
+      }, [messages.length]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!message.trim()) return;
@@ -391,7 +392,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   msg.sender === loggedInUserId ? "flex-end" : "flex-start",
               }}
             >
-              {isHovered && (
+              {isHovered && msg.sender === loggedInUserId &&(
                 <div className="actionBox">
                   <FaReply
                     className="replyButton"
@@ -426,7 +427,23 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   {msg.text}
                 </span>
               </div>
-
+              {isHovered && msg.sender !== loggedInUserId &&(
+                <div className="actionBox">
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                  />
+                  <button
+                    className="reactButton"
+                    onClick={() => toggleReactionPicker(index)}
+                  >
+                    😀
+                  </button>
+                </div>
+              )}
               {showReactionPicker === index && (
                 <div className="reactionPicker">
                   <EmojiPicker
@@ -438,7 +455,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
               )}
 
               <div className={`reactions ${isHovered ? "visible" : ""}`}>
-                {msg.reactions &&
+                {msg.reactions && Object.keys(msg.reactions).length > 0 &&
                   Object.entries(msg.reactions).map(([emoji, count]) => (
                     <span key={emoji} className="reaction">
                       {emoji} {count}
@@ -452,6 +469,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     ) : (
       <p>No messages yet.</p>
     )}
+    <div ref={inputRef}></div>
   </div>
 ) : (
   <div className="defaultMessageArea">
