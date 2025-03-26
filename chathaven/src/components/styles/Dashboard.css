@@ -220,6 +220,7 @@
   width: calc(100vw - 40px);
 }
 .receivedMessage {
+  position:relative;
   font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
@@ -236,6 +237,7 @@
   font-size: 12px;
 }
 .sentMessage {
+  position:relative;
   font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
@@ -946,6 +948,7 @@
 }
 
 .messageContent {
+  position:relative;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -1163,7 +1166,17 @@
 .reactions {
     display: flex;
     gap: 5px;
-    margin-top: 5px;
+    position: absolute;
+    bottom: -5px; 
+    background-color: white;
+    border-radius: 15px;
+    padding: 2px 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-size: 12px;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
   }
 
 /* Remove the extra blue highlight on emoji buttons */
@@ -1201,4 +1214,24 @@
   border-radius: 8px;
   padding: 5px;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.reactions:not(:empty) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sentMessage .reactions {
+  right: 10px;
+}
+
+.receivedMessage .reactions {
+  left: 10px;
+}
+
+.reaction {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0 2px;
 }

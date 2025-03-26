@@ -122,8 +122,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     }, [selectedChannel]);
 
     useEffect(() => {
+      if(messages.length > 0 && inputRef.current){
         inputRef.current?.scrollIntoView({behavior: "smooth"});
-      }, [messages]);
+      }
+      }, [messages.length]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!message.trim()) return;
@@ -453,7 +455,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
               )}
 
               <div className={`reactions ${isHovered ? "visible" : ""}`}>
-                {msg.reactions &&
+                {msg.reactions && Object.keys(msg.reactions).length > 0 &&
                   Object.entries(msg.reactions).map(([emoji, count]) => (
                     <span key={emoji} className="reaction">
                       {emoji} {count}
