@@ -1221,14 +1221,6 @@
   visibility: visible;
 }
 
-.sentMessage .reactions {
-  right: 10px;
-}
-
-.receivedMessage .reactions {
-  left: 10px;
-}
-
 .reaction {
   display: flex;
   align-items: center;
