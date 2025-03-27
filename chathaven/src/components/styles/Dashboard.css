@@ -1227,3 +1227,126 @@
   gap: 3px;
   margin: 0 2px;
 }
+
+.openCameraButton{
+  color: #17556d;
+  font-size:25px;
+  margin:0;
+  cursor:pointer;
+  margin-right:10px;
+}
+
+.openCameraButton:hover{
+  color: #668a97;
+  transition: 0.3s ease;
+}
+
+.openEmojiPicker{
+  color: #17556d;
+  font-size:30px;
+  margin:0;
+  cursor:pointer;
+  margin-right:10px;
+}
+
+.openEmojiPicker:hover{
+  color: #668a97;
+  transition: 0.3s ease;
+}
+
+img,
+video,
+button {
+  display: block;
+}
+
+.webcamOverlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.499);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.webcamMenu{
+  background-color:black;
+  padding:25px;
+  width:fit-content;
+  height:fit-content;
+  border-radius:25px;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.webcam{
+  border-radius:5px;
+  margin:10px;
+}
+
+.takePictureButton{
+  margin-top: 15px;
+  color:white;
+  font-size:40px;
+}
+
+.takePictureButton:hover{
+  color:rgb(204, 204, 204);
+  cursor:pointer;
+}
+
+.closeCamera{
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 15px;
+  color:white;
+}
+
+.closeCamera:hover{
+  color:rgb(204, 204, 204);
+  cursor:pointer;
+}
+
+.imagePreview{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.499);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.buttonBox{
+  display:flex;
+  flex-direction:row;
+  margin-top:15px;
+}
+
+.pictureButton{
+  border-radius:50%;
+  border:none;
+  margin:0 10px 0 10px;
+  width:40px;
+  height:40px;
+  cursor:pointer;
+  outline:none;
+}
+
+.pictureButton:hover{
+  outline:none;
+  border:none;
+  background-color:grey;
+  color:white;
+  transition:0.3s ease;
+}

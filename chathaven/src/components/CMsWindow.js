@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from "react";
-import { FaArrowUp, FaUserSlash } from "react-icons/fa";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { FaUserSlash, FaReply } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
-import { MdExitToApp } from "react-icons/md";
-import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
 import EmojiPicker from "emoji-picker-react";
-
+import Webcam from "react-webcam";
+import { FaArrowUp, FaCamera } from "react-icons/fa6";
+import { MdExitToApp, MdEmojiEmotions, MdCamera } from "react-icons/md";
 
 export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
     const [messages, setMessages] = useState([]);
@@ -27,6 +27,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [user, setUser] = useState(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [showReactionPicker, setShowReactionPicker] = useState(null);
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const camRef = useRef(null);
+    const [imgSrc, setImgSrc] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     // Fetch all users
     useEffect(() => {
@@ -286,6 +290,16 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         }
     };
 
+    const capture = useCallback(() => {
+      const imageSrc = camRef.current.getScreenshot();
+      setImgSrc(imageSrc);
+      setIsCameraOpen(false);
+    }, [camRef, setImgSrc]);
+
+    const handleOpenCamera = () => {
+      setIsCameraOpen((prev)=>!prev);
+    }
+
     return (
         <div id="messageWindow">
             <div id="channelSidebarMembersOverlay"style={{ display: isChannelMemberListOpen ? "flex" : "none" }}>
@@ -496,12 +510,12 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                         <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
                 )}
-                <button
-                     onClick={() => setShowEmojiPicker((prev) => !prev)}
-                     style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
-                 >
-                     😀
-                 </button>
+                <FaCamera className="openCameraButton" onClick={handleOpenCamera}/>
+              
+                <MdEmojiEmotions 
+                className="openEmojiPicker" 
+                onClick={() => setShowEmojiPicker((prev) => !prev)}/>
+
                 {showEmojiPicker && (
                     <div style={{position: "absolute", bottom: "50px", zIndex: 100}}>
                         <EmojiPicker 
@@ -538,6 +552,31 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             {showSuccess &&
             <div className={`success ${showSuccess ? "show" : ""}`}>
                 <p className="successMessage">Successfully left channel.</p>
+            </div>
+            }
+
+            {isCameraOpen &&
+            <div className="webcamOverlay">
+              <div className="webcamMenu">
+                <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
+                <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg"/>
+                <MdCamera className = "takePictureButton" onClick={capture}/>
+              </div>
+            </div>
+            }
+
+            {imgSrc &&
+            <div className = "imagePreview">
+              <div className ="webcamMenu">
+                <img style={{borderRadius:"5px"}}src={imgSrc}/>
+                <div className="buttonBox">
+                  <button className="pictureButton"><FaArrowUp/></button>
+                  <button className="pictureButton" onClick={()=>{
+                    setImgSrc(null);
+                    setIsCameraOpen(true);
+                  }}><RxCross2/></button>
+                </div>
+              </div>
             </div>
             }
 
