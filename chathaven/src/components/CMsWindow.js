@@ -578,7 +578,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             <div className="webcamOverlay">
               <div className="webcamMenu">
                 <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
-                <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg"/>
+                <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg" mirrored={true}/>
                 <MdCamera className = "takePictureButton" onClick={capture}/>
               </div>
             </div>
