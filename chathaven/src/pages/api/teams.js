@@ -1,5 +1,6 @@
 import connectToDatabase from "../../lib/mongodb";
 import Team from "../../models/Team";
+import Channel from "../../models/Channel";
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
 
@@ -16,7 +17,7 @@ export default async function handler(req, res) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.userId;
 
-      let { teamName, members } = req.body;
+      let { teamName, members, defaultChannels } = req.body;
 
       if (!teamName) {
         return res.status(400).json({ error: "Team name is required" });
@@ -31,6 +32,18 @@ export default async function handler(req, res) {
 
       const newTeam = new Team({ teamName, members });
       await newTeam.save();
+
+      if (defaultChannels && defaultChannels.length > 0) {
+        const channelsToCreate = defaultChannels.map((channelName) => ({
+          name: channelName,
+          teamId: newTeam._id,
+          members
+        }));
+
+        const createdChannels = await Channel.insertMany(channelsToCreate);
+        newTeam.channels = createdChannels.map((channel) => channel._id);
+        await newTeam.save();
+      }
 
       res
         .status(201)

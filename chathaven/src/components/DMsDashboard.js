@@ -58,6 +58,15 @@ export default function DMsPage() {
 
   return (
     <div id="DMsContainer">
+      <div id="logoutButtonArea">
+      <div id="profileButton" onClick={()=> {
+                      setIsProfileMenuOpen(true)
+                      }} title = "Your profile">
+                      <FaUserCircle />
+            </div>
+            <ChannelButton />
+          <LogoutButton />
+        </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="DMsList">
           <li id="DMsHeader">
@@ -86,19 +95,10 @@ export default function DMsPage() {
             <li className="noDms">No DMs yet</li>
           )}
         </ul>
-
-        <div id="logoutButtonArea">
-          <LogoutButton />
-          <ChannelButton />
-          <div id="profileButton" onClick={()=> {
-                      setIsProfileMenuOpen(true)
-                      }}>
-                      <FaUserCircle />
-            </div>
-        </div>
       </div>
       <button
         id="toggleSidebarButton"
+        data-testid="toggle-sidebar-button"
         onClick={handleToggleSidebar}
         className={sidebarOpen ? "open" : "closed"}
       >
@@ -110,26 +110,6 @@ export default function DMsPage() {
       </button>
 
       <DMsWindow selectedUser={selectedUser} sidebarOpen={sidebarOpen}/>
-
-       {/*<div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"}>
-        <div className="sentMessage">
-          message 1 message 1 message 1 message 1message 1 message 1 message 1
-          message 1message 1{" "}
-        </div>
-        <div className="receivedMessage">message 2</div>
-      </div>
-      <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
-        <input
-          type="text"
-          placeholder="Type a message..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
-        />
-        <button onClick={handleSendMessage}>
-          <FaArrowUp />
-        </button>
-      </div> */}
 
       {isMenuOpen && (
         <CreateDMMenu

@@ -30,13 +30,13 @@ export default async function handler(req, res){
 
             let channels;
             if (user.isGlobalAdmin) {
-                console.log(`🔹 Global Admin. Fetching ALL channels in team ${teamId}...`);
+                console.log(`Global Admin. Fetching ALL channels in team ${teamId}...`);
                 channels = await Channel.find({ teamId });
             } else {
-                console.log(`🔹 Regular user. Fetching ONLY assigned channels in team ${teamId}...`);
+                console.log(`Regular user. Fetching ONLY assigned channels in team ${teamId}...`);
                 channels = await Channel.find({ teamId, members: userId });
                 if (!channels.length) {
-                    console.warn(`⚠️ No channels found for user: ${userId}`);
+                    console.warn(` No channels found for user: ${userId}`);
                 }
             }
             
@@ -181,12 +181,53 @@ export default async function handler(req, res){
                 $push: { members: userIdToAdd }
             });
 
-            console.log(`✅ User ${userIdToAdd} added to channel ${channelId}`);
+            console.log(`User ${userIdToAdd} added to channel ${channelId}`);
             return res.status(200).json({ message: "User added to channel successfully" });
     
         } catch (error) {
             console.error("Error adding user to channel:", error);
             return res.status(500).json({ error: "Failed to add user to channel" });
+        }
+    } 
+    
+    else if (req.method === "DELETE"){
+        const { channelId} = req.body;
+
+        if(!channelId){
+            return res.status(400).json({error: "Channel ID is required"});
+        }
+
+        try{
+            const token = req.cookies.authToken;
+            if(!token){
+                return res.status(401).json({error:"Unauthorized"});
+            }
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const userId = decoded.userId;
+
+            const channel = await Channel.findById(channelId);
+            if(!channel){
+                return res.status(404).json({error: "Channel not found"});
+            }
+
+            await Channel.findByIdAndUpdate(channelId, {
+                $pull: {members: userId}
+            });
+
+            await User.findByIdAndUpdate(userId, {
+                $pull:{isChannelAdmin:channelId}
+            });
+
+            const updatedChannels = await Channel.find({members: userId});
+
+            return res.status(200).json({
+                message:"Successfully left channel",
+                channels: updatedChannels
+            });
+        } catch (error){
+            console.error("Error leaving channel:", error);
+            return res.status(500).json({error: "Failed to leave channel"});
         }
     }
 

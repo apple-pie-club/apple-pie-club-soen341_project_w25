@@ -55,14 +55,16 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         try{
         const channelId = req.body.channelId
-        const text = req.body.text;
+        const text = req.body.text || "";
+        const reply = req.body.reply;
+        const imageData = req.body.imageData;
         console.log(`Sending message to channel: ${channelId} by user: ${loggedInUserId}`);
 
         if(!channelId) {
             return res.status(400).json({error: "Channel ID required"});
         }
         
-        if(!text || text.trim() === "") {
+        if(!imageData && !text) {
             return res.status(400).json({error: "Message text is required"});
         }
 
@@ -79,9 +81,14 @@ export default async function handler(req, res) {
             sender: loggedInUserId,
             text: text.trim(),
             timestamp: new Date(),
+            reply: reply
         };
+
+        if(imageData){
+          newMessage.imageData = imageData;
+        }
         console.log("New message object:", newMessage);
-    
+        
         
         //Add message to Channel
         cm.messages.push(newMessage);
