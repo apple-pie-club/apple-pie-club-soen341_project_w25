@@ -10,6 +10,10 @@ on:
       - edited
       - synchronize
       - reopened
+  push:
+    branches:
+      - main
+      - development
 
 jobs:
   test:
