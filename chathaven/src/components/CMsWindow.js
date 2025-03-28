@@ -132,7 +132,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
       }, [messages.length]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
-        if (!message.trim()) return;
+        if (!imgSrc && !message.trim()) return;
 
         if (!selectedChannel || !selectedChannel._id) {
             console.error("Error: selectedChannel is null or missing _id.");
@@ -143,11 +143,20 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         console.log("Sending message to: ", channelId);
 
         try {
+          const messageToSend = {
+            channelId, 
+            text: message,
+            reply: reply
+          };
+
+          if(imgSrc){
+            messageToSend.imageData = imgSrc;
+          }
             const response = await fetch("/api/channelsmessages", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ channelId, text: message , reply: reply}),
+                body: JSON.stringify(messageToSend),
             });
 
             const result = await response.json();
@@ -162,6 +171,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             setMessages((prevMessages) => [...prevMessages, result.newMessage]);
             setMessage("");
             setReply(null);
+            setImgSrc(null);
+            setIsCameraOpen(false);
         } catch (error) {
             console.error("Error sending message:", error);
             alert("An error occurred. Please try again.");
@@ -440,6 +451,14 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   )}
                   {msg.text}
                 </span>
+
+                {msg.imageData && (
+                  <img 
+                  src={msg.imageData}
+                  alt="Sent image"
+                  className="sentImage"
+                  />
+                )}
               </div>
               {isHovered && msg.sender !== loggedInUserId &&(
                 <div className="actionBox">
@@ -568,9 +587,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             {imgSrc &&
             <div className = "imagePreview">
               <div className ="webcamMenu">
+                <h3 style={{color:"white", marginBottom:"10px"}}>SEND PICTURE? </h3>
                 <img style={{borderRadius:"5px"}}src={imgSrc}/>
                 <div className="buttonBox">
-                  <button className="pictureButton"><FaArrowUp/></button>
+                  <button className="pictureButton" onClick={handleSendMessage}><FaArrowUp/></button>
                   <button className="pictureButton" onClick={()=>{
                     setImgSrc(null);
                     setIsCameraOpen(true);

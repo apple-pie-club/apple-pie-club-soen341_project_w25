@@ -1274,6 +1274,7 @@ button {
 }
 
 .webcamMenu{
+  font-family:"Panton";
   background-color:black;
   padding:25px;
   width:fit-content;
@@ -1349,4 +1350,16 @@ button {
   background-color:grey;
   color:white;
   transition:0.3s ease;
+}
+
+.sentImage{
+  max-width:250px;
+  max-height: 250px;
+  border-radius: 8px;
+  margin-top: 10px;
+  object-fit: cover;
+}
+
+.sentImage:hover{
+  cursor:pointer;
 }
