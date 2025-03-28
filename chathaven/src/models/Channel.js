@@ -13,7 +13,11 @@ const ChannelSchema = new mongoose.Schema({
           },
           text: {
             type: String, // Message text
-            required: true,
+            default: "",
+          },
+          imageData: {
+            type: String, // Base64 encoded image
+            default: null
           },
           timestamp: {
             type: Date, // Timestamp of when the message was sent

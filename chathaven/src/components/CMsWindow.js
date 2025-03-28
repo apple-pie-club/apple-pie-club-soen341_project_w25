@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from "react";
-import { FaArrowUp, FaUserSlash } from "react-icons/fa";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { FaUserSlash, FaReply } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
-import { MdExitToApp } from "react-icons/md";
-import { FaReply } from "react-icons/fa";
 import "./styles/Dashboard.css";
 import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu";
 import EmojiPicker from "emoji-picker-react";
-
+import Webcam from "react-webcam";
+import { FaArrowUp, FaCamera } from "react-icons/fa6";
+import { MdExitToApp, MdEmojiEmotions, MdCamera } from "react-icons/md";
 
 export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaClass, onLeaveChannel}) {
     const [messages, setMessages] = useState([]);
@@ -27,6 +27,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [user, setUser] = useState(null);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [showReactionPicker, setShowReactionPicker] = useState(null);
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const camRef = useRef(null);
+    const [imgSrc, setImgSrc] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     // Fetch all users
     useEffect(() => {
@@ -128,7 +132,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
       }, [messages.length]);
     //  Handle Sending Messages
     const handleSendMessage = async () => {
-        if (!message.trim()) return;
+        if (!imgSrc && !message.trim()) return;
 
         if (!selectedChannel || !selectedChannel._id) {
             console.error("Error: selectedChannel is null or missing _id.");
@@ -139,11 +143,20 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         console.log("Sending message to: ", channelId);
 
         try {
+          const messageToSend = {
+            channelId, 
+            text: message,
+            reply: reply
+          };
+
+          if(imgSrc){
+            messageToSend.imageData = imgSrc;
+          }
             const response = await fetch("/api/channelsmessages", {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ channelId, text: message , reply: reply}),
+                body: JSON.stringify(messageToSend),
             });
 
             const result = await response.json();
@@ -158,6 +171,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             setMessages((prevMessages) => [...prevMessages, result.newMessage]);
             setMessage("");
             setReply(null);
+            setImgSrc(null);
+            setIsCameraOpen(false);
         } catch (error) {
             console.error("Error sending message:", error);
             alert("An error occurred. Please try again.");
@@ -285,6 +300,16 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             showErrorMessage("An error occurred. Please try again.");
         }
     };
+
+    const capture = useCallback(() => {
+      const imageSrc = camRef.current.getScreenshot();
+      setImgSrc(imageSrc);
+      setIsCameraOpen(false);
+    }, [camRef, setImgSrc]);
+
+    const handleOpenCamera = () => {
+      setIsCameraOpen((prev)=>!prev);
+    }
 
     return (
         <div id="messageWindow">
@@ -426,6 +451,14 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   )}
                   {msg.text}
                 </span>
+
+                {msg.imageData && (
+                  <img 
+                  src={msg.imageData}
+                  alt="Sent image"
+                  className="sentImage"
+                  />
+                )}
               </div>
               {isHovered && msg.sender !== loggedInUserId &&(
                 <div className="actionBox">
@@ -496,12 +529,12 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                         <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
                 )}
-                <button
-                     onClick={() => setShowEmojiPicker((prev) => !prev)}
-                     style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
-                 >
-                     😀
-                 </button>
+                <FaCamera className="openCameraButton" onClick={handleOpenCamera}/>
+              
+                <MdEmojiEmotions 
+                className="openEmojiPicker" 
+                onClick={() => setShowEmojiPicker((prev) => !prev)}/>
+
                 {showEmojiPicker && (
                     <div style={{position: "absolute", bottom: "50px", zIndex: 100}}>
                         <EmojiPicker 
@@ -538,6 +571,32 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             {showSuccess &&
             <div className={`success ${showSuccess ? "show" : ""}`}>
                 <p className="successMessage">Successfully left channel.</p>
+            </div>
+            }
+
+            {isCameraOpen &&
+            <div className="webcamOverlay">
+              <div className="webcamMenu">
+                <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
+                <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg" mirrored={true}/>
+                <MdCamera className = "takePictureButton" onClick={capture}/>
+              </div>
+            </div>
+            }
+
+            {imgSrc &&
+            <div className = "imagePreview">
+              <div className ="webcamMenu">
+                <h3 style={{color:"white", marginBottom:"10px"}}>SEND PICTURE? </h3>
+                <img style={{borderRadius:"5px"}}src={imgSrc}/>
+                <div className="buttonBox">
+                  <button className="pictureButton" onClick={handleSendMessage}><FaArrowUp/></button>
+                  <button className="pictureButton" onClick={()=>{
+                    setImgSrc(null);
+                    setIsCameraOpen(true);
+                  }}><RxCross2/></button>
+                </div>
+              </div>
             </div>
             }
 
