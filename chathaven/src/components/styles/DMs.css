@@ -384,6 +384,7 @@ body{
 }
 
 .button {
+  display:flex;
   font-family: "Comfortaa";
   border-radius: 10px;
   margin: 10px;
@@ -552,4 +553,60 @@ body{
   margin-right:10px;
   height:85%;
   margin-bottom:0;
+}
+
+.buttonGroup{
+  display:flex;
+  flex-direction:row;
+}
+
+.openEmojiPicker{
+  color: #17556d;
+  font-size:30px;
+  margin:0;
+  cursor:pointer;
+  margin-right:10px;
+}
+
+.openEmojiPicker:hover{
+  color: #668a97;
+  transition: 0.3s ease;
+}
+
+.reactButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+.reactButton:hover{
+  transform:scale(1.2);
+  background:none;
+  border:none;
+  box-shadow:none;
+  outline:none;
+  transition:0.3s ease;
+}
+.reactionPicker {
+  position: absolute;
+  bottom: 30px;
+  z-index: 100;
+  background: white;
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.reactions:not(:empty) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.reaction {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 0 2px;
 }

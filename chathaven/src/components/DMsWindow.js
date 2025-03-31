@@ -3,7 +3,7 @@ import { FaArrowUp, FaReply } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 import EmojiPicker from "emoji-picker-react";
-
+import { MdEmojiEmotions, MdCamera } from "react-icons/md";
 
 export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [messages, setMessages] = useState([]);
@@ -13,7 +13,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [users, setUsers] = useState({});
   const listRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-
+  const [showReactionPicker, setShowReactionPicker] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -120,6 +120,27 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
   
+  const toggleReactionPicker = (index) => {
+    setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+const addReaction = (index, emoji) => {
+  setMessages((prevMessages) => {
+      const newMessages = [...prevMessages];
+
+      // Initialize reactions if not present
+      if (!newMessages[index].reactions) {
+          newMessages[index].reactions = {};
+      }
+
+      // Increment reaction count or add new reaction
+      newMessages[index].reactions[emoji] = (newMessages[index].reactions[emoji] || 0) + 1;
+
+      return newMessages;
+  });
+
+  setShowReactionPicker(null); // Close picker after selecting an emoji
+};
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
@@ -148,7 +169,19 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
             <div className="messageContent" style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
               {isHovered && msg.sender !== selectedUser._id && (
                 <div className="actionBox">
-                  <FaReply className="replyButton" onClick={() => setReply(msg)} />
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                  />
+                  <button
+                    className="reactButton"
+                    onClick={() => toggleReactionPicker(index)}
+                  >
+                    😀
+                  </button>
                 </div>
               )}
 
@@ -157,9 +190,37 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
               </div>
               {isHovered && msg.sender === selectedUser._id && (
                 <div className="actionBox">
-                  <FaReply className="replyButton" onClick={() => setReply(msg)} />
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                  />
+                  <button
+                    className="reactButton"
+                    onClick={() => toggleReactionPicker(index)}
+                  >
+                    😀
+                  </button>
                 </div>
               )}
+              {showReactionPicker === index && (
+                <div className="reactionPicker">
+                  <EmojiPicker
+                  onEmojiClick={(emoji) =>
+                  addReaction(index, emoji.emoji)}/>
+                </div>
+              )}
+              
+              <div className={`reactions ${isHovered ? "visible" : ""}`}>
+                {msg.reactions && Object.keys(msg.reactions).length > 0 &&
+                Object.entries(msg.reactions).map(([emoji, count]) => (
+                <span key={emoji} className="reaction">
+                  {emoji} {count}
+                </span>
+                ))}
+              </div>
             </div>
           </div>);
         })}
@@ -173,12 +234,11 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
           </div>
         )}
         {/* Emoji Picker Button */}
-        <button
+        <MdEmojiEmotions
+        className="openEmojiPicker"
           onClick={() => setShowEmojiPicker((prev) => !prev)}
-          style={{ background: "transparent", border: "none", cursor: "pointer", fontSize: "20px", marginRight: "5px" }}
-        >
-          😀
-        </button>
+        />
+        
 
         {/* Emoji Picker Popup */}
         {showEmojiPicker && (

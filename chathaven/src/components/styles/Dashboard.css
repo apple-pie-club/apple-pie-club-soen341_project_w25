@@ -433,6 +433,7 @@
 }
 
 .button {
+  display:flex;
   font-family: "Comfortaa";
   border-radius: 10px;
   margin: 10px;
@@ -446,6 +447,11 @@
   background-color: rgb(181, 181, 181);
   cursor: pointer;
   transition: 0.3s ease;
+}
+
+#buttonGroup{
+  display:flex;
+  flex-direction:row;
 }
 
 #toggleSidebarButton {

@@ -81,13 +81,14 @@ const CreateDMMenu = ({ isOpen, onClose }) => {
             </option>
           ))}
         </select>
-
-        <button id="createDMButton" className="button" onClick={handleSubmit}>
-          Start DM
-        </button>
-        <button id="cancelButton" className="button" onClick={onClose}>
-          Cancel
-        </button>
+        <div class="buttonGroup">
+          <button id="createDMButton" className="button" onClick={handleSubmit}>
+            Start DM
+          </button>
+          <button id="cancelButton" className="button" onClick={onClose}>
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );
