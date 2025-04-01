@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FaReply } from "react-icons/fa";
+import { FaReply, FaTrash } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 import EmojiPicker from "emoji-picker-react";
@@ -13,6 +13,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [reply, setReply] = useState(null);
   const [users, setUsers] = useState({});
   const listRef = useRef(null);
+  const inputRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showReactionPicker, setShowReactionPicker] = useState(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
 
   useEffect(() => {
     listRef.current?.lastElementChild?.scrollIntoView()
-  }, [messages]);
+  }, [messages.length]);
 
   const handleSendMessage = async () => {
     if (!imgSrc && !message.trim()) return; // Don't send empty messages
@@ -229,13 +230,12 @@ const addReaction = (index, emoji) => {
                   >
                     😀
                   </button>
-                  <button
+                  <FaTrash
                     className="deleteButton"
                     onClick={() => handleDelete(msg._id)}
                     title="Delete message"
-                  >
-                    🗑️
-                  </button>
+                  />
+                  
                 </div>
               )}
 

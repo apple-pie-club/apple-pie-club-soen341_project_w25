@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { FaUserSlash, FaReply } from "react-icons/fa";
+import { FaUserSlash, FaReply, FaTrash } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 import "./styles/Dashboard.css";
@@ -453,13 +453,11 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   >
                     😀
                   </button>
-                  <button
+                  <FaTrash
                     className="deleteButton"
                     onClick={() => handleDelete(msg._id)}
                     title="Delete message"
-                  >
-                    🗑️
-                  </button>
+                  />
                 </div>
               )}
 
@@ -506,13 +504,11 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                     😀
                   </button>
                   {(user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
-                    <button
-                      className="deleteButton"
-                      onClick={() => handleDelete(msg._id)}
-                      title="Delete message"
-                    >
-                      🗑️
-                    </button>
+                    <FaTrash
+                    className="deleteButton"
+                    onClick={() => handleDelete(msg._id)}
+                    title="Delete message"
+                  />
                   )}
                 </div>
               )}
