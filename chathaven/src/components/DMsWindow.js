@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { FaArrowUp, FaReply } from "react-icons/fa";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { FaReply } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 import EmojiPicker from "emoji-picker-react";
 import { MdEmojiEmotions, MdCamera } from "react-icons/md";
-
+import { FaArrowUp, FaCamera } from "react-icons/fa6";
+import Webcam from "react-webcam";
 export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -14,6 +15,9 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const listRef = useRef(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showReactionPicker, setShowReactionPicker] = useState(null);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const camRef = useRef(null);
+  const [imgSrc, setImgSrc] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -79,7 +83,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
 
   // Handle sending messages
   const handleSendMessage = async () => {
-    if (!message.trim()) return; // Don't send empty messages
+    if (!imgSrc && !message.trim()) return; // Don't send empty messages
 
     if (!selectedUser || !selectedUser._id) {
       console.error(" Error: selectedUser is null or missing _id.");
@@ -90,12 +94,21 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     console.log("Sending message to:", userId);
 
     try {
+      const messageToSend = {
+            userId, 
+            text: message,
+            reply: reply
+          };
+
+          if(imgSrc){
+            messageToSend.imageData = imgSrc;
+          }
       const response = await fetch("/api/dmsmessages", {
         //  No need to pass userId in URL
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, text: message, reply: reply }), //  Send `userId` in the body
+        body: JSON.stringify(messageToSend), //  Send `userId` in the body
       });
 
       const result = await response.json();
@@ -111,6 +124,8 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       setMessages((prevMessages) => [...prevMessages, result.newMessage]); //  Append new message
       setMessage(""); //  Clear input after sending
       setReply(null);
+      setImgSrc(null);
+            setIsCameraOpen(false);
     } catch (error) {
       console.error("Error sending message:", error);
       alert("An error occurred. Please try again.");
@@ -141,6 +156,16 @@ const addReaction = (index, emoji) => {
 
   setShowReactionPicker(null); // Close picker after selecting an emoji
 };
+
+  const capture = useCallback(() => {
+      const imageSrc = camRef.current.getScreenshot();
+      setImgSrc(imageSrc);
+      setIsCameraOpen(false);
+    }, [camRef, setImgSrc]);
+
+    const handleOpenCamera = () => {
+      setIsCameraOpen((prev)=>!prev);
+    }
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
 
@@ -187,6 +212,13 @@ const addReaction = (index, emoji) => {
 
               <div key={index} className={msg.sender !== selectedUser._id ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
                 <span>{msg.sender === selectedUser._id && <strong>{senderName}: <br /></strong>}{msg.text}</span>
+                {msg.imageData && (
+                  <img 
+                  src={msg.imageData}
+                  alt="Sent image"
+                  className="sentImage"
+                  />
+                )}
               </div>
               {isHovered && msg.sender === selectedUser._id && (
                 <div className="actionBox">
@@ -233,6 +265,7 @@ const addReaction = (index, emoji) => {
             <RxCross2 className="closeReply" onClick={() => setReply(null)} />
           </div>
         )}
+        <FaCamera className="openCameraButton" onClick={handleOpenCamera}/>
         {/* Emoji Picker Button */}
         <MdEmojiEmotions
         className="openEmojiPicker"
@@ -265,6 +298,33 @@ const addReaction = (index, emoji) => {
           <FaArrowUp />
         </button>
       </div>
+
+      {isCameraOpen &&
+                  <div className="webcamOverlay">
+                    <div className="webcamMenu">
+                      <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
+                      <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg" mirrored={true}/>
+                      <MdCamera className = "takePictureButton" onClick={capture}/>
+                    </div>
+                  </div>
+                  }
+      
+                  {imgSrc &&
+                  <div className = "imagePreview">
+                    <div className ="webcamMenu">
+                      <h3 style={{color:"white", marginBottom:"10px"}}>SEND PICTURE? </h3>
+                      <img style={{borderRadius:"5px"}}src={imgSrc}/>
+                      <div className="buttonBox">
+                        <button className="pictureButton" onClick={handleSendMessage}><FaArrowUp/></button>
+                        <button className="pictureButton" onClick={()=>{
+                          setImgSrc(null);
+                          setIsCameraOpen(true);
+                        }}><RxCross2/></button>
+                      </div>
+                    </div>
+                  </div>
+                  }
+      
     </div>
   );
 }

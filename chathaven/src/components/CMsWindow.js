@@ -30,7 +30,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const camRef = useRef(null);
     const [imgSrc, setImgSrc] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
 
     // Fetch all users
     useEffect(() => {
