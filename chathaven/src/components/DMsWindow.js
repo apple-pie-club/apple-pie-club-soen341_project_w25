@@ -228,7 +228,7 @@ const addReaction = (index, emoji) => {
                     title="Add reaction"
                   >
                     😀
-
+                  </button>
                   <button
                     className="deleteButton"
                     onClick={() => handleDelete(msg._id)}
