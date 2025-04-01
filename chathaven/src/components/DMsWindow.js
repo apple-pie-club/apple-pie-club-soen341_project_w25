@@ -81,7 +81,6 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     listRef.current?.lastElementChild?.scrollIntoView()
   }, [messages]);
 
-  // Handle sending messages
   const handleSendMessage = async () => {
     if (!imgSrc && !message.trim()) return; // Don't send empty messages
 
@@ -131,6 +130,27 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       alert("An error occurred. Please try again.");
     }
   };
+
+  const handleDelete = async (messageId) => {
+    try {
+      const res = await fetch("/api/dmsmessages", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ userId: selectedUser._id, messageId })
+      });
+      if (res.ok) {
+        setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+      } else {
+        console.error("Error deleting message");
+      }
+    } catch (err) {
+      console.error("Error deleting message:", err);
+    }
+  };
+
   const handleEmojiSelect = (emojiObject) => {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
@@ -200,12 +220,21 @@ const addReaction = (index, emoji) => {
                       setReply(msg);
                       inputRef.current?.focus();
                     }}
+                    title="Reply"
                   />
                   <button
                     className="reactButton"
                     onClick={() => toggleReactionPicker(index)}
+                    title="Add reaction"
                   >
                     😀
+
+                  <button
+                    className="deleteButton"
+                    onClick={() => handleDelete(msg._id)}
+                    title="Delete message"
+                  >
+                    🗑️
                   </button>
                 </div>
               )}
@@ -228,10 +257,12 @@ const addReaction = (index, emoji) => {
                       setReply(msg);
                       inputRef.current?.focus();
                     }}
+                    title="Reply"
                   />
                   <button
                     className="reactButton"
                     onClick={() => toggleReactionPicker(index)}
+                    title="Add reaction"
                   >
                     😀
                   </button>
@@ -242,6 +273,7 @@ const addReaction = (index, emoji) => {
                   <EmojiPicker
                   onEmojiClick={(emoji) =>
                   addReaction(index, emoji.emoji)}/>
+
                 </div>
               )}
               

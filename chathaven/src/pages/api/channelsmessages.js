@@ -104,7 +104,37 @@ export default async function handler(req, res) {
     }
 
     }
-    res.setHeader("Allow", ["GET", "POST"]);
+
+  if (req.method === "DELETE") {
+    const { channelId, messageId } = req.body;
+    if (!channelId || !messageId) {
+      return res.status(400).json({ error: "Missing channelId or messageId" });
+    }
+
+    const channel = await Channel.findById(channelId);
+    if (!channel) return res.status(404).json({ error: "Channel not found" });
+
+    const initialLength = channel.messages.length;
+
+    channel.messages.forEach(msg => {
+      if (msg.reply && msg.reply._id.toString() === messageId && msg.reply.text !== "") {
+        msg.reply.text = "message deleted";
+      }
+    });
+
+    channel.messages = channel.messages.filter(
+      (msg) => msg._id.toString() !== messageId
+    );
+
+    if (channel.messages.length === initialLength) {
+      return res.status(404).json({ error: "Message not found in channel" });
+    }
+
+    await channel.save();
+    return res.status(200).json({ success: true });
+  }
+
+  res.setHeader("Allow", ["GET", "POST", "DELETE"]);
   return res.status(405).json({ error: `Method ${req.method} not allowed.` });
 
 }
