@@ -77,7 +77,6 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     listRef.current?.lastElementChild?.scrollIntoView()
   }, [messages]);
 
-  // Handle sending messages
   const handleSendMessage = async () => {
     if (!message.trim()) return; // Don't send empty messages
 
@@ -116,6 +115,27 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       alert("An error occurred. Please try again.");
     }
   };
+
+  const handleDelete = async (messageId) => {
+    try {
+      const res = await fetch("/api/dmsmessages", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ userId: selectedUser._id, messageId })
+      });
+      if (res.ok) {
+        setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+      } else {
+        console.error("Error deleting message");
+      }
+    } catch (err) {
+      console.error("Error deleting message:", err);
+    }
+  };
+
   const handleEmojiSelect = (emojiObject) => {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
@@ -148,7 +168,21 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
             <div className="messageContent" style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
               {isHovered && msg.sender !== selectedUser._id && (
                 <div className="actionBox">
-                  <FaReply className="replyButton" onClick={() => setReply(msg)} />
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                    title="Reply"
+                  />
+                  <button
+                    className="deleteButton"
+                    onClick={() => handleDelete(msg._id)}
+                    title="Delete message"
+                  >
+                    🗑️
+                  </button>
                 </div>
               )}
 
@@ -157,7 +191,14 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
               </div>
               {isHovered && msg.sender === selectedUser._id && (
                 <div className="actionBox">
-                  <FaReply className="replyButton" onClick={() => setReply(msg)} />
+                  <FaReply
+                    className="replyButton"
+                    onClick={() => {
+                      setReply(msg);
+                      inputRef.current?.focus();
+                    }}
+                    title="Reply"
+                  />
                 </div>
               )}
             </div>
