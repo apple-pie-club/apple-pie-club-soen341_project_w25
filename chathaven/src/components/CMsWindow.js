@@ -130,7 +130,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         inputRef.current?.scrollIntoView({behavior: "smooth"});
       }
       }, [messages.length]);
-    //  Handle Sending Messages
+
     const handleSendMessage = async () => {
         if (!imgSrc && !message.trim()) return;
 
@@ -177,6 +177,26 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
             console.error("Error sending message:", error);
             alert("An error occurred. Please try again.");
         }
+    };
+
+    const handleDelete = async (messageId) => {
+      try {
+        const res = await fetch("/api/channelsmessages", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({ channelId: selectedChannel._id, messageId })
+        });
+        if (res.ok) {
+          setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+        } else {
+          console.error("Error deleting message");
+        }
+      } catch (err) {
+        console.error("Error deleting message:", err);
+      }
     };
 
     const handleOpenChannelMemberList = () =>{
@@ -425,12 +445,21 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                       setReply(msg);
                       inputRef.current?.focus();
                     }}
+                    title="Reply"
                   />
                   <button
                     className="reactButton"
                     onClick={() => toggleReactionPicker(index)}
+                    title="Add reaction"
                   >
                     😀
+                  </button>
+                  <button
+                    className="deleteButton"
+                    onClick={() => handleDelete(msg._id)}
+                    title="Delete message"
+                  >
+                    🗑️
                   </button>
                 </div>
               )}
@@ -468,13 +497,24 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                       setReply(msg);
                       inputRef.current?.focus();
                     }}
+                    title="Reply"
                   />
                   <button
                     className="reactButton"
                     onClick={() => toggleReactionPicker(index)}
+                    title="Add reaction"
                   >
                     😀
                   </button>
+                  {(user?.isGlobalAdmin || (selectedChannel && user?.isChannelAdmin?.includes(selectedChannel._id))) && (
+                    <button
+                      className="deleteButton"
+                      onClick={() => handleDelete(msg._id)}
+                      title="Delete message"
+                    >
+                      🗑️
+                    </button>
+                  )}
                 </div>
               )}
               {showReactionPicker === index && (
