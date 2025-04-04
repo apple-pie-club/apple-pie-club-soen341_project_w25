@@ -388,6 +388,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         const senderName = users[msg.sender] || "Unknown User";
         const isHovered = hoveredMessageIndex === index;
         const replyMessage = msg.reply;
+        const youtubeLinkRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+        const youtubeLinks = [...msg.text.matchAll(youtubeLinkRegex)];
 
         return (
           <div
@@ -485,6 +487,18 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                   className="sentImage"
                   />
                 )}
+
+                {youtubeLinks.length > 0 && (
+                  youtubeLinks.map((linkMatch, index) => {
+                    const videoId = linkMatch[1];
+                    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    return (
+                    <iframe key={index}
+                    src={embedUrl}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen></iframe>
+                  );
+                }))}
               </div>
               {isHovered && msg.sender !== loggedInUserId &&(
                 <div className="actionBox">
