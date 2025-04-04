@@ -57,15 +57,16 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const userId = req.body.userId;
-      const text = req.body.text;
+      const text = req.body.text || "";
       const reply = req.body.reply;
+      const imageData = req.body.imageData;
       console.log("Sending message to:", userId);
 
       if (!userId) {
         return res.status(400).json({ error: "Recipient user ID is required" });
       }
 
-      if (!text || text.trim() === "") {
+      if (!imageData && !text) {
         return res.status(400).json({ error: "Message text is required" });
       }
 
@@ -92,6 +93,10 @@ export default async function handler(req, res) {
         reply:reply
       };
 
+      if(imageData){
+        newMessage.imageData = imageData;
+      }
+      
       // Add message to DM
       dm.messages.push(newMessage);
       await dm.save(); // Save DM after adding the message
