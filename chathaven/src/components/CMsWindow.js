@@ -493,7 +493,8 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                     const videoId = linkMatch[1];
                     const embedUrl = `https://www.youtube.com/embed/${videoId}`;
                     return (
-                    <iframe key={index}
+                    <iframe className="youtubeVideo" 
+                    key={index}
                     src={embedUrl}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen></iframe>
