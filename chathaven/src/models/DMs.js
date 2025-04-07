@@ -25,16 +25,20 @@ const DMsSchema = new mongoose.Schema({
       },
       imageData: {
         type: String, // Base64 encoded image
-        default: null
+        default: null,
       },
       timestamp: {
         type: Date, // Timestamp of when the message was sent
         default: Date.now, // Defaults to the current time
       },
-      reply:{
+      reply: {
         type: mongoose.Schema.Types.Mixed,
-        default:null
-      }
+        default: null,
+      },
+      tag: {
+        type: String, // Field to store the tag of the message
+        default: null,
+      },
     },
   ],
 });
