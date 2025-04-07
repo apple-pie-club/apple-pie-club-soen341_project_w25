@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 import EmojiPicker from "emoji-picker-react";
 import { MdEmojiEmotions, MdCamera } from "react-icons/md";
-import { FaArrowUp, FaCamera } from "react-icons/fa6";
+import { FaArrowUp, FaCamera, FaTags } from "react-icons/fa6";
 import Webcam from "react-webcam";
 export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [messages, setMessages] = useState([]);
@@ -19,21 +19,65 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const camRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
+  const [isTagsOpen, setIsTagsOpen] = useState(false);
+  const [tags, setTags] = useState([
+    "Work",
+    "Personal",
+    "Important",
+    "Casual",
+    "Urgent",
+  ]);
+  const [newTagInput, setNewTagInput] = useState("");
+  const [isNewTagOpen, setIsNewTagOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false);
+
+  const handleCreateNewTag = () => {
+    setIsNewTagOpen(true);
+  };
+
+  const handleTagSelect = (tag) => {
+    if (selectedTag === tag) {
+      setSelectedTag(null);
+    } else {
+      setSelectedTag(tag);
+    } // Add tag to selectedTags state
+    setIsSelectedTagOpen(true);
+  };
+
+  // Handle new tag submission
+  const handleSubmitNewTag = () => {
+    if (newTagInput.trim()) {
+      setTags((prevTags) => [
+        ...prevTags.filter((tag) => tag !== "New"),
+        newTagInput,
+      ]); // Remove "New" if it exists and add the new tag
+      setSelectedTag(newTagInput);
+      setNewTagInput("");
+      setIsNewTagOpen(false);
+    } else {
+      alert("Please enter a valid tag name.");
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/users", { method: "GET", credentials: "include" });
+        const response = await fetch("/api/users", {
+          method: "GET",
+          credentials: "include",
+        });
         if (!response.ok) throw new Error("Failed to fetch users");
 
         const data = await response.json();
         console.log("Fetched Users:", data);
 
         const usersMap = {};
-        data.forEach(user => {
-          usersMap[user._id] = user.firstname && user.lastname
-            ? `${user.firstname} ${user.lastname}`
-            : user.email;
+        data.forEach((user) => {
+          usersMap[user._id] =
+            user.firstname && user.lastname
+              ? `${user.firstname} ${user.lastname}`
+              : user.email;
         });
 
         setUsers(usersMap);
@@ -79,7 +123,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   }, [selectedUser]);
 
   useEffect(() => {
-    listRef.current?.lastElementChild?.scrollIntoView()
+    listRef.current?.lastElementChild?.scrollIntoView();
   }, [messages.length]);
 
   const handleSendMessage = async () => {
@@ -95,14 +139,15 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
 
     try {
       const messageToSend = {
-            userId, 
-            text: message,
-            reply: reply
-          };
+        userId,
+        text: message,
+        reply: reply,
+        tag: selectedTag,
+      };
 
-          if(imgSrc){
-            messageToSend.imageData = imgSrc;
-          }
+      if (imgSrc) {
+        messageToSend.imageData = imgSrc;
+      }
       const response = await fetch("/api/dmsmessages", {
         //  No need to pass userId in URL
         method: "POST",
@@ -125,7 +170,8 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       setMessage(""); //  Clear input after sending
       setReply(null);
       setImgSrc(null);
-            setIsCameraOpen(false);
+      setIsCameraOpen(false);
+      setSelectedTag(null);
     } catch (error) {
       console.error("Error sending message:", error);
       alert("An error occurred. Please try again.");
@@ -137,10 +183,10 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       const res = await fetch("/api/dmsmessages", {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ userId: selectedUser._id, messageId })
+        body: JSON.stringify({ userId: selectedUser._id, messageId }),
       });
       if (res.ok) {
         setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
@@ -155,155 +201,231 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const handleEmojiSelect = (emojiObject) => {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
   };
-  
+
   const toggleReactionPicker = (index) => {
     setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
   };
 
-const addReaction = (index, emoji) => {
-  setMessages((prevMessages) => {
+  const addReaction = (index, emoji) => {
+    setMessages((prevMessages) => {
       const newMessages = [...prevMessages];
 
       // Initialize reactions if not present
       if (!newMessages[index].reactions) {
-          newMessages[index].reactions = {};
+        newMessages[index].reactions = {};
       }
 
       // Increment reaction count or add new reaction
-      newMessages[index].reactions[emoji] = (newMessages[index].reactions[emoji] || 0) + 1;
+      newMessages[index].reactions[emoji] =
+        (newMessages[index].reactions[emoji] || 0) + 1;
 
       return newMessages;
-  });
+    });
 
-  setShowReactionPicker(null); // Close picker after selecting an emoji
-};
+    setShowReactionPicker(null); // Close picker after selecting an emoji
+  };
 
   const capture = useCallback(() => {
-      const imageSrc = camRef.current.getScreenshot();
-      setImgSrc(imageSrc);
-      setIsCameraOpen(false);
-    }, [camRef, setImgSrc]);
+    const imageSrc = camRef.current.getScreenshot();
+    setImgSrc(imageSrc);
+    setIsCameraOpen(false);
+  }, [camRef, setImgSrc]);
 
-    const handleOpenCamera = () => {
-      setIsCameraOpen((prev)=>!prev);
-    }
+  const handleOpenCamera = () => {
+    setIsCameraOpen((prev) => !prev);
+  };
+
+  const handleOpenTags = () => {
+    setIsTagsOpen((prev) => !prev);
+  };
+
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
-
-      <div id="DmMessagesArea" className={sidebarOpen ? "shifted" : "fullWidth"} ref={listRef}>
+      <div
+        id="DmMessagesArea"
+        className={sidebarOpen ? "shifted" : "fullWidth"}
+        ref={listRef}
+      >
         {messages.map((msg, index) => {
           const senderName = users[msg.sender] || "Unknown User";
           const isHovered = hoveredMessageIndex === index;
           const replyMessage = msg.reply;
-          return (<div className="message" key={index} onMouseEnter={() => setHoveredMessageIndex(index)} onMouseLeave={() => setHoveredMessageIndex(null)}>
-            {replyMessage &&
-              (
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
-
-                  {msg.sender === selectedUser._id &&
+          return (
+            <div
+              className="message"
+              key={index}
+              onMouseEnter={() => setHoveredMessageIndex(index)}
+              onMouseLeave={() => setHoveredMessageIndex(null)}
+            >
+              {replyMessage && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent:
+                      msg.sender !== selectedUser._id
+                        ? "flex-end"
+                        : "flex-start",
+                  }}
+                >
+                  {msg.sender === selectedUser._id && (
                     <div className="replyMessageIndicatorReceived"></div>
-                  }
-                  <div className={`replyMessage ${msg.sender !== selectedUser._id ? 'sent' : 'received'}`} style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
-                    <p>{users[replyMessage.sender]}: <br />{replyMessage.text}</p>
+                  )}
+                  <div
+                    className={`replyMessage ${
+                      msg.sender !== selectedUser._id ? "sent" : "received"
+                    }`}
+                    style={{
+                      justifyContent:
+                        msg.sender !== selectedUser._id
+                          ? "flex-end"
+                          : "flex-start",
+                    }}
+                  >
+                    <p>
+                      {users[replyMessage.sender]}: <br />
+                      {replyMessage.text}
+                    </p>
                   </div>
 
-                  {msg.sender !== selectedUser._id &&
+                  {msg.sender !== selectedUser._id && (
                     <div className="replyMessageIndicatorSent"></div>
-                  }
+                  )}
                 </div>
               )}
-            <div className="messageContent" style={{ justifyContent: msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start' }}>
-              {isHovered && msg.sender !== selectedUser._id && (
-                <div className="actionBox">
-                  <FaReply
-                    className="replyButton"
-                    onClick={() => {
-                      setReply(msg);
-                      inputRef.current?.focus();
-                    }}
-                    title="Reply"
-                  />
-                  <button
-                    className="reactButton"
-                    onClick={() => toggleReactionPicker(index)}
-                    title="Add reaction"
-                  >
-                    😀
-                  </button>
-                  <FaTrash
-                    className="deleteButton"
-                    onClick={() => handleDelete(msg._id)}
-                    title="Delete message"
-                  />
-                  
-                </div>
-              )}
-
-              <div key={index} className={msg.sender !== selectedUser._id ? "sentMessage" : "receivedMessage"} style={{ marginTop: replyMessage ? '0px' : '10px' }}>
-                <span>{msg.sender === selectedUser._id && <strong>{senderName}: <br /></strong>}{msg.text}</span>
-                {msg.imageData && (
-                  <img 
-                  src={msg.imageData}
-                  alt="Sent image"
-                  className="sentImage"
-                  />
+              <div
+                className="messageContent"
+                style={{
+                  justifyContent:
+                    msg.sender !== selectedUser._id ? "flex-end" : "flex-start",
+                }}
+              >
+                {isHovered && msg.sender !== selectedUser._id && (
+                  <div className="actionBox">
+                    <FaReply
+                      className="replyButton"
+                      onClick={() => {
+                        setReply(msg);
+                        inputRef.current?.focus();
+                      }}
+                      title="Reply"
+                    />
+                    <button
+                      className="reactButton"
+                      onClick={() => toggleReactionPicker(index)}
+                      title="Add reaction"
+                    >
+                      😀
+                    </button>
+                    <FaTrash
+                      className="deleteButton"
+                      onClick={() => handleDelete(msg._id)}
+                      title="Delete message"
+                    />
+                  </div>
                 )}
-              </div>
-              {isHovered && msg.sender === selectedUser._id && (
-                <div className="actionBox">
-                  <FaReply
-                    className="replyButton"
-                    onClick={() => {
-                      setReply(msg);
-                      inputRef.current?.focus();
-                    }}
-                    title="Reply"
-                  />
-                  <button
-                    className="reactButton"
-                    onClick={() => toggleReactionPicker(index)}
-                    title="Add reaction"
-                  >
-                    😀
-                  </button>
-                </div>
-              )}
-              {showReactionPicker === index && (
-                <div className="reactionPicker">
-                  <EmojiPicker
-                  onEmojiClick={(emoji) =>
-                  addReaction(index, emoji.emoji)}/>
 
+                <div
+                  key={index}
+                  className={
+                    msg.sender !== selectedUser._id
+                      ? "sentMessage"
+                      : "receivedMessage"
+                  }
+                  style={{ marginTop: replyMessage ? "0px" : "10px" }}
+                >
+                  <span>
+                    {msg.sender === selectedUser._id && (
+                      <strong>
+                        {senderName}: <br />
+                      </strong>
+                    )}
+                    <div className="messageTagSpace">
+                      {msg.tag && (
+                        <div
+                          className={
+                            msg.sender !== selectedUser._id
+                              ? "sentTag"
+                              : "receivedTag"
+                          }
+                        >
+                          <span>{msg.tag}</span>
+                        </div>
+                      )}
+                    </div>
+                    {msg.text}
+                  </span>
+                  {msg.imageData && (
+                    <img
+                      src={msg.imageData}
+                      alt="Sent image"
+                      className="sentImage"
+                    />
+                  )}
                 </div>
-              )}
-              
-              <div className={`reactions ${isHovered ? "visible" : ""}`}>
-                {msg.reactions && Object.keys(msg.reactions).length > 0 &&
-                Object.entries(msg.reactions).map(([emoji, count]) => (
-                <span key={emoji} className="reaction">
-                  {emoji} {count}
-                </span>
-                ))}
+                {isHovered && msg.sender === selectedUser._id && (
+                  <div className="actionBox">
+                    <FaReply
+                      className="replyButton"
+                      onClick={() => {
+                        setReply(msg);
+                        inputRef.current?.focus();
+                      }}
+                      title="Reply"
+                    />
+                    <button
+                      className="reactButton"
+                      onClick={() => toggleReactionPicker(index)}
+                      title="Add reaction"
+                    >
+                      😀
+                    </button>
+                  </div>
+                )}
+                {showReactionPicker === index && (
+                  <div className="reactionPicker">
+                    <EmojiPicker
+                      onEmojiClick={(emoji) => addReaction(index, emoji.emoji)}
+                    />
+                  </div>
+                )}
+
+                <div className={`reactions ${isHovered ? "visible" : ""}`}>
+                  {msg.reactions &&
+                    Object.keys(msg.reactions).length > 0 &&
+                    Object.entries(msg.reactions).map(([emoji, count]) => (
+                      <span key={emoji} className="reaction">
+                        {emoji} {count}
+                      </span>
+                    ))}
+                </div>
               </div>
             </div>
-          </div>);
+          );
         })}
       </div>
 
       <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
         {reply && (
           <div className="DMreplyingBox">
-            <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0, 70)}{reply.text.length > 71 ? "..." : ""}</p></span>
+            <span>
+              Replying to {users[reply.sender]}:
+              <p>
+                {reply.text.substring(0, 70)}
+                {reply.text.length > 71 ? "..." : ""}
+              </p>
+            </span>
             <RxCross2 className="closeReply" onClick={() => setReply(null)} />
           </div>
         )}
-        <FaCamera className="openCameraButton" onClick={handleOpenCamera}/>
+        <FaCamera className="openCameraButton" onClick={handleOpenCamera} />
         {/* Emoji Picker Button */}
         <MdEmojiEmotions
-        className="openEmojiPicker"
+          className="openEmojiPicker"
           onClick={() => setShowEmojiPicker((prev) => !prev)}
         />
-        
+        <FaTags className="tagsButton" onClick={handleOpenTags} />
 
         {/* Emoji Picker Popup */}
         {showEmojiPicker && (
@@ -313,7 +435,13 @@ const addReaction = (index, emoji) => {
               previewConfig={{ showPreview: false }}
               searchDisabled={true}
             />
-          </div>)}
+          </div>
+        )}
+        {selectedTag && (
+          <div className="selectedTags">
+            <div className="selectedTag">{selectedTag}</div>
+          </div>
+        )}
         <input
           type="text"
           placeholder="Type a message..."
@@ -331,32 +459,86 @@ const addReaction = (index, emoji) => {
         </button>
       </div>
 
-      {isCameraOpen &&
-                  <div className="webcamOverlay">
-                    <div className="webcamMenu">
-                      <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
-                      <Webcam className="webcam" ref={camRef} screenshotFormat="image/jpeg" mirrored={true}/>
-                      <MdCamera className = "takePictureButton" onClick={capture}/>
-                    </div>
-                  </div>
-                  }
-      
-                  {imgSrc &&
-                  <div className = "imagePreview">
-                    <div className ="webcamMenu">
-                      <h3 style={{color:"white", marginBottom:"10px"}}>SEND PICTURE? </h3>
-                      <img style={{borderRadius:"5px"}}src={imgSrc}/>
-                      <div className="buttonBox">
-                        <button className="pictureButton" onClick={handleSendMessage}><FaArrowUp/></button>
-                        <button className="pictureButton" onClick={()=>{
-                          setImgSrc(null);
-                          setIsCameraOpen(true);
-                        }}><RxCross2/></button>
-                      </div>
-                    </div>
-                  </div>
-                  }
-      
+      {isCameraOpen && (
+        <div className="webcamOverlay">
+          <div className="webcamMenu">
+            <RxCross2 className="closeCamera" onClick={handleOpenCamera} />
+            <Webcam
+              className="webcam"
+              ref={camRef}
+              screenshotFormat="image/jpeg"
+              mirrored={true}
+            />
+            <MdCamera className="takePictureButton" onClick={capture} />
+          </div>
+        </div>
+      )}
+
+      {isTagsOpen && (
+        <div className={`tagsMenu ${isTagsOpen ? "open" : ""}`}>
+          {/* List of tags */}
+          <div className="tagsList">
+            {tags.map((tag, index) => (
+              <div
+                key={index}
+                className="tagItem"
+                onClick={() => handleTagSelect(tag)}
+              >
+                {tag}
+              </div>
+            ))}
+            {!tags.includes("New") && (
+              <div className="tagItem" onClick={handleCreateNewTag}>
+                New
+              </div>
+            )}
+          </div>
+
+          {isNewTagOpen && (
+            <div className="newTagOverlay">
+              <div className="newTagContent">
+                <RxCross2
+                  className="closeNewTag"
+                  onClick={() => setIsNewTagOpen(false)}
+                />
+                <h3>Create a New Tag</h3>
+                <input
+                  type="text"
+                  value={newTagInput}
+                  onChange={(e) => setNewTagInput(e.target.value)}
+                  placeholder="Enter tag name"
+                />
+                <button onClick={handleSubmitNewTag}>Create</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {imgSrc && (
+        <div className="imagePreview">
+          <div className="webcamMenu">
+            <h3 style={{ color: "white", marginBottom: "10px" }}>
+              SEND PICTURE?{" "}
+            </h3>
+            <img style={{ borderRadius: "5px" }} src={imgSrc} />
+            <div className="buttonBox">
+              <button className="pictureButton" onClick={handleSendMessage}>
+                <FaArrowUp />
+              </button>
+              <button
+                className="pictureButton"
+                onClick={() => {
+                  setImgSrc(null);
+                  setIsCameraOpen(true);
+                }}
+              >
+                <RxCross2 />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

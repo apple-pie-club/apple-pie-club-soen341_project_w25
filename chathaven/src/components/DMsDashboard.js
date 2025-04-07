@@ -10,7 +10,7 @@ import LogoutButton from "./LogoutButton";
 import ChannelButton from "./ChannelButton";
 import CreateDMMenu from "./CreateDMMenu";
 import DMsWindow from "./DMsWindow";
-import EditProfileMenu from  "./EditProfileMenu";
+import EditProfileMenu from "./EditProfileMenu";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +30,8 @@ export default function DMsPage() {
       .then((res) => res.json())
       .then((data) => {
         console.log("User Data for Admin:", data); // Debugging log
-        if (data && typeof data.isGlobalAdmin !== "undefined") { //Use isGlobalAdmin
+        if (data && typeof data.isGlobalAdmin !== "undefined") {
+          //Use isGlobalAdmin
           setUser(data);
         } else {
           console.warn("isGlobalAdmin field not found in user data!");
@@ -42,31 +43,36 @@ export default function DMsPage() {
 
   // Fetch existing DMs on component mount
   useEffect(() => {
-    if(!loadingUser)
-    {fetch("/api/dms", {
-      method: "GET",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Participants fetched:", data); // Debug
-        setParticipants(data);
+    if (!loadingUser) {
+      fetch("/api/dms", {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
       })
-      .catch((error) => console.error(" Error fetching DMs:", error));}
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Participants fetched:", data); // Debug
+          setParticipants(data);
+        })
+        .catch((error) => console.error(" Error fetching DMs:", error));
+    }
   }, [loadingUser]);
 
   return (
     <div id="DMsContainer">
       <div id="logoutButtonArea">
-      <div id="profileButton" onClick={()=> {
-                      setIsProfileMenuOpen(true)
-                      }} title = "Your profile">
-                      <FaUserCircle />
-            </div>
-            <ChannelButton />
-          <LogoutButton />
+        <div
+          id="profileButton"
+          onClick={() => {
+            setIsProfileMenuOpen(true);
+          }}
+          title="Your profile"
+        >
+          <FaUserCircle />
         </div>
+        <ChannelButton />
+        <LogoutButton />
+      </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="DMsList">
           <li id="DMsHeader">
@@ -109,7 +115,7 @@ export default function DMsPage() {
         )}{" "}
       </button>
 
-      <DMsWindow selectedUser={selectedUser} sidebarOpen={sidebarOpen}/>
+      <DMsWindow selectedUser={selectedUser} sidebarOpen={sidebarOpen} />
 
       {isMenuOpen && (
         <CreateDMMenu
@@ -121,18 +127,19 @@ export default function DMsPage() {
         />
       )}
 
-      {isProfileMenuOpen && (<EditProfileMenu 
-            user = {user}
-            setUser = {setUser} 
-            isOpen = {isProfileMenuOpen}
-            onClose={()=>setIsProfileMenuOpen(false)}
-            />
+      {isProfileMenuOpen && (
+        <EditProfileMenu
+          user={user}
+          setUser={setUser}
+          isOpen={isProfileMenuOpen}
+          onClose={() => setIsProfileMenuOpen(false)}
+        />
       )}
-      { (loadingUser && participants) && (
+      {loadingUser && participants && (
         <div className="loadingScreen">
           <div className="loader"></div>
         </div>
-      )} 
+      )}
     </div>
   );
 }
