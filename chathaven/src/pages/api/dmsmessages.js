@@ -60,6 +60,7 @@ export default async function handler(req, res) {
       const text = req.body.text || "";
       const reply = req.body.reply;
       const imageData = req.body.imageData;
+      const tag = req.body.tag || null;
       console.log("Sending message to:", userId);
 
       if (!userId) {
@@ -90,13 +91,14 @@ export default async function handler(req, res) {
         sender: loggedInUserId,
         text: text.trim(),
         timestamp: new Date(),
-        reply:reply
+        reply: reply,
+        tag: tag,
       };
 
-      if(imageData){
+      if (imageData) {
         newMessage.imageData = imageData;
       }
-      
+
       // Add message to DM
       dm.messages.push(newMessage);
       await dm.save(); // Save DM after adding the message
@@ -123,15 +125,17 @@ export default async function handler(req, res) {
 
     const initialLength = dm.messages.length;
 
-    dm.messages.forEach(msg => {
-      if (msg.reply && msg.reply._id.toString() === messageId && msg.reply.text !== "") {
+    dm.messages.forEach((msg) => {
+      if (
+        msg.reply &&
+        msg.reply._id.toString() === messageId &&
+        msg.reply.text !== ""
+      ) {
         msg.reply.text = "message deleted";
       }
     });
 
-    dm.messages = dm.messages.filter(
-      (msg) => msg._id.toString() !== messageId
-    );
+    dm.messages = dm.messages.filter((msg) => msg._id.toString() !== messageId);
 
     if (dm.messages.length === initialLength) {
       return res.status(404).json({ error: "Message not found in dm" });

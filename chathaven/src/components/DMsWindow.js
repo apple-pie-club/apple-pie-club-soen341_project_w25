@@ -142,6 +142,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
         userId,
         text: message,
         reply: reply,
+        tag: selectedTag,
       };
 
       if (imgSrc) {
