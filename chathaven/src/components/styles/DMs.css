@@ -766,7 +766,7 @@ button {
   position: absolute;
   top: 690px;
   left: 320px;
-  width: 600px;
+  width: 500px;
   height: 60px;
   background-color: white;
   border-radius: 10px;
@@ -779,7 +779,8 @@ button {
   z-index: 9999;
   display: flex;
   align-items: center;
-  overflow: hidden;
+  overflow-x: auto;
+  white-space: nowrap;
   transition: right 0.3s ease-in-out;
 }
 .tagsMenu.open {
@@ -829,6 +830,7 @@ button {
 }
 
 .newTagContent {
+  position: relative;
   background: white;
   padding: 20px;
   border-radius: 10px;
@@ -869,4 +871,17 @@ button {
 
 .closeNewTag:hover {
   color: #000;
+}
+
+.selectedTag {
+  font-family: "Comfortaa";
+  background-color: white;
+  border-radius: 10px;
+  border-left: 1px solid #ccc;
+  padding: 6px;
+  margin-right: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  align-items: center;
+  transition: right 0.3s ease-in-out;
 }

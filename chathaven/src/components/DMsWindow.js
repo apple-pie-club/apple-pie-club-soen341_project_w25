@@ -29,9 +29,20 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   ]);
   const [newTagInput, setNewTagInput] = useState("");
   const [isNewTagOpen, setIsNewTagOpen] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false);
 
   const handleCreateNewTag = () => {
     setIsNewTagOpen(true);
+  };
+
+  const handleTagSelect = (tag) => {
+    if (selectedTag === tag) {
+      setSelectedTag(null);
+    } else {
+      setSelectedTag(tag);
+    } // Add tag to selectedTags state
+    setIsSelectedTagOpen(true);
   };
 
   // Handle new tag submission
@@ -41,6 +52,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
         ...prevTags.filter((tag) => tag !== "New"),
         newTagInput,
       ]); // Remove "New" if it exists and add the new tag
+      setSelectedTag(newTagInput);
       setNewTagInput("");
       setIsNewTagOpen(false);
     } else {
@@ -158,6 +170,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       setReply(null);
       setImgSrc(null);
       setIsCameraOpen(false);
+      setSelectedTag(null);
     } catch (error) {
       console.error("Error sending message:", error);
       alert("An error occurred. Please try again.");
@@ -410,6 +423,11 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
             />
           </div>
         )}
+        {selectedTag && (
+          <div className="selectedTags">
+            <div className="selectedTag">{selectedTag}</div>
+          </div>
+        )}
         <input
           type="text"
           placeholder="Type a message..."
@@ -444,12 +462,14 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
 
       {isTagsOpen && (
         <div className={`tagsMenu ${isTagsOpen ? "open" : ""}`}>
-          <RxCross2 className="closeTags" onClick={handleOpenTags} />
-
           {/* List of tags */}
           <div className="tagsList">
             {tags.map((tag, index) => (
-              <div key={index} className="tagItem">
+              <div
+                key={index}
+                className="tagItem"
+                onClick={() => handleTagSelect(tag)}
+              >
                 {tag}
               </div>
             ))}
@@ -463,6 +483,10 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
           {isNewTagOpen && (
             <div className="newTagOverlay">
               <div className="newTagContent">
+                <RxCross2
+                  className="closeNewTag"
+                  onClick={() => setIsNewTagOpen(false)}
+                />
                 <h3>Create a New Tag</h3>
                 <input
                   type="text"
@@ -471,10 +495,6 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
                   placeholder="Enter tag name"
                 />
                 <button onClick={handleSubmitNewTag}>Create</button>
-                <RxCross2
-                  className="closeNewTag"
-                  onClick={() => setIsNewTagOpen(false)}
-                />
               </div>
             </div>
           )}
