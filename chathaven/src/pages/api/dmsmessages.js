@@ -1,3 +1,4 @@
+import { trackFallbackParamAccessed } from "next/dist/server/app-render/dynamic-rendering";
 import connectToDatabase from "../../lib/mongodb";
 import DM from "../../models/DMs";
 import jwt from "jsonwebtoken";
@@ -45,7 +46,6 @@ export default async function handler(req, res) {
           .status(404)
           .json({ error: "No messages found between these users" });
       }
-
       return res.status(200).json(dm.messages); // Return messages exchanged between both users
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
       const text = req.body.text || "";
       const reply = req.body.reply;
       const imageData = req.body.imageData;
-      const tag = req.body.tag || null;
+      const tag = req.body.tag;
       console.log("Sending message to:", userId);
 
       if (!userId) {

@@ -341,6 +341,19 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
                         {senderName}: <br />
                       </strong>
                     )}
+                    <div className="messageTagSpace">
+                      {msg.tag && (
+                        <div
+                          className={
+                            msg.sender !== selectedUser._id
+                              ? "sentTag"
+                              : "receivedTag"
+                          }
+                        >
+                          <span>{msg.tag}</span>
+                        </div>
+                      )}
+                    </div>
                     {msg.text}
                   </span>
                   {msg.imageData && (

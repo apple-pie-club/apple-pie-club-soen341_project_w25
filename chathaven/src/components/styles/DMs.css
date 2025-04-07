@@ -216,6 +216,8 @@ body {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  display: inline-flex;
+  flex-direction: column;
 }
 
 .sentMessage {
@@ -230,6 +232,8 @@ body {
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  display: inline-flex;
+  flex-direction: column;
 }
 
 #channelButton {
@@ -884,4 +888,37 @@ button {
   z-index: 9999;
   align-items: center;
   transition: right 0.3s ease-in-out;
+}
+.messageTagSpace {
+  display: flex;
+}
+.sentTag {
+  font-family: "Comfortaa";
+  background-color: white;
+  height: 25px;
+  display: inline-block;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #17556d;
+  margin-top: 7px;
+  margin-bottom: 10px;
+}
+.receivedTag {
+  font-family: "Comfortaa";
+  background-color: #17556d;
+  height: 25px;
+  display: inline-block;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: white;
+  margin-top: 7px;
+  margin-bottom: 10px;
+}
+
+.messageTag span {
+  display: inline-block;
 }
