@@ -220,7 +220,7 @@
   width: calc(100vw - 40px);
 }
 .receivedMessage {
-  position:relative;
+  position: relative;
   font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
@@ -237,7 +237,7 @@
   font-size: 12px;
 }
 .sentMessage {
-  position:relative;
+  position: relative;
   font-family: "Comfortaa";
   margin: 10px;
   padding: 10px;
@@ -433,7 +433,7 @@
 }
 
 .button {
-  display:flex;
+  display: flex;
   font-family: "Comfortaa";
   border-radius: 10px;
   margin: 10px;
@@ -449,9 +449,9 @@
   transition: 0.3s ease;
 }
 
-#buttonGroup{
-  display:flex;
-  flex-direction:row;
+#buttonGroup {
+  display: flex;
+  flex-direction: row;
 }
 
 #toggleSidebarButton {
@@ -954,7 +954,7 @@
 }
 
 .messageContent {
-  position:relative;
+  position: relative;
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -1016,7 +1016,6 @@
   flex-direction: column; /* Optional, based on your content */
 }
 
-
 #socketClientPopupOverlay {
   position: fixed;
   top: 0;
@@ -1032,13 +1031,13 @@
   z-index: 999; /* Behind the pop-up */
 }
 
-.replyMessageIndicatorSent{
-  border-radius:10px;
-  background-color:#d6d4d4;
-  width:5px;
-  margin-right:10px;
-  height:85%;
-  margin-bottom:0;
+.replyMessageIndicatorSent {
+  border-radius: 10px;
+  background-color: #d6d4d4;
+  width: 5px;
+  margin-right: 10px;
+  height: 85%;
+  margin-bottom: 0;
 }
 
 .teamNameDisplay {
@@ -1103,7 +1102,6 @@
   justify-content: center;
 }
 
-
 .requestList {
   list-style: none;
   padding: 0;
@@ -1137,13 +1135,12 @@
 }
 
 .requestList button.approve svg {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 .requestList button.approve:hover svg {
-  color: #388E3C; 
+  color: #388e3c;
 }
-
 
 .requestList button.reject svg {
   color: #f44336;
@@ -1160,7 +1157,7 @@
   color: white;
   font-size: 25px;
   text-align: center;
-  position: relative; 
+  position: relative;
   margin-top: 10px;
 }
 
@@ -1170,20 +1167,20 @@
 }
 
 .reactions {
-    display: flex;
-    gap: 5px;
-    position: absolute;
-    bottom: -5px; 
-    background-color: white;
-    border-radius: 15px;
-    padding: 2px 6px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    font-size: 12px;
-    z-index: 10;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s, visibility 0.2s;
-  }
+  display: flex;
+  gap: 5px;
+  position: absolute;
+  bottom: -5px;
+  background-color: white;
+  border-radius: 15px;
+  padding: 2px 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
 
 /* Remove the extra blue highlight on emoji buttons */
 .EmojiPickerReact button {
@@ -1193,7 +1190,7 @@
 }
 
 .EmojiPickerReact .epr-body {
-  margin-top: -60px !important; 
+  margin-top: -60px !important;
 }
 
 .reactButton {
@@ -1204,13 +1201,13 @@
   margin-left: 8px;
 }
 
-.reactButton:hover{
-  transform:scale(1.2);
-  background:none;
-  border:none;
-  box-shadow:none;
-  outline:none;
-  transition:0.3s ease;
+.reactButton:hover {
+  transform: scale(1.2);
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  transition: 0.3s ease;
 }
 .reactionPicker {
   position: absolute;
@@ -1234,28 +1231,28 @@
   margin: 0 2px;
 }
 
-.openCameraButton{
+.openCameraButton {
   color: #17556d;
-  font-size:25px;
-  margin:0;
-  cursor:pointer;
-  margin-right:10px;
+  font-size: 25px;
+  margin: 0;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
-.openCameraButton:hover{
+.openCameraButton:hover {
   color: #668a97;
   transition: 0.3s ease;
 }
 
-.openEmojiPicker{
+.openEmojiPicker {
   color: #17556d;
-  font-size:30px;
-  margin:0;
-  cursor:pointer;
-  margin-right:10px;
+  font-size: 30px;
+  margin: 0;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
-.openEmojiPicker:hover{
+.openEmojiPicker:hover {
   color: #668a97;
   transition: 0.3s ease;
 }
@@ -1266,7 +1263,7 @@ button {
   display: block;
 }
 
-.webcamOverlay{
+.webcamOverlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -1279,49 +1276,49 @@ button {
   z-index: 1000;
 }
 
-.webcamMenu{
-  font-family:"Panton";
-  background-color:black;
-  padding:25px;
-  width:fit-content;
-  height:fit-content;
-  border-radius:25px;
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+.webcamMenu {
+  font-family: "Panton";
+  background-color: black;
+  padding: 25px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 25px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.webcam{
-  border-radius:5px;
-  margin:10px;
+.webcam {
+  border-radius: 5px;
+  margin: 10px;
 }
 
-.takePictureButton{
+.takePictureButton {
   margin-top: 15px;
-  color:white;
-  font-size:40px;
+  color: white;
+  font-size: 40px;
 }
 
-.takePictureButton:hover{
-  color:rgb(204, 204, 204);
-  cursor:pointer;
+.takePictureButton:hover {
+  color: rgb(204, 204, 204);
+  cursor: pointer;
 }
 
-.closeCamera{
+.closeCamera {
   position: absolute;
   top: 15px;
   right: 15px;
   font-size: 15px;
-  color:white;
+  color: white;
 }
 
-.closeCamera:hover{
-  color:rgb(204, 204, 204);
-  cursor:pointer;
+.closeCamera:hover {
+  color: rgb(204, 204, 204);
+  cursor: pointer;
 }
 
-.imagePreview{
+.imagePreview {
   position: fixed;
   top: 0;
   left: 0;
@@ -1334,50 +1331,223 @@ button {
   z-index: 1000;
 }
 
-.buttonBox{
-  display:flex;
-  flex-direction:row;
-  margin-top:15px;
+.buttonBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 15px;
 }
 
-.pictureButton{
-  border-radius:50%;
-  border:none;
-  margin:0 10px 0 10px;
-  width:40px;
-  height:40px;
-  cursor:pointer;
-  outline:none;
+.pictureButton {
+  border-radius: 50%;
+  border: none;
+  margin: 0 10px 0 10px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  outline: none;
 }
 
-.pictureButton:hover{
-  outline:none;
-  border:none;
-  background-color:grey;
-  color:white;
-  transition:0.3s ease;
+.pictureButton:hover {
+  outline: none;
+  border: none;
+  background-color: grey;
+  color: white;
+  transition: 0.3s ease;
 }
 
-.sentImage{
-  max-width:250px;
+.sentImage {
+  max-width: 250px;
   max-height: 250px;
   border-radius: 8px;
   margin-top: 10px;
   object-fit: cover;
 }
 
-.sentImage:hover{
-  cursor:pointer;
+.sentImage:hover {
+  cursor: pointer;
 }
 
-.deleteButton{
-  background-color:none;
-  cursor:pointer;
-  font-size:20;
-  margin-left:10px;
+.deleteButton {
+  background-color: none;
+  cursor: pointer;
+  font-size: 20;
+  margin-left: 10px;
 }
 
-.deleteButton:hover{
-  transform:scale(1.2);
-  transition:0.3s ease;
+.deleteButton:hover {
+  transform: scale(1.2);
+  transition: 0.3s ease;
+}
+
+.tagsButton {
+  color: #17556d;
+  font-size: 25px;
+  margin: 0;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.tagsButton:hover {
+  color: #668a97;
+  transition: 0.3s ease;
+}
+
+.tagsMenu {
+  font-family: "Panton";
+  position: absolute;
+  top: 690px;
+  left: 320px;
+  width: 500px;
+  height: 60px;
+  background-color: white;
+  border-radius: 10px;
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  transition: right 0.3s ease-in-out;
+}
+.tagsMenu.open {
+  right: 0;
+}
+.tagsList {
+  display: flex; /* Display tags horizontally */
+  flex-wrap: nowrap; /* Prevent wrapping */
+  gap: 8px; /* Space between tags */
+}
+
+.tagItem {
+  padding: 8px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.tagItem:hover {
+  background-color: #ccc;
+}
+.closeTags {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 15px;
+  color: white;
+}
+
+.closeTags:hover {
+  color: rgb(204, 204, 204);
+  cursor: pointer;
+}
+.newTagOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.newTagContent {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  width: 300px;
+  text-align: center;
+}
+
+.newTagContent input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.newTagContent button {
+  padding: 10px;
+  background-color: #21647f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.newTagContent button:hover {
+  background-color: #17556d;
+}
+
+.closeNewTag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: #888;
+}
+
+.closeNewTag:hover {
+  color: #000;
+}
+
+.selectedTag {
+  font-family: "Comfortaa";
+  background-color: white;
+  border-radius: 10px;
+  border-left: 1px solid #ccc;
+  padding: 6px;
+  margin-right: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  align-items: center;
+  transition: right 0.3s ease-in-out;
+}
+.messageTagSpace {
+  display: flex;
+}
+
+/* for CMsWindow, the received and sent tags are inversed */
+.sentTag {
+  font-family: "Comfortaa";
+  background-color: #17556d;
+  height: 25px;
+  display: inline-block;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: white;
+  margin-top: 7px;
+  margin-bottom: 10px;
+}
+.receivedTag {
+  font-family: "Comfortaa";
+  background-color: white;
+  height: 25px;
+  display: inline-block;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #17556d;
+  margin-top: 7px;
+  margin-bottom: 10px;
+}
+
+.messageTag span {
+  display: inline-block;
 }
