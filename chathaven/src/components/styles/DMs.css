@@ -760,3 +760,58 @@ button {
   color: #668a97;
   transition: 0.3s ease;
 }
+
+.tagsMenu {
+  font-family: "Panton";
+  position: absolute;
+  top: 690px;
+  left: 320px;
+  width: 600px;
+  height: 60px;
+  background-color: white;
+  border-radius: 10px;
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  transition: right 0.3s ease-in-out;
+}
+.tagsMenu.open {
+  right: 0;
+}
+.tagsList {
+  display: flex; /* Display tags horizontally */
+  flex-wrap: nowrap; /* Prevent wrapping */
+  gap: 8px; /* Space between tags */
+}
+
+.tagItem {
+  padding: 8px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.tagItem:hover {
+  background-color: #ccc;
+}
+.closeTags {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 15px;
+  color: white;
+}
+
+.closeTags:hover {
+  color: rgb(204, 204, 204);
+  cursor: pointer;
+}

@@ -19,6 +19,9 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const camRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
+  const [isTagsOpen, setIsTagsOpen] = useState(false);
+  // Sample tags of the default ones.
+  const availableTags = ["Work", "Personal", "Important", "Casual", "Urgent"];
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -192,6 +195,11 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const handleOpenCamera = () => {
     setIsCameraOpen((prev) => !prev);
   };
+
+  const handleOpenTags = () => {
+    setIsTagsOpen((prev) => !prev);
+  };
+
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
       <div
@@ -365,7 +373,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
           className="openEmojiPicker"
           onClick={() => setShowEmojiPicker((prev) => !prev)}
         />
-        <FaTags className="tagsButton" />
+        <FaTags className="tagsButton" onClick={handleOpenTags} />
 
         {/* Emoji Picker Popup */}
         {showEmojiPicker && (
@@ -405,6 +413,21 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
               mirrored={true}
             />
             <MdCamera className="takePictureButton" onClick={capture} />
+          </div>
+        </div>
+      )}
+
+      {isTagsOpen && (
+        <div className="tagsMenu">
+          <RxCross2 className="closeTags" onClick={handleOpenTags} />
+
+          {/* List of tags */}
+          <div className="tagsList">
+            {availableTags.map((tag, index) => (
+              <div key={index} className="tagItem">
+                {tag}
+              </div>
+            ))}
           </div>
         </div>
       )}
