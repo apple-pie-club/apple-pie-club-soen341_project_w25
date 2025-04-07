@@ -20,8 +20,33 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const camRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [isTagsOpen, setIsTagsOpen] = useState(false);
-  // Sample tags of the default ones.
-  const availableTags = ["Work", "Personal", "Important", "Casual", "Urgent"];
+  const [tags, setTags] = useState([
+    "Work",
+    "Personal",
+    "Important",
+    "Casual",
+    "Urgent",
+  ]);
+  const [newTagInput, setNewTagInput] = useState("");
+  const [isNewTagOpen, setIsNewTagOpen] = useState(false);
+
+  const handleCreateNewTag = () => {
+    setIsNewTagOpen(true);
+  };
+
+  // Handle new tag submission
+  const handleSubmitNewTag = () => {
+    if (newTagInput.trim()) {
+      setTags((prevTags) => [
+        ...prevTags.filter((tag) => tag !== "New"),
+        newTagInput,
+      ]); // Remove "New" if it exists and add the new tag
+      setNewTagInput("");
+      setIsNewTagOpen(false);
+    } else {
+      alert("Please enter a valid tag name.");
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -418,17 +443,41 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       )}
 
       {isTagsOpen && (
-        <div className="tagsMenu">
+        <div className={`tagsMenu ${isTagsOpen ? "open" : ""}`}>
           <RxCross2 className="closeTags" onClick={handleOpenTags} />
 
           {/* List of tags */}
           <div className="tagsList">
-            {availableTags.map((tag, index) => (
+            {tags.map((tag, index) => (
               <div key={index} className="tagItem">
                 {tag}
               </div>
             ))}
+            {!tags.includes("New") && (
+              <div className="tagItem" onClick={handleCreateNewTag}>
+                New
+              </div>
+            )}
           </div>
+
+          {isNewTagOpen && (
+            <div className="newTagOverlay">
+              <div className="newTagContent">
+                <h3>Create a New Tag</h3>
+                <input
+                  type="text"
+                  value={newTagInput}
+                  onChange={(e) => setNewTagInput(e.target.value)}
+                  placeholder="Enter tag name"
+                />
+                <button onClick={handleSubmitNewTag}>Create</button>
+                <RxCross2
+                  className="closeNewTag"
+                  onClick={() => setIsNewTagOpen(false)}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
