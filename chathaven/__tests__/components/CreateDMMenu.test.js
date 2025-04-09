@@ -9,6 +9,20 @@ beforeEach(() => {
 global.fetch = jest.fn();
 
 describe('EditProfileMenu', () => {
+    test("clicking submit causes an alert", async () => {
+        let alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+        await act(async () => {
+            render(<CreateDMMenu isOpen={true} />);
+        });
+
+        act(() => {
+            fireEvent.click(screen.getByRole("button", { name: /Start DM/i }));
+        });
+
+        expect(alertSpy).toHaveBeenCalledTimes(1);
+        alertSpy.mockRestore();
+    });
+
     test("renders the EditProfileMenu page with the correct text", async () => {
         await act(async () => {
             render(<CreateDMMenu isOpen={true} />);
@@ -45,19 +59,5 @@ describe('EditProfileMenu', () => {
 
         expect(global.fetch).toHaveBeenCalledTimes(1);
         expect(global.fetch).toHaveBeenCalledWith("/api/users");
-    });
-
-    test("clicking submit causes an alert", async () => {
-        let alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-        await act(async () => {
-            render(<CreateDMMenu isOpen={true} />);
-        });
-
-        act(() => {
-            fireEvent.click(screen.getByRole("button", { name: /Start DM/i }));
-        });
-
-        expect(alertSpy).toHaveBeenCalledTimes(1);
-        alertSpy.mockRestore();
     });
 });

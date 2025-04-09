@@ -5,16 +5,6 @@ import LoginPage from '../../src/pages/login';
 jest.mock('next/router', () => require('next-router-mock'));
 
 describe("LoginPage", () => {
-    test("renders login form elements", async () => {
-        await act(async () => {
-            render(<LoginPage />);
-        });
-
-        expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
-    });
-
     test("updates email and password state on input", async () => {
         await act(async () => {
             render(<LoginPage />);
@@ -53,5 +43,15 @@ describe("LoginPage", () => {
         });
 
         await waitFor(() => expect(screen.getByText("Invalid credentials")).toBeInTheDocument());
+    });
+
+    test("renders login form elements", async () => {
+        await act(async () => {
+            render(<LoginPage />);
+        });
+
+        expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
     });
 });

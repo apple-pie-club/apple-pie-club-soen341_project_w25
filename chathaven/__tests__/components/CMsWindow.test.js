@@ -25,14 +25,6 @@ describe('CMsWindow', () => {
         alertSpy.mockRestore();
     });
 
-    test("renders the CMsWindow buttons", async () => {
-        await act(async () => {
-            render(<CMsWindow selectedChannel={mockChannel} />);
-        });
-
-        expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
-    });
-
     test("sending a message", async () => {
         await act(async () => {
             render(<CMsWindow selectedChannel={mockChannel} />);
@@ -53,12 +45,18 @@ describe('CMsWindow', () => {
             render(<CMsWindow selectedChannel={mockChannel} />);
         });
 
-        const input = screen.getByPlaceholderText("Type a message...");
-
         await act(async () => {
             await user.keyboard('{Enter}');
         });
 
         expect(global.fetch).toHaveBeenCalledTimes(3);
+    });
+
+    test("renders the CMsWindow buttons", async () => {
+        await act(async () => {
+            render(<CMsWindow selectedChannel={mockChannel} />);
+        });
+
+        expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
     });
 });
