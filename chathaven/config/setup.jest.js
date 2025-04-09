@@ -1,7 +1,8 @@
 jest.spyOn(console, "error").mockImplementation((...args) => {
     const messagesToIgnore = [
         "selectedUser is null or missing _id",
-        "Error sending message:"
+        "Error sending message:",
+        "API response is not an array:"
     ];
 
     const shouldSuppress = args.some(arg =>
@@ -18,7 +19,8 @@ jest.spyOn(console, "warn").mockImplementation((...args) => {
         "Error fetching users:",
         "Error fetching user data",
         "Error: selectedChannel is null or missing _id.",
-        "Error fetching messages:"   
+        "Error fetching messages:",
+        "isGlobalAdmin field not found in user data!"
     ];
 
     const shouldSuppress = args.some(arg =>
