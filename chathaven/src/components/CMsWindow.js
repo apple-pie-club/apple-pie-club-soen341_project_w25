@@ -35,7 +35,6 @@ export default function CMsWindow({
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const camRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
-  // msg tags
   const [isTagsOpen, setIsTagsOpen] = useState(false);
   const [tags, setTags] = useState([
     "Work",
@@ -81,7 +80,6 @@ export default function CMsWindow({
     }
   };
 
-  // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -714,11 +712,12 @@ export default function CMsWindow({
             <RxCross2 className="closeReply" onClick={() => setReply(null)} />
           </div>
         )}
-        <FaCamera className="openCameraButton" onClick={handleOpenCamera} />
+        <FaCamera className="openCameraButton" onClick={handleOpenCamera} title="Open Camera"/>
 
         <MdEmojiEmotions
           className="openEmojiPicker"
           onClick={() => setShowEmojiPicker((prev) => !prev)}
+          title="Emoji Picker"
         />
         <FaTags className="tagsButton" onClick={handleOpenTags} />
 

@@ -12,7 +12,7 @@ global.fetch = jest.fn(() =>
     })
 );
 
-const mockUser = { _id: "0", email: "email@test.com", firstname: "testFirstname", lastname: "testLastname", isGlobalAdmin: false };
+const mockUser = { _id: "1", email: "email@test.com", firstname: "testFirstname", lastname: "testLastname", isGlobalAdmin: false };
 
 describe('DMsWindow', () => {
     beforeEach(() => {
@@ -22,14 +22,6 @@ describe('DMsWindow', () => {
 
     afterEach(() => {
         alertSpy.mockRestore();
-    });
-
-    test("renders the DMsWindow buttons", async () => {
-        await act(async () => {
-            render(<DMsWindow selectedUser={mockUser} sidebarOpen={true} />);
-        });
-
-        expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
     });
 
     test("sending a message", async () => {
@@ -52,12 +44,18 @@ describe('DMsWindow', () => {
             render(<DMsWindow selectedUser={mockUser} sidebarOpen={true} />);
         });
 
-        const input = screen.getByPlaceholderText("Type a message...");
-
         await act(async () => {
             await user.keyboard('{Enter}');
         });
 
         expect(global.fetch).toHaveBeenCalledTimes(2);
+    });
+
+    test("renders the DMsWindow buttons", async () => {
+        await act(async () => {
+            render(<DMsWindow selectedUser={mockUser} sidebarOpen={true} />);
+        });
+
+        expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
     });
 });

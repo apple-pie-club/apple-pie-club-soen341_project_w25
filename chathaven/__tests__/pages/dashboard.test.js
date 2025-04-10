@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import DashboardPage from '../../src/pages/dashboard';
 
 jest.mock('next/router', () => require('next-router-mock'));
@@ -10,29 +10,47 @@ global.fetch = jest.fn(() =>
     })
 );
 
-const mockUserRegular = { _id: "2", isGlobalAdmin: false };
-
 describe('DashboardPage', () => {
+    test("does not show 'Create Team' button for non global admins", async () => {
+        await act(async () => {
+            render(<DashboardPage />);
+        });
+
+        expect(screen.queryByText(/Create Team/i)).not.toBeInTheDocument();
+    });
+
+    test("can interact with the user status menu", async () => {
+        await act(async () => {
+            render(<DashboardPage />);
+        });
+
+        act(() => {
+            fireEvent.click(screen.getByTestId('user-status-button'));
+        });
+
+        expect(global.fetch).toHaveBeenCalled();
+    });
+
+    test("user status", async () => {
+        await act(async () => {
+            render(<DashboardPage />);
+        });
+
+        expect(screen.getByTestId('user-status-button')).toBeInTheDocument();
+    });
+
     test("renders the dashboard page with the correct text", async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.getByText(/no teams yet/i)).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Type a message...")).toBeInTheDocument();
     });
 
-    test("does not show 'Create Team' button for non global admins", async () => {
-        await act(async () => {
-            render(<DashboardPage user={mockUserRegular} loadingUser={false} />);
-        });
-
-        expect(screen.queryByText(/Create Team/i)).not.toBeInTheDocument();
-    });
-
     test('renders the dashboard page buttons', async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} loadingUser={false} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.getByTestId('logout-button')).toBeInTheDocument();

@@ -362,6 +362,8 @@ const handleApproveRequest = async (request) => {
         </div>
         <div
            id="profileButton"
+           title="User Status"
+           data-testid="user-status-button"
            onClick={() => {
              setSocketClientVisible(true);
            }}

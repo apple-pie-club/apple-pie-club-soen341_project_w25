@@ -12,6 +12,19 @@ const mockUser = { _id: "0", email: "email@test.com", firstname: "testFirstname"
 const mockTeamMembers = [mockUser];
 
 describe('CreateChannelMenu', () => {
+    test("can select users", async () => {
+        await act(async () => {
+            render(<CreateChannelMenu teamMembers={mockTeamMembers} isOpen={true} />);
+        });
+
+        act(() => {
+            fireEvent.click(screen.getByRole("checkbox", { name: "" }));
+        });
+
+        expect(screen.getByRole("button", { name: /Create Channel/i })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
+    });
+
     test("renders the CreateChannelMenu buttons", async () => {
         await act(async () => {
             render(<CreateChannelMenu teamMembers={mockTeamMembers} isOpen={true} />);
@@ -31,18 +44,5 @@ describe('CreateChannelMenu', () => {
               <div />
             </body>
           `);
-    });
-
-    test("can select users", async () => {
-        await act(async () => {
-            render(<CreateChannelMenu teamMembers={mockTeamMembers} isOpen={true} />);
-        });
-
-        act(() => {
-            fireEvent.click(screen.getByRole("checkbox", { name: "" }));
-        });
-
-        expect(screen.getByRole("button", { name: /Create Channel/i })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
     });
 });

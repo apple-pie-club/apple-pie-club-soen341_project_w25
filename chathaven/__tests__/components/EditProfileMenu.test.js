@@ -11,6 +11,23 @@ global.fetch = jest.fn(() =>
 const mockUser = { _id: "0", email: "email@test.com", firstname: "testFirstname", lastname: "testLastname", isGlobalAdmin: false };
 
 describe('EditProfileMenu', () => {
+    test("allows the user to edit their profile", async () => {
+        await act(async () => {
+            render(<EditProfileMenu user={mockUser} isOpen={true} />);
+        });
+        
+        await act(async () => {
+            fireEvent.click(screen.getByTestId('edit-button'));
+        });
+        
+        await act(async () => {
+            fireEvent.click(screen.getByRole("button", { name: /save changes/i }));
+            await new Promise(resolve => setTimeout(resolve, 0));
+        });
+        
+        expect(screen.getByDisplayValue(/testFirstname/i)).toBeInTheDocument();
+    });
+
     test("renders the EditProfileMenu page with the correct text", async () => {
         await act(async () => {
             render(<EditProfileMenu user={mockUser} isOpen={true} />);
@@ -41,23 +58,6 @@ describe('EditProfileMenu', () => {
             fireEvent.click(screen.getByTestId('edit-button'));
         });
 
-        expect(screen.getByDisplayValue(/testFirstname/i)).toBeInTheDocument();
-    });
-
-    test("allows the user to edit their profile", async () => {
-        await act(async () => {
-            render(<EditProfileMenu user={mockUser} isOpen={true} />);
-        });
-        
-        await act(async () => {
-            fireEvent.click(screen.getByTestId('edit-button'));
-        });
-        
-        await act(async () => {
-            fireEvent.click(screen.getByRole("button", { name: /save changes/i }));
-            await new Promise(resolve => setTimeout(resolve, 0));
-        });
-        
         expect(screen.getByDisplayValue(/testFirstname/i)).toBeInTheDocument();
     });
 });
