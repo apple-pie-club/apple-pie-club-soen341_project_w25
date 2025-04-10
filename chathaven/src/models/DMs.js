@@ -39,8 +39,17 @@ const DMsSchema = new mongoose.Schema({
         type: String, // Field to store the tag of the message
         default: null,
       },
+      vanish: {
+        type: Boolean,
+        default: false,
+      },
     },
   ],
+  vanishMode: {
+    type: Boolean,
+    default: false,
+  },
+
 });
 
 export default mongoose.models.DMs || mongoose.model("DMs", DMsSchema);
