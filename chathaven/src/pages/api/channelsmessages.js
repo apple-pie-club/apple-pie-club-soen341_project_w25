@@ -3,108 +3,144 @@ import Channel from "../../models/Channel";
 import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
-    await connectToDatabase();
-    
-    const token = req.cookies.authToken;
-    if (!token) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
+  await connectToDatabase();
 
-    let loggedInUserId;
+  const token = req.cookies.authToken;
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  let loggedInUserId;
+  try {
+    // Decode JWT token to get the logged-in user's ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    loggedInUserId = decoded.userId;
+  } catch (err) {
+    console.error("JWT Error:", err);
+    return res.status(403).json({ error: "Forbidden: Invalid token" });
+  }
+
+  // Handle GET requests (Fetching Messages)
+  if (req.method === "GET") {
     try {
-     // Decode JWT token to get the logged-in user's ID
-     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-     loggedInUserId = decoded.userId;
-    } catch (err) {
-     console.error("JWT Error:", err);
-     return res.status(403).json({ error: "Forbidden: Invalid token" });
-    }
+      const channelId = req.query.channelId; // Get channelId from body
+      console.log("Fetching messages for channel: ", channelId);
 
-    // Handle GET requests (Fetching Messages)
-    if (req.method === "GET") {
-        try {
-          const channelId = req.query.channelId; // Get channelId from body
-          console.log("Fetching messages for channel: ", channelId);
-    
-          if (!channelId) {
-            return res
-              .status(400)
-              .json({ error: "Channel ID is required in the request body" });
-          }
-    
-          // Find the selected Channel by its ID
-          const channel = await Channel.findById(channelId);
-          
-            console.log("Fetching messages for channel: ", channelId);
-            
-          if (!channel) {
-            return res
-              .status(404)
-              .json({ error: "No channel found under this ID" });
-          }
-    
-          return res.status(200).json(channel.messages); // Return channel messages exchanged in the past
-        
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-          return res.status(500).json({ error: "Failed to retrieve channel messages." });
-        }
+      if (!channelId) {
+        return res
+          .status(400)
+          .json({ error: "Channel ID is required in the request body" });
       }
 
-    // Handle POST requests (Sending Messages)
-    if (req.method === "POST") {
-        try{
-        const channelId = req.body.channelId
-        const text = req.body.text || "";
-        const reply = req.body.reply;
-        const imageData = req.body.imageData;
-        console.log(`Sending message to channel: ${channelId} by user: ${loggedInUserId}`);
+      // Find the selected Channel by its ID
+      const channel = await Channel.findById(channelId);
 
-        if(!channelId) {
-            return res.status(400).json({error: "Channel ID required"});
-        }
-        
-        if(!imageData && !text) {
-            return res.status(400).json({error: "Message text is required"});
-        }
+      console.log("Fetching messages for channel: ", channelId);
 
-        console.log(`Looking for channel with ID: ${channelId}`);
-        // Check if a channel already exisits
-        let cm = await Channel.findOne({
-            _id:channelId,
-        })
-
-        console.log("Channel found:", cm);
-
-        //Create new message object
-        const newMessage = { 
-            sender: loggedInUserId,
-            text: text.trim(),
-            timestamp: new Date(),
-            reply: reply
-        };
-
-        if(imageData){
-          newMessage.imageData = imageData;
-        }
-        console.log("New message object:", newMessage);
-        
-        
-        //Add message to Channel
-        cm.messages.push(newMessage);
-        console.log("Messages array after push:", cm.messages);
-        await cm.save(); // save channel after adding message
-        console.log("Message saved successfully!");
+      if (!channel) {
         return res
-            .status(201)
-            .json({ message: "Message sent successfully!", newMessage });
+          .status(404)
+          .json({ error: "No channel found under this ID" });
+      }
+
+      return res.status(200).json(channel.messages); // Return channel messages exchanged in the past
     } catch (error) {
-        console.error("Error sending message:", error);
-        return res.status(500).json({ error: "Failed to send message." });
+      console.error("Error fetching messages:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to retrieve channel messages." });
+    }
+  }
+
+  // Handle POST requests (Sending Messages)
+  if (req.method === "POST") {
+    try {
+      const channelId = req.body.channelId;
+      const text = req.body.text || "";
+      const reply = req.body.reply;
+      const imageData = req.body.imageData;
+      const tag = req.body.tag;
+      console.log(
+        `Sending message to channel: ${channelId} by user: ${loggedInUserId}`
+      );
+
+      if (!channelId) {
+        return res.status(400).json({ error: "Channel ID required" });
+      }
+
+      if (!imageData && !text) {
+        return res.status(400).json({ error: "Message text is required" });
+      }
+
+      console.log(`Looking for channel with ID: ${channelId}`);
+      // Check if a channel already exisits
+      let cm = await Channel.findOne({
+        _id: channelId,
+      });
+
+      console.log("Channel found:", cm);
+
+      //Create new message object
+      const newMessage = {
+        sender: loggedInUserId,
+        text: text.trim(),
+        timestamp: new Date(),
+        reply: reply,
+        tag: tag,
+      };
+
+      if (imageData) {
+        newMessage.imageData = imageData;
+      }
+      console.log("New message object:", newMessage);
+
+      //Add message to Channel
+      cm.messages.push(newMessage);
+      console.log("Messages array after push:", cm.messages);
+      await cm.save(); // save channel after adding message
+      console.log("Message saved successfully!");
+      return res
+        .status(201)
+        .json({ message: "Message sent successfully!", newMessage });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      return res.status(500).json({ error: "Failed to send message." });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    const { channelId, messageId } = req.body;
+    if (!channelId || !messageId) {
+      return res.status(400).json({ error: "Missing channelId or messageId" });
     }
 
+    const channel = await Channel.findById(channelId);
+    if (!channel) return res.status(404).json({ error: "Channel not found" });
+
+    const initialLength = channel.messages.length;
+
+    channel.messages.forEach((msg) => {
+      if (
+        msg.reply &&
+        msg.reply._id.toString() === messageId &&
+        msg.reply.text !== ""
+      ) {
+        msg.reply.text = "message deleted";
+      }
+    });
+
+    channel.messages = channel.messages.filter(
+      (msg) => msg._id.toString() !== messageId
+    );
+
+    if (channel.messages.length === initialLength) {
+      return res.status(404).json({ error: "Message not found in channel" });
     }
-    res.setHeader("Allow", ["GET", "POST"]);
+
+    await channel.save();
+    return res.status(200).json({ success: true });
+  }
+
+  res.setHeader("Allow", ["GET", "POST", "DELETE"]);
   return res.status(405).json({ error: `Method ${req.method} not allowed.` });
-
 }

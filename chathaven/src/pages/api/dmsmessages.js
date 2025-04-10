@@ -1,3 +1,4 @@
+import { trackFallbackParamAccessed } from "next/dist/server/app-render/dynamic-rendering";
 import connectToDatabase from "../../lib/mongodb";
 import DM from "../../models/DMs";
 import jwt from "jsonwebtoken";
@@ -45,7 +46,6 @@ export default async function handler(req, res) {
           .status(404)
           .json({ error: "No messages found between these users" });
       }
-
       return res.status(200).json(dm.messages); // Return messages exchanged between both users
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -57,15 +57,17 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
       const userId = req.body.userId;
-      const text = req.body.text;
+      const text = req.body.text || "";
       const reply = req.body.reply;
+      const imageData = req.body.imageData;
+      const tag = req.body.tag;
       console.log("Sending message to:", userId);
 
       if (!userId) {
         return res.status(400).json({ error: "Recipient user ID is required" });
       }
 
-      if (!text || text.trim() === "") {
+      if (!imageData && !text) {
         return res.status(400).json({ error: "Message text is required" });
       }
 
@@ -89,8 +91,13 @@ export default async function handler(req, res) {
         sender: loggedInUserId,
         text: text.trim(),
         timestamp: new Date(),
-        reply:reply
+        reply: reply,
+        tag: tag,
       };
+
+      if (imageData) {
+        newMessage.imageData = imageData;
+      }
 
       // Add message to DM
       dm.messages.push(newMessage);
@@ -105,7 +112,39 @@ export default async function handler(req, res) {
     }
   }
 
-  // Allow both GET and POST requests
-  res.setHeader("Allow", ["GET", "POST"]);
+  if (req.method === "DELETE") {
+    const { userId, messageId } = req.body;
+    if (!userId || !messageId) {
+      return res.status(400).json({ error: "Missing userId or messageId" });
+    }
+
+    const dm = await DM.findOne({
+      participants: { $all: [loggedInUserId, userId] },
+    });
+    if (!dm) return res.status(404).json({ error: "DM not found" });
+
+    const initialLength = dm.messages.length;
+
+    dm.messages.forEach((msg) => {
+      if (
+        msg.reply &&
+        msg.reply._id.toString() === messageId &&
+        msg.reply.text !== ""
+      ) {
+        msg.reply.text = "message deleted";
+      }
+    });
+
+    dm.messages = dm.messages.filter((msg) => msg._id.toString() !== messageId);
+
+    if (dm.messages.length === initialLength) {
+      return res.status(404).json({ error: "Message not found in dm" });
+    }
+
+    await dm.save();
+    return res.status(200).json({ success: true });
+  }
+
+  res.setHeader("Allow", ["GET", "POST", "DELETE"]);
   return res.status(405).json({ error: `Method ${req.method} not allowed.` });
 }
