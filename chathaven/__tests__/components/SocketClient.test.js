@@ -12,7 +12,7 @@ global.fetch = jest.fn();
 
 describe('SocketClient', () => {
     const mockSocket = { emit: jest.fn() };
-    const mockUserId = 'user123';
+    const mockUserId = '1111';
     const mockUpdateStatus = jest.fn();
 
     beforeEach(() => {
@@ -37,8 +37,8 @@ describe('SocketClient', () => {
 
         global.fetch.mockResolvedValue({
             json: () => Promise.resolve([
-                { userId: 'testUser1', lastActiveTime: '2025-04-09T10:00:00Z' },
-                { userId: 'testUser3', lastActiveTime: '2025-04-09T09:30:00Z' }
+                { userId: 'testUser1', lastActiveTime: '2025-01-01T01:00:00Z' },
+                { userId: 'testUser3', lastActiveTime: '2025-01-12T12:00:00Z' }
             ])
         });
     });

@@ -30,9 +30,7 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
     const [isCameraOpen, setIsCameraOpen] = useState(false);
     const camRef = useRef(null);
     const [imgSrc, setImgSrc] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
 
-    // Fetch all users
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -58,7 +56,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         fetchUsers();
     }, []);
 
-    // Fetch logged-in user ID & admin status
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -93,7 +90,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         }
     }, [selectedChannel, users]); // Re-run when users change
 
-    // Fetch Messages
     useEffect(() => {
         const fetchMessages = async () => {
             if (!selectedChannel || !selectedChannel._id) {
@@ -130,7 +126,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         inputRef.current?.scrollIntoView({behavior: "smooth"});
       }
       }, [messages.length]);
-    //  Handle Sending Messages
     const handleSendMessage = async () => {
         if (!imgSrc && !message.trim()) return;
 
@@ -243,12 +238,10 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         setMessage((prevMessage) => prevMessage + emojiObject.emoji);
     };
 
-    // Toggle the reaction picker for a specific message
     const toggleReactionPicker = (index) => {
         setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
     };
 
-    // Add a reaction to a message
     const addReaction = (index, emoji) => {
         setMessages((prevMessages) => {
             const newMessages = [...prevMessages];
@@ -266,7 +259,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
 
         setShowReactionPicker(null); // Close picker after selecting an emoji
     };
-
 
     const handleLeaveChannel = async() =>{
         if(!selectedChannel || !selectedChannel._id){
@@ -343,7 +335,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                 </ul>
             </div>
             </div>
-
 
             {/* Messages Area */}
             <div id="messagesArea" className={messageAreaClass} ref={listRef}>
@@ -518,7 +509,6 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
         selectedTeam={selectedTeam}
         userId={loggedInUserId}
       />
-    
 
             {/* Message Input */}
             <div id="messageBar" className={messageAreaClass}>
@@ -529,11 +519,12 @@ export default function CMsWindow({ selectedTeam, selectedChannel, messageAreaCl
                         <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
                     </div>
                 )}
-                <FaCamera className="openCameraButton" onClick={handleOpenCamera}/>
+                <FaCamera className="openCameraButton" onClick={handleOpenCamera} title="Open Camera"/>
               
                 <MdEmojiEmotions 
                 className="openEmojiPicker" 
-                onClick={() => setShowEmojiPicker((prev) => !prev)}/>
+                onClick={() => setShowEmojiPicker((prev) => !prev)}
+                title="Emoji Picker"/>
 
                 {showEmojiPicker && (
                     <div style={{position: "absolute", bottom: "50px", zIndex: 100}}>

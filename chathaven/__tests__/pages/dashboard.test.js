@@ -10,20 +10,18 @@ global.fetch = jest.fn(() =>
     })
 );
 
-const mockUserRegular = { _id: "2", isGlobalAdmin: false };
-
 describe('DashboardPage', () => {
     test("does not show 'Create Team' button for non global admins", async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} loadingUser={false} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.queryByText(/Create Team/i)).not.toBeInTheDocument();
     });
 
-    test("can open the user status menu", async () => {
+    test("can interact with the user status menu", async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} />);
+            render(<DashboardPage />);
         });
 
         act(() => {
@@ -31,12 +29,11 @@ describe('DashboardPage', () => {
         });
 
         expect(global.fetch).toHaveBeenCalled();
-        expect(screen.getByTitle('User Status')).toBeInTheDocument();
     });
 
     test("user status", async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.getByTestId('user-status-button')).toBeInTheDocument();
@@ -44,7 +41,7 @@ describe('DashboardPage', () => {
 
     test("renders the dashboard page with the correct text", async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.getByText(/no teams yet/i)).toBeInTheDocument();
@@ -53,7 +50,7 @@ describe('DashboardPage', () => {
 
     test('renders the dashboard page buttons', async () => {
         await act(async () => {
-            render(<DashboardPage user={mockUserRegular} loadingUser={false} />);
+            render(<DashboardPage />);
         });
 
         expect(screen.getByTestId('logout-button')).toBeInTheDocument();

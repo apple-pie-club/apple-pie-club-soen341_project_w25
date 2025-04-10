@@ -12,7 +12,7 @@ global.fetch = jest.fn(() =>
     })
 );
 
-const mockUser = { _id: "0", email: "email@test.com", firstname: "testFirstname", lastname: "testLastname", isGlobalAdmin: false };
+const mockUser = { _id: "1", email: "email@test.com", firstname: "testFirstname", lastname: "testLastname", isGlobalAdmin: false };
 
 describe('DMsWindow', () => {
     beforeEach(() => {
