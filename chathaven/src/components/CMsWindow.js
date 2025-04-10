@@ -207,18 +207,6 @@ export default function CMsWindow({
         reply: reply,
         tag: selectedTag,
       };
-    
-    const handleEmojiSelect = (emojiObject) => {
-        setMessage((prevMessage) => prevMessage + emojiObject.emoji);
-    };
-
-    const toggleReactionPicker = (index) => {
-        setShowReactionPicker((prevIndex) => (prevIndex === index ? null : index));
-    };
-
-    const addReaction = (index, emoji) => {
-        setMessages((prevMessages) => {
-            const newMessages = [...prevMessages];
 
       if (imgSrc) {
         messageToSend.imageData = imgSrc;
@@ -282,11 +270,6 @@ export default function CMsWindow({
       return;
     }
 
-    const handleLeaveChannel = async() =>{
-        if(!selectedChannel || !selectedChannel._id){
-            console.error("Error: selectedChannel is null or missing _id.");
-            return;
-        }
     if (userId === loggedInUserId) {
       alert(" You cannot ban yourself!");
       return;
@@ -393,70 +376,6 @@ export default function CMsWindow({
         return;
       }
 
-            {/* Messages Area */}
-            <div id="messagesArea" className={messageAreaClass} ref={listRef}>
-            {selectedTeam && !selectedChannel ? (
-  <div className="teamNameDisplay">
-    <h2>{selectedTeam.teamName}</h2>
-    <p>Select a channel to start messaging.</p>
-    <p>Want to join a channel? Request to join a channel in this team!</p>
-    <button
-      className="button"
-      onClick={() => {
-        console.log("Request to Join button clicked");
-        setIsRequestModalOpen(true);
-      }}
-    >
-      Request to Join
-    </button>
-  </div>
-) : selectedChannel ? (
-  <div className="messagesContainer">
-    {messages.length > 0 ? (
-      messages.map((msg, index) => {
-        const senderName = users[msg.sender] || "Unknown User";
-        const isHovered = hoveredMessageIndex === index;
-        const replyMessage = msg.reply;
-
-        return (
-          <div
-            className="message"
-            key={index}
-            onMouseEnter={() => setHoveredMessageIndex(index)}
-            onMouseLeave={() => setHoveredMessageIndex(null)}
-          >
-            {replyMessage && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent:
-                    msg.sender === loggedInUserId ? "flex-end" : "flex-start",
-                }}
-              >
-                {msg.sender !== loggedInUserId && (
-                  <div className="replyMessageIndicatorReceived"></div>
-                )}
-                <div
-                  className={`replyMessage ${
-                    msg.sender === loggedInUserId ? "sent" : "received"
-                  }`}
-                  style={{
-                    justifyContent:
-                      msg.sender === loggedInUserId ? "flex-end" : "flex-start",
-                  }}
-                >
-                  <p>
-                    {users[replyMessage.sender]}: <br />
-                    {replyMessage.text}
-                  </p>
-                </div>
-                {msg.sender === loggedInUserId && (
-                  <div className="replyMessageIndicatorSent"></div>
-                )}
-              </div>
-            )}
       showSuccessMessage();
 
       setMembers((prevMembers) =>
@@ -774,55 +693,6 @@ export default function CMsWindow({
         userId={loggedInUserId}
       />
 
-            {/* Message Input */}
-            <div id="messageBar" className={messageAreaClass}>
-                <HiQuestionMarkCircle id="openMemberListButton" onClick={handleOpenChannelMemberList} title="Channel Members" />
-                {reply && (
-                    <div className="replyingBox">
-                        <span>Replying to {users[reply.sender]}:<p>{reply.text.substring(0,70)}{reply.text.length>71?"...":""}</p></span>
-                        <RxCross2 className="closeReply" onClick={()=> setReply(null)} />
-                    </div>
-                )}
-                <FaCamera className="openCameraButton" onClick={handleOpenCamera} title="Open Camera"/>
-              
-                <MdEmojiEmotions 
-                className="openEmojiPicker" 
-                onClick={() => setShowEmojiPicker((prev) => !prev)}
-                title="Emoji Picker"/>
-
-                {showEmojiPicker && (
-                    <div style={{position: "absolute", bottom: "50px", zIndex: 100}}>
-                        <EmojiPicker 
-                        onEmojiClick={handleEmojiSelect}
-                        previewConfig={{showPreview:false}}
-                        searchDisabled={true}
-                        />
-                    </div>
-                )}
-            
-            <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Type a message..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSendMessage();
-                        }
-                    }}
-                />
-                <button onClick={handleSendMessage}>
-                    <FaArrowUp />
-                </button>
-                </div>
-            {showError && 
-            <div className={`alert ${showError ? "show" : ""}`}>
-                <p className="error">{error}</p>
-            </div>
-            }
-
       {/* Message Input */}
       <div id="messageBar" className={messageAreaClass}>
         <HiQuestionMarkCircle
@@ -842,11 +712,12 @@ export default function CMsWindow({
             <RxCross2 className="closeReply" onClick={() => setReply(null)} />
           </div>
         )}
-        <FaCamera className="openCameraButton" onClick={handleOpenCamera} />
+        <FaCamera className="openCameraButton" onClick={handleOpenCamera} title="Open Camera"/>
 
         <MdEmojiEmotions
           className="openEmojiPicker"
           onClick={() => setShowEmojiPicker((prev) => !prev)}
+          title="Emoji Picker"
         />
         <FaTags className="tagsButton" onClick={handleOpenTags} />
 
