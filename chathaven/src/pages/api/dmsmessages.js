@@ -24,6 +24,29 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: "Forbidden: Invalid token" });
   }
 
+  // Handle GET request to fetch vanish mode only
+  if (req.method === "GET" && req.query.fetchVanishMode === "true") {
+    const userId = req.query.userId;
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    try {
+      const dm = await DM.findOne({
+        participants: { $all: [loggedInUserId, userId] },
+      }).select("vanishMode");
+
+      if (!dm) {
+        return res.status(404).json({ error: "DM not found" });
+      }
+
+      return res.status(200).json({ vanishMode: dm.vanishMode || false });
+    } catch (error) {
+      console.error("Error fetching vanish mode:", error);
+      return res.status(500).json({ error: "Failed to retrieve vanish mode." });
+    }
+  }
+
   // Handle GET Requests (Fetching Messages)
   if (req.method === "GET") {
     try {
@@ -39,7 +62,7 @@ export default async function handler(req, res) {
       // Find the DM that includes both users
       const dm = await DM.findOne({
         participants: { $all: [loggedInUserId, userId] },
-      });
+      }).select("messages");
 
       if (!dm) {
         return res
@@ -56,11 +79,7 @@ export default async function handler(req, res) {
   // Handle POST Requests (Sending Messages)
   if (req.method === "POST") {
     try {
-      const userId = req.body.userId;
-      const text = req.body.text || "";
-      const reply = req.body.reply;
-      const imageData = req.body.imageData;
-      const tag = req.body.tag;
+      const { userId, text, reply, imageData, tag, vanish } = req.body;
       console.log("Sending message to:", userId);
 
       if (!userId) {
@@ -93,6 +112,7 @@ export default async function handler(req, res) {
         timestamp: new Date(),
         reply: reply,
         tag: tag,
+        vanish: dm.vanishMode || false,
       };
 
       if (imageData) {
@@ -113,9 +133,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "DELETE") {
-    const { userId, messageId } = req.body;
-    if (!userId || !messageId) {
-      return res.status(400).json({ error: "Missing userId or messageId" });
+    const { userId, messageId, vanishMessageIds } = req.body;
+    if (!userId || (!messageId && !vanishMessageIds)) {
+      return res.status(400).json({ error: "Missing userId or messageId or vanishMessageIds" });
     }
 
     const dm = await DM.findOne({
@@ -125,24 +145,70 @@ export default async function handler(req, res) {
 
     const initialLength = dm.messages.length;
 
+    // Soft delete replies
     dm.messages.forEach((msg) => {
       if (
         msg.reply &&
-        msg.reply._id.toString() === messageId &&
+        ((messageId && msg.reply?._id?.toString() === messageId) ||
+         (vanishMessageIds && msg.reply?._id && vanishMessageIds.includes(msg.reply._id.toString()))) &&
         msg.reply.text !== ""
       ) {
         msg.reply.text = "message deleted";
       }
     });
 
-    dm.messages = dm.messages.filter((msg) => msg._id.toString() !== messageId);
+    // Single delete
+    if (messageId) {
+      dm.messages = dm.messages.filter((msg) => msg._id.toString() !== messageId);
+    }
+
+    // Batch delete for vanish messages
+    if (Array.isArray(vanishMessageIds)) {
+      dm.messages = dm.messages.filter(
+        (msg) => !(vanishMessageIds.includes(msg._id.toString()) && msg.vanish === true)
+      );
+    }
 
     if (dm.messages.length === initialLength) {
-      return res.status(404).json({ error: "Message not found in dm" });
+      return res.status(404).json({ error: "Message(s) not found in dm" });
     }
 
     await dm.save();
     return res.status(200).json({ success: true });
+  }
+
+  if (req.method === "PATCH") {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    try {
+      const dm = await DM.findOne({
+        participants: { $all: [loggedInUserId, userId] },
+      });
+
+      if (!dm) {
+        return res.status(404).json({ error: "DM not found" });
+      }
+
+      dm.vanishMode = !dm.vanishMode;
+      await dm.save();
+
+      const updatedDM = await DM.findById(dm._id);
+  
+      console.log("Vanish mode now set to:", updatedDM.vanishMode);
+      console.log("Updated DM:", updatedDM);
+
+      return res.status(200).json({
+        message: `Vanish mode ${updatedDM.vanishMode ? "enabled" : "disabled"}`,
+        vanishMode: updatedDM.vanishMode,
+      });
+    } catch (err) {
+      console.error("Error toggling vanish mode:", err);
+      return res.status(500).json({ error: "Failed to toggle vanish mode" });
+    }
   }
 
   res.setHeader("Allow", ["GET", "POST", "DELETE"]);

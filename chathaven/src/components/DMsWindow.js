@@ -4,9 +4,12 @@ import { RxCross2 } from "react-icons/rx";
 import "./styles/DMs.css";
 import EmojiPicker from "emoji-picker-react";
 import { MdEmojiEmotions, MdCamera } from "react-icons/md";
-import { FaArrowUp, FaCamera, FaTags } from "react-icons/fa6";
+import { FaArrowUp, FaCamera, FaTags, FaBarcode } from "react-icons/fa6";
 import Webcam from "react-webcam";
+import MessageBubble from "./MessageBubble";
+
 export default function DMsWindow({ selectedUser, sidebarOpen }) {
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null);
@@ -20,6 +23,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const camRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [isTagsOpen, setIsTagsOpen] = useState(false);
+  const [isVanishOpen, setIsVanishOpen] = useState(false);
   const [tags, setTags] = useState([
     "Work",
     "Personal",
@@ -31,6 +35,48 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [isNewTagOpen, setIsNewTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
   const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false);
+  const [seenVanishMessages, setSeenVanishMessages] = useState(new Set());
+
+  useEffect(() => {
+    const fetchVanishMode = async () => {
+      if (!selectedUser?._id) return;
+      try {
+        const res = await fetch(`/api/dmsmessages?userId=${selectedUser._id}&fetchVanishMode=true`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setIsVanishOpen(data.vanishMode);
+        }
+      } catch (error) {
+        console.error("Failed to fetch vanish mode:", error);
+      }
+    };
+  
+    fetchVanishMode();
+  }, [selectedUser]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("/api/user", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch user data");
+
+        const data = await response.json();
+        console.log("Logged-in User:", data);
+        setLoggedInUserId(data._id);
+
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleCreateNewTag = () => {
     setIsNewTagOpen(true);
@@ -41,17 +87,16 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       setSelectedTag(null);
     } else {
       setSelectedTag(tag);
-    } // Add tag to selectedTags state
+    }
     setIsSelectedTagOpen(true);
   };
 
-  // Handle new tag submission
   const handleSubmitNewTag = () => {
     if (newTagInput.trim()) {
       setTags((prevTags) => [
         ...prevTags.filter((tag) => tag !== "New"),
         newTagInput,
-      ]); // Remove "New" if it exists and add the new tag
+      ]);
       setSelectedTag(newTagInput);
       setNewTagInput("");
       setIsNewTagOpen(false);
@@ -88,6 +133,7 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
 
     fetchUsers();
   }, []);
+
   useEffect(() => {
     const fetchMessages = async () => {
       if (!selectedUser || !selectedUser._id) {
@@ -127,33 +173,38 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
   }, [messages.length]);
 
   const handleSendMessage = async () => {
-    if (!imgSrc && !message.trim()) return; // Don't send empty messages
+    if (!imgSrc && !message.trim()) return;
 
     if (!selectedUser || !selectedUser._id) {
       console.error(" Error: selectedUser is null or missing _id.");
       return;
     }
 
-    const userId = selectedUser._id; // Extract the recipient's user ID
+    const userId = selectedUser._id;
     console.log("Sending message to:", userId);
 
     try {
+      const vanishModeRes = await fetch(`/api/dmsmessages?userId=${userId}&fetchVanishMode=true`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const vanishModeData = await vanishModeRes.json();
       const messageToSend = {
         userId,
         text: message,
         reply: reply,
         tag: selectedTag,
+        vanish: vanishModeData.vanishMode,
       };
 
       if (imgSrc) {
         messageToSend.imageData = imgSrc;
       }
       const response = await fetch("/api/dmsmessages", {
-        //  No need to pass userId in URL
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(messageToSend), //  Send `userId` in the body
+        body: JSON.stringify(messageToSend),
       });
 
       const result = await response.json();
@@ -165,9 +216,10 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
       }
 
       console.log("Message sent successfully:", result.newMessage);
+      console.log("New message vanish status:", result.newMessage?.vanish);
 
-      setMessages((prevMessages) => [...prevMessages, result.newMessage]); //  Append new message
-      setMessage(""); //  Clear input after sending
+      setMessages((prevMessages) => [...prevMessages, result.newMessage]);
+      setMessage("");
       setReply(null);
       setImgSrc(null);
       setIsCameraOpen(false);
@@ -178,7 +230,8 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     }
   };
 
-  const handleDelete = async (messageId) => {
+  const handleDelete = async (messageIds) => {
+    console.log("Sending DELETE request for messages:", messageIds);
     try {
       const res = await fetch("/api/dmsmessages", {
         method: "DELETE",
@@ -186,17 +239,39 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ userId: selectedUser._id, messageId }),
+        body: JSON.stringify({
+          userId: selectedUser._id,
+          messageId: Array.isArray(messageIds) ? undefined : messageIds,
+          vanishMessageIds: Array.isArray(messageIds) ? messageIds : undefined,
+        }),
       });
+      const resText = await res.text();
+      console.log("DELETE response:", resText);
       if (res.ok) {
-        setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+        const toDelete = Array.isArray(messageIds) ? messageIds : [messageIds];
+        setMessages((prev) =>
+          prev.filter((msg) =>
+            !toDelete.includes(msg._id) || !msg.vanish
+          )
+        );
       } else {
-        console.error("Error deleting message");
+        console.error("Error deleting message(s)");
       }
     } catch (err) {
-      console.error("Error deleting message:", err);
+      console.error("Error deleting message(s):", err);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      console.log("Cleaning up vanish messages on DM switch:", Array.from(seenVanishMessages));
+      if (seenVanishMessages.size === 0) return;
+      const seenIds = Array.from(seenVanishMessages);
+      console.log("Deleting seen vanish messages:", seenIds);
+      handleDelete(seenIds);
+      setSeenVanishMessages(new Set());
+    };
+  }, [selectedUser]);
 
   const handleEmojiSelect = (emojiObject) => {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji);
@@ -210,19 +285,17 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     setMessages((prevMessages) => {
       const newMessages = [...prevMessages];
 
-      // Initialize reactions if not present
       if (!newMessages[index].reactions) {
         newMessages[index].reactions = {};
       }
 
-      // Increment reaction count or add new reaction
       newMessages[index].reactions[emoji] =
         (newMessages[index].reactions[emoji] || 0) + 1;
 
       return newMessages;
     });
 
-    setShowReactionPicker(null); // Close picker after selecting an emoji
+    setShowReactionPicker(null);
   };
 
   const capture = useCallback(() => {
@@ -239,6 +312,37 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
     setIsTagsOpen((prev) => !prev);
   };
 
+  const handleEnableVanish = async () => {
+    if (!selectedUser?._id) return;
+
+    try {
+      const response = await fetch("/api/dmsmessages", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: selectedUser._id }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to toggle vanish mode");
+      }
+
+      // Re-fetch vanish mode from the server
+      const refreshRes = await fetch(`/api/dmsmessages?userId=${selectedUser._id}&fetchVanishMode=true`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const refreshData = await refreshRes.json();
+      console.log("Fetched updated vanishMode:", refreshData.vanishMode);
+      setIsVanishOpen(refreshData.vanishMode);
+    } catch (error) {
+      console.error("Error toggling vanish mode:", error);
+      alert("Error toggling vanish mode.");
+    }
+  };
+
   return (
     <div id="DmMessageWindow" className={sidebarOpen ? "shifted" : "fullWidth"}>
       <div
@@ -246,183 +350,26 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
         className={sidebarOpen ? "shifted" : "fullWidth"}
         ref={listRef}
       >
-        {messages.map((msg, index) => {
-          const senderName = users[msg.sender] || "Unknown User";
-          const isHovered = hoveredMessageIndex === index;
-          const replyMessage = msg.reply;
-          const youtubeLinkRegex =
-          /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
-          const youtubeLinks = [...msg.text.matchAll(youtubeLinkRegex)];
-
-          return (
-            <div
-              className="message"
-              key={index}
-              onMouseEnter={() => setHoveredMessageIndex(index)}
-              onMouseLeave={() => setHoveredMessageIndex(null)}
-            >
-              {replyMessage && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent:
-                      msg.sender !== selectedUser._id
-                        ? "flex-end"
-                        : "flex-start",
-                  }}
-                >
-                  {msg.sender === selectedUser._id && (
-                    <div className="replyMessageIndicatorReceived"></div>
-                  )}
-                  <div
-                    className={`replyMessage ${
-                      msg.sender !== selectedUser._id ? "sent" : "received"
-                    }`}
-                    style={{
-                      justifyContent:
-                        msg.sender !== selectedUser._id
-                          ? "flex-end"
-                          : "flex-start",
-                    }}
-                  >
-                    <p>
-                      {users[replyMessage.sender]}: <br />
-                      {replyMessage.text}
-                    </p>
-                  </div>
-
-                  {msg.sender !== selectedUser._id && (
-                    <div className="replyMessageIndicatorSent"></div>
-                  )}
-                </div>
-              )}
-              <div
-                className="messageContent"
-                style={{
-                  justifyContent:
-                    msg.sender !== selectedUser._id ? "flex-end" : "flex-start",
-                }}
-              >
-                {isHovered && msg.sender !== selectedUser._id && (
-                  <div className="actionBox">
-                    <FaReply
-                      className="replyButton"
-                      onClick={() => {
-                        setReply(msg);
-                        inputRef.current?.focus();
-                      }}
-                      title="Reply"
-                    />
-                    <button
-                      className="reactButton"
-                      onClick={() => toggleReactionPicker(index)}
-                      title="Add reaction"
-                    >
-                      😀
-                    </button>
-                    <FaTrash
-                      className="deleteButton"
-                      onClick={() => handleDelete(msg._id)}
-                      title="Delete message"
-                    />
-                  </div>
-                )}
-
-                <div
-                  key={index}
-                  className={
-                    msg.sender !== selectedUser._id
-                      ? "sentMessage"
-                      : "receivedMessage"
-                  }
-                  style={{ marginTop: replyMessage ? "0px" : "10px" }}
-                >
-                  <span>
-                    {msg.sender === selectedUser._id && (
-                      <strong>
-                        {senderName}: <br />
-                      </strong>
-                    )}
-                    <div className="messageTagSpace">
-                      {msg.tag && (
-                        <div
-                          className={
-                            msg.sender !== selectedUser._id
-                              ? "sentTag"
-                              : "receivedTag"
-                          }
-                        >
-                          <span>{msg.tag}</span>
-                        </div>
-                      )}
-                    </div>
-                    {msg.text}
-                  </span>
-                  {msg.imageData && (
-                    <img
-                      src={msg.imageData}
-                      alt="Sent image"
-                      className="sentImage"
-                    />
-                  )}
-
-                        {youtubeLinks.length > 0 &&
-                          youtubeLinks.map((linkMatch, index) => {
-                            const videoId = linkMatch[1];
-                            const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                            return (
-                              <iframe
-                                className="youtubeVideo"
-                                key={index}
-                                src={embedUrl}
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                              ></iframe>
-                            );
-                          })}
-                </div>
-                {isHovered && msg.sender === selectedUser._id && (
-                  <div className="actionBox">
-                    <FaReply
-                      className="replyButton"
-                      onClick={() => {
-                        setReply(msg);
-                        inputRef.current?.focus();
-                      }}
-                      title="Reply"
-                    />
-                    <button
-                      className="reactButton"
-                      onClick={() => toggleReactionPicker(index)}
-                      title="Add reaction"
-                    >
-                      😀
-                    </button>
-                  </div>
-                )}
-                {showReactionPicker === index && (
-                  <div className="reactionPicker">
-                    <EmojiPicker
-                      onEmojiClick={(emoji) => addReaction(index, emoji.emoji)}
-                    />
-                  </div>
-                )}
-
-                <div className={`reactions ${isHovered ? "visible" : ""}`}>
-                  {msg.reactions &&
-                    Object.keys(msg.reactions).length > 0 &&
-                    Object.entries(msg.reactions).map(([emoji, count]) => (
-                      <span key={emoji} className="reaction">
-                        {emoji} {count}
-                      </span>
-                    ))}
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {messages.map((msg, index) => (
+          <MessageBubble
+            key={index}
+            msg={msg}
+            index={index}
+            users={users}
+            selectedUser={selectedUser}
+            currentUserId={loggedInUserId}
+            setHoveredMessageIndex={setHoveredMessageIndex}
+            hoveredMessageIndex={hoveredMessageIndex}
+            setReply={setReply}
+            inputRef={inputRef}
+            toggleReactionPicker={toggleReactionPicker}
+            showReactionPicker={showReactionPicker}
+            addReaction={addReaction}
+            handleDelete={handleDelete}
+            seenVanishMessages={seenVanishMessages}
+            setSeenVanishMessages={setSeenVanishMessages}
+          />
+        ))}
       </div>
 
       <div id="DmMessageBar" className={sidebarOpen ? "shifted" : "fullWidth"}>
@@ -445,7 +392,10 @@ export default function DMsWindow({ selectedUser, sidebarOpen }) {
           onClick={() => setShowEmojiPicker((prev) => !prev)}
         />
         <FaTags className="tagsButton" onClick={handleOpenTags} />
-
+        <FaBarcode
+          className={`vanishButton ${isVanishOpen ? "active" : ""}`}
+          onClick={handleEnableVanish}
+        />
         {/* Emoji Picker Popup */}
         {showEmojiPicker && (
           <div style={{ position: "absolute", bottom: "50px", zIndex: 100 }}>
