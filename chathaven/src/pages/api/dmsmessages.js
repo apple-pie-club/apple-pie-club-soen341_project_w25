@@ -149,8 +149,8 @@ export default async function handler(req, res) {
     dm.messages.forEach((msg) => {
       if (
         msg.reply &&
-        ((messageId && msg.reply._id.toString() === messageId) ||
-         (vanishMessageIds && vanishMessageIds.includes(msg.reply._id.toString()))) &&
+        ((messageId && msg.reply?._id?.toString() === messageId) ||
+         (vanishMessageIds && msg.reply?._id && vanishMessageIds.includes(msg.reply._id.toString()))) &&
         msg.reply.text !== ""
       ) {
         msg.reply.text = "message deleted";
