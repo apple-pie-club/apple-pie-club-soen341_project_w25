@@ -48,7 +48,7 @@ describe('DMsWindow', () => {
             await user.keyboard('{Enter}');
         });
 
-        expect(global.fetch).toHaveBeenCalledTimes(2);
+        expect(global.fetch).toHaveBeenCalledTimes(4);
     });
 
     test("renders the DMsWindow buttons", async () => {
