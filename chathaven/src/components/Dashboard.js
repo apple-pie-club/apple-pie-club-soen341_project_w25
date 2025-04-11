@@ -406,13 +406,8 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-
-      <div
-        id="sidebar"
-        className={sidebarOpen ? "open" : "closed"}
-        key={user?._id}
-      >
-        <ul id="teamList">
+      <div id='sidebar' className={sidebarOpen ? 'open' : 'closed'} key={user?._id}>
+        <ul id='teamList'>
           <li id="teamHeader">
             TEAMS <br />
             {loadingUser ? (
@@ -421,31 +416,7 @@ export default function DashboardPage() {
               <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
                 <FaPlus /> Create Team
               </div>
-            ) : (
-              <></>
-            )}
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div id='sidebar' className={sidebarOpen ? 'open' : 'closed'} key={user?._id}>
-        <ul id='teamList'>
-          <li id='teamHeader'>
-            TEAMS <br />
-            {loadingUser
-              ? (
-                <p>Loading...</p>
-                )
-              : user?.isGlobalAdmin
-                ? (
-                  <div id='createTeam' onClick={() => setIsMenuOpen(true)}>
-                    <FaPlus /> Create Team
-                  </div>
-                  )
-                : (
-                  <></>
-                  )}
+            ) : null}
           </li>
 
           {teams.length > 0 ? (
