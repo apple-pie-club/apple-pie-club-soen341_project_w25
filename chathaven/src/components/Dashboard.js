@@ -5,7 +5,6 @@ import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
 } from "react-icons/md"
-import { FaUserCircle, FaUserPlus, FaModx } from "react-icons/fa"
 import "./styles/Dashboard.css"
 import LogoutButton from "./LogoutButton"
 import DirectMessagesButton from "./DirectMessagesButton"
@@ -14,7 +13,6 @@ import CreateChannelMenu from "./CreateChannelMenu"
 import CMsWindow from "./CMsWindow"
 import AddUserToChannelMenu from "./AddUserToChannelMenu"
 import { VscRequestChanges } from "react-icons/vsc"
-import { FaCheckSquare } from "react-icons/fa"
 import { FaSquareXmark } from "react-icons/fa6"
 import EditProfileMenu from "./EditProfileMenu"
 import SocketClient from "./SocketClient"
