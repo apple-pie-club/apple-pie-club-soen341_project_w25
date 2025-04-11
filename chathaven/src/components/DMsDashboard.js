@@ -11,6 +11,7 @@ import ChannelButton from "./ChannelButton";
 import CreateDMMenu from "./CreateDMMenu";
 import DMsWindow from "./DMsWindow";
 import EditProfileMenu from "./EditProfileMenu";
+import { useRouter } from "next/router";
 
 export default function DMsPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,9 +21,36 @@ export default function DMsPage() {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
+  const [userId, setUserId] = useState(null);
+  const router = useRouter();
 
   const handleToggleSidebar = () => {
     setSidebarOpen((prevState) => !prevState);
+  };
+
+  // Fetch user details (including role)
+  useEffect(() => {
+    fetch("/api/user", { method: "GET", credentials: "include" })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("User Data for Admin:", data); // Debugging log
+        if (data && typeof data.isGlobalAdmin !== "undefined") {
+          //Use isGlobalAdmin
+          setUser(data);
+          setUserId(data._id);
+        } else {
+          console.warn("isGlobalAdmin field not found in user data!");
+        }
+      })
+      .catch((error) => console.error("Error fetching user data:", error))
+      .finally(() => setLoadingUser(false));
+  }, []);
+
+  const handleLogout = async () => {
+    // Call logout API
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    // Redirect to login page after logout
+    router.push("/login");
   };
 
   useEffect(() => {
@@ -71,7 +99,7 @@ export default function DMsPage() {
           <FaUserCircle />
         </div>
         <ChannelButton />
-        <LogoutButton />
+        <LogoutButton handleLogout={handleLogout} />
       </div>
       <div id="sidebar" className={sidebarOpen ? "open" : "closed"}>
         <ul id="DMsList">
