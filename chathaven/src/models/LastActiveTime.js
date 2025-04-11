@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const LastActiveTimeSchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true }, // userId to identify the user
-  lastActiveTime: { type: Date, required: true }, // the last active timestamp
-});
+  lastActiveTime: { type: Date, required: true } // the last active timestamp
+})
 
 export default mongoose.models.LastActiveTime ||
-  mongoose.model("LastActiveTime", LastActiveTimeSchema);
+  mongoose.model('LastActiveTime', LastActiveTimeSchema)

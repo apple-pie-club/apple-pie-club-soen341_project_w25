@@ -1,49 +1,49 @@
-import '@testing-library/jest-dom';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import CreateTeamMenu from '../../src/components/CreateTeamMenu';
+import '@testing-library/jest-dom'
+import { render, screen, fireEvent, act } from '@testing-library/react'
+import CreateTeamMenu from '../../src/components/CreateTeamMenu'
 
 global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () =>
-        Promise.resolve([
-          { _id: "1", email: "email@test.com", firstname: "firstname", lastname: "lastname", isGlobalAdmin: false },
-        ]),
-    })
-  );
+  Promise.resolve({
+    json: () =>
+      Promise.resolve([
+        { _id: '1', email: 'email@test.com', firstname: 'firstname', lastname: 'lastname', isGlobalAdmin: false }
+      ])
+  })
+)
 
 describe('CreateTeamMenu', () => {
-    test("renders the CreateTeamMenu buttons", async () => {
-        await act(async () => {
-            render(<CreateTeamMenu isOpen={true} />);
-        });
+  test('clicking submit causes an alert', async () => {
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => { })
+    await act(async () => {
+      render(<CreateTeamMenu isOpen />)
+    })
 
-        expect(screen.getByRole("button", { name: /Create Team/i })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Cancel/i })).toBeInTheDocument();
-    });
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: /Create Team/i }))
+    })
 
-    test("renders nothing when the menu is closed", async () => {
-        await act(async () => {
-            render(<CreateTeamMenu isOpen={false} />);
-        });
+    expect(alertSpy).toHaveBeenCalledTimes(1)
+    alertSpy.mockRestore()
+  })
 
-        expect(document.body).toMatchInlineSnapshot(`
+  test('renders the CreateTeamMenu buttons', async () => {
+    await act(async () => {
+      render(<CreateTeamMenu isOpen />)
+    })
+
+    expect(screen.getByRole('button', { name: /Create Team/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Cancel/i })).toBeInTheDocument()
+  })
+
+  test('renders nothing when the menu is closed', async () => {
+    await act(async () => {
+      render(<CreateTeamMenu isOpen={false} />)
+    })
+
+    expect(document.body).toMatchInlineSnapshot(`
             <body>
               <div />
             </body>
-          `);
-    });
-
-    test("clicking submit causes an alert", async () => {
-        let alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-        await act(async () => {
-            render(<CreateTeamMenu isOpen={true} />);
-        });
-
-        act(() => {
-            fireEvent.click(screen.getByRole("button", { name: /Create Team/i }));
-        });
-
-        expect(alertSpy).toHaveBeenCalledTimes(1);
-        alertSpy.mockRestore();
-    });
-});
+          `)
+  })
+})

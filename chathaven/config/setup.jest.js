@@ -1,35 +1,37 @@
-jest.spyOn(console, "error").mockImplementation((...args) => {
-    const messagesToIgnore = [
-        "selectedUser is null or missing _id",
-        "Error sending message:"
-    ];
+jest.spyOn(console, 'error').mockImplementation((...args) => {
+  const messagesToIgnore = [
+    'selectedUser is null or missing _id',
+    'Error sending message:',
+    'API response is not an array:'
+  ]
 
-    const shouldSuppress = args.some(arg =>
-        typeof arg === 'string' && messagesToIgnore.some(msg => arg.includes(msg))
-    );
+  const shouldSuppress = args.some(arg =>
+    typeof arg === 'string' && messagesToIgnore.some(msg => arg.includes(msg))
+  )
 
-    if (!shouldSuppress) {
-        console.warn(...args);
-    }
-});
+  if (!shouldSuppress) {
+    console.warn(...args)
+  }
+})
 
-jest.spyOn(console, "warn").mockImplementation((...args) => {
-    const messagesToIgnore = [
-        "Error fetching users:",
-        "Error fetching user data",
-        "Error: selectedChannel is null or missing _id.",
-        "Error fetching messages:"   
-    ];
+jest.spyOn(console, 'warn').mockImplementation((...args) => {
+  const messagesToIgnore = [
+    'Error fetching users:',
+    'Error fetching user data',
+    'Error: selectedChannel is null or missing _id.',
+    'Error fetching messages:',
+    'isGlobalAdmin field not found in user data!'
+  ]
 
-    const shouldSuppress = args.some(arg =>
-        typeof arg === 'string' && messagesToIgnore.some(msg => arg.includes(msg))
-    );
+  const shouldSuppress = args.some(arg =>
+    typeof arg === 'string' && messagesToIgnore.some(msg => arg.includes(msg))
+  )
 
-    if (!shouldSuppress) {
-        const originalWarn = jest.requireActual('console').warn;
-        originalWarn(...args);
-    }
-});
+  if (!shouldSuppress) {
+    const originalWarn = jest.requireActual('console').warn
+    originalWarn(...args)
+  }
+})
 
-jest.spyOn(console, "log").mockImplementation((...args) => {
-});
+jest.spyOn(console, 'log').mockImplementation((...args) => {
+})

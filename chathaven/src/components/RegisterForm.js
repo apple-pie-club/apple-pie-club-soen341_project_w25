@@ -1,88 +1,87 @@
-import { useState } from "react";
-import "./styles/RegisterForm.css"
-import Link from 'next/link';
+import { useState } from 'react'
+import './styles/RegisterForm.css'
+import Link from 'next/link'
 
-export default function RegisterForm({ onRegister }) {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [contactByFax, setContactByFax] = useState(false);
-  const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false);
-  const [error, setError] = useState("");
-  const [showError, setShowError] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-
+export default function RegisterForm ({ onRegister }) {
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [contactByFax, setContactByFax] = useState(false)
+  const [requestGlobalAdmin, setRequestGlobalAdmin] = useState(false)
+  const [error, setError] = useState('')
+  const [showError, setShowError] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const showErrorMessage = (message) => {
-    setError(message);
-    setShowError(true);
-    
+    setError(message)
+    setShowError(true)
+
     setTimeout(() => {
-      setShowError(false);
-    }, 3000);
-  };
+      setShowError(false)
+    }, 3000)
+  }
 
-  const showSuccessMessage = ()=>{
-    setShowSuccess(true);
+  const showSuccessMessage = () => {
+    setShowSuccess(true)
 
-    setTimeout(() =>{
-      setShowSuccess(false);
-    }, 3000);
-  };
+    setTimeout(() => {
+      setShowSuccess(false)
+    }, 3000)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError('')
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ firstname, lastname, email, password, requestGlobalAdmin }),
-      });
-      
-      const data = await res.json();
+        body: JSON.stringify({ firstname, lastname, email, password, requestGlobalAdmin })
+      })
+
+      const data = await res.json()
 
       if (res.ok) {
-        showSuccessMessage();
-        setTimeout(() => onRegister(), 2000); // Call a function to redirect to login after 2000ms
+        showSuccessMessage()
+        setTimeout(() => onRegister(), 2000) // Call a function to redirect to login after 2000ms
       } else {
-        showErrorMessage(data.message);
+        showErrorMessage(data.message)
       }
     } catch (error) {
-      console.log(error);
-      showErrorMessage("Something went wrong.");
+      console.log(error)
+      showErrorMessage('Something went wrong.')
     }
-  };
+  }
 
   return (
     <div>
-      <form id="registerForm" onSubmit={handleSubmit}>
-        <p id="loginText">SIGN UP</p>
+      <form id='registerForm' onSubmit={handleSubmit}>
+        <p id='loginText'>SIGN UP</p>
         <input
-          className="textInput"
-          type="text"
-          placeholder="First Name"
-          name="name"
+          className='textInput'
+          type='text'
+          placeholder='First Name'
+          name='name'
           value={firstname}
           onChange={(e) => setFirstname(e.target.value)}
           required
         />
         <input
-          className="textInput"
-          type="text"
-          placeholder="Last Name"
+          className='textInput'
+          type='text'
+          placeholder='Last Name'
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
           required
         />
         <input
-          className="textInput"
-          type="email"
-          placeholder="Email"
+          className='textInput'
+          type='email'
+          placeholder='Email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -90,45 +89,44 @@ export default function RegisterForm({ onRegister }) {
 
         {/* Honeypot - this field is invisible to humans and catches spambots */}
         <input
-          type="checkbox"
-          name="ensure_that_im_contacted_by_fax"
+          type='checkbox'
+          name='ensure_that_im_contacted_by_fax'
           checked={contactByFax}
-          tabIndex="-1"
+          tabIndex='-1'
           onChange={(e) => setContactByFax(e.target.checked)}
-          style={{ display: "none" }}
-          autoComplete="off"
+          style={{ display: 'none' }}
+          autoComplete='off'
         />
         <input
-          className="textInput"
-          type="password"
-          placeholder="Password"
+          className='textInput'
+          type='password'
+          placeholder='Password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <label className="checkboxLabel">
+        <label className='checkboxLabel'>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={requestGlobalAdmin}
             onChange={(e) => setRequestGlobalAdmin(e.target.checked)}
           />
-          <span className="checkmark"></span>
-          <p className="text">Request Global Admin Status</p>
+          <span className='checkmark' />
+          <p className='text'>Request Global Admin Status</p>
         </label>
-        <button id="registerButton" type="submit">Register</button>
-        <p className="text">Already have an account? <Link href="/login">Login here</Link></p>
+        <button id='registerButton' type='submit'>Register</button>
+        <p className='text'>Already have an account? <Link href='/login'>Login here</Link></p>
       </form>
-      {showError && 
-        <div className={`alert ${showError ? "show" : ""}`}>
-          <p className="error">{error}</p>
+      {showError &&
+        <div className={`alert ${showError ? 'show' : ''}`}>
+          <p className='error'>{error}</p>
         </div>}
 
       {showSuccess &&
-        <div className={`success ${showSuccess ? "show" : ""}`}>
-          <p className="successMessage">User successfully registered</p>
-        </div>
-      }
+        <div className={`success ${showSuccess ? 'show' : ''}`}>
+          <p className='successMessage'>User successfully registered</p>
+        </div>}
 
     </div>
-  );
+  )
 }
