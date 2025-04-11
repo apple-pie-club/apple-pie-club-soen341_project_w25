@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { FaUserSlash, FaReply, FaTrash, FaTags } from 'react-icons/fa'
-import { RxCross2 } from 'react-icons/rx'
-import { HiQuestionMarkCircle } from 'react-icons/hi2'
-import './styles/Dashboard.css'
-import RequestToJoinChannelMenu from './RequestToJoinChannelMenu'
-import EmojiPicker from 'emoji-picker-react'
-import Webcam from 'react-webcam'
-import { FaArrowUp, FaCamera } from 'react-icons/fa6'
-import { MdExitToApp, MdEmojiEmotions, MdCamera } from 'react-icons/md'
 
-export default function CMsWindow ({
+import { useState, useEffect, useRef, useCallback } from "react"
+import { FaUserSlash, FaReply, FaTrash, FaTags } from "react-icons/fa"
+import { RxCross2 } from "react-icons/rx"
+import { HiQuestionMarkCircle } from "react-icons/hi2"
+import "./styles/Dashboard.css"
+import RequestToJoinChannelMenu from "./RequestToJoinChannelMenu"
+import EmojiPicker from "emoji-picker-react"
+import Webcam from "react-webcam"
+import { FaArrowUp, FaCamera } from "react-icons/fa6"
+import { MdExitToApp, MdEmojiEmotions, MdCamera } from "react-icons/md"
+import AlertPopup from "./AlertPopup"
+
+export default function CMsWindow({
   selectedTeam,
   selectedChannel,
   messageAreaClass,
@@ -37,16 +39,18 @@ export default function CMsWindow ({
   const [imgSrc, setImgSrc] = useState(null)
   const [isTagsOpen, setIsTagsOpen] = useState(false)
   const [tags, setTags] = useState([
-    'Work',
-    'Personal',
-    'Important',
-    'Casual',
-    'Urgent'
-  ])
-  const [newTagInput, setNewTagInput] = useState('')
+    "Work",
+    "Personal",
+    "Important",
+    "Casual",
+    "Urgent",
+  ]);
+  const [newTagInput, setNewTagInput] = useState("")
   const [isNewTagOpen, setIsNewTagOpen] = useState(false)
   const [selectedTag, setSelectedTag] = useState(null)
-  const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState("")
+
 
   const handleCreateNewTag = () => {
     setIsNewTagOpen(true)
@@ -56,10 +60,18 @@ export default function CMsWindow ({
     if (selectedTag === tag) {
       setSelectedTag(null)
     } else {
-      setSelectedTag(tag)
+      setSelectedTag(tag);
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag '${tag}' selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     } // Add tag to selectedTags state
-    setIsSelectedTagOpen(true)
-  }
+    setIsTagsOpen(false);
+  };
+
 
   const handleOpenTags = () => {
     setIsTagsOpen((prev) => !prev)
@@ -69,12 +81,19 @@ export default function CMsWindow ({
   const handleSubmitNewTag = () => {
     if (newTagInput.trim()) {
       setTags((prevTags) => [
-        ...prevTags.filter((tag) => tag !== 'New'),
-        newTagInput
-      ]) // Remove "New" if it exists and add the new tag
-      setSelectedTag(newTagInput)
-      setNewTagInput('')
-      setIsNewTagOpen(false)
+        ...prevTags.filter((tag) => tag !== "New"),
+        newTagInput,
+      ]); // Remove "New" if it exists and add the new tag
+      setSelectedTag(newTagInput);
+      setNewTagInput('');
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag '${newTagInput}' selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+      setIsTagsOpen(false);
     } else {
       alert('Please enter a valid tag name.')
     }
@@ -720,6 +739,7 @@ export default function CMsWindow ({
             <RxCross2 className='closeReply' onClick={() => setReply(null)} />
           </div>
         )}
+        
         <FaCamera className='openCameraButton' onClick={handleOpenCamera} title='Open Camera' />
 
         <MdEmojiEmotions
@@ -787,6 +807,8 @@ export default function CMsWindow ({
           </div>
         </div>
       )}
+      {showPopup && <AlertPopup message={popupMessage} />}
+
       {isTagsOpen && (
         <div className={`tagsMenu ${isTagsOpen ? 'open' : ''}`}>
           {/* List of tags */}

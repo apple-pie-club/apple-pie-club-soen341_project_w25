@@ -11,9 +11,11 @@ export const useSocket = () => {
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null)
   const [userId, setUserId] = useState(null)
-  const [status, setStatus] = useState('disconnected')
+  const [status, setStatus] = useState("disconnected")
   const [usersStatus, setUsersStatus] = useState({})
   const [userNames, setUserNames] = useState({})
+  const [currentStatus, setCurrentStatus] = useState("available")
+
 
   useEffect(() => {
     const fetchAllUsers = async () => {
@@ -127,15 +129,24 @@ export const SocketProvider = ({ children }) => {
   const updateStatus = (newStatus) => {
     if (userId) {
       if (socket && socket.connected) {
-        socket.emit('message', userId, newStatus) // Send status to server
-        console.log(`Status updated to: ${newStatus}`)
+        socket.emit("message", userId, newStatus); // Send status to server
+        console.log(`Status updated to: ${newStatus}`);
+        setCurrentStatus(newStatus);
       }
     }
   }
 
   return (
     <SocketContext.Provider
-      value={{ socket, userId, status, usersStatus, userNames, updateStatus }}
+      value={{
+        socket,
+        userId,
+        status,
+        usersStatus,
+        userNames,
+        updateStatus,
+        currentStatus,
+      }}
     >
       {children}
     </SocketContext.Provider>

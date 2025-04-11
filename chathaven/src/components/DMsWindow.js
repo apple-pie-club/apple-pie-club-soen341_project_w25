@@ -1,17 +1,18 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { FaReply, FaTrash } from 'react-icons/fa'
-import { RxCross2 } from 'react-icons/rx'
-import './styles/DMs.css'
-import EmojiPicker from 'emoji-picker-react'
-import { MdEmojiEmotions, MdCamera } from 'react-icons/md'
-import { FaArrowUp, FaCamera, FaTags, FaBarcode } from 'react-icons/fa6'
-import Webcam from 'react-webcam'
-import MessageBubble from './MessageBubble'
-
-export default function DMsWindow ({ selectedUser, sidebarOpen }) {
+import { useState, useEffect, useRef, useCallback } from "react"
+import { FaReply, FaTrash } from "react-icons/fa"
+import { RxCross2 } from "react-icons/rx"
+import "./styles/DMs.css"
+import EmojiPicker from "emoji-picker-react"
+import { MdEmojiEmotions, MdCamera } from "react-icons/md"
+import { FaArrowUp, FaCamera, FaTags, FaBarcode } from "react-icons/fa6"
+import Webcam from "react-webcam"
+import MessageBubble from "./MessageBubble"
+import AlertPopup from "./AlertPopup"
+  
+export default function DMsWindow({ selectedUser, sidebarOpen }) {
   const [loggedInUserId, setLoggedInUserId] = useState(null)
   const [messages, setMessages] = useState([])
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState("")
   const [hoveredMessageIndex, setHoveredMessageIndex] = useState(null)
   const [reply, setReply] = useState(null)
   const [users, setUsers] = useState({})
@@ -25,45 +26,51 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
   const [isTagsOpen, setIsTagsOpen] = useState(false)
   const [isVanishOpen, setIsVanishOpen] = useState(false)
   const [tags, setTags] = useState([
-    'Work',
-    'Personal',
-    'Important',
-    'Casual',
-    'Urgent'
+    "Work",
+    "Personal",
+    "Important",
+    "Casual",
+    "Urgent",
   ])
-  const [newTagInput, setNewTagInput] = useState('')
+  const [newTagInput, setNewTagInput] = useState("")
   const [isNewTagOpen, setIsNewTagOpen] = useState(false)
   const [selectedTag, setSelectedTag] = useState(null)
-  const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false)
   const [seenVanishMessages, setSeenVanishMessages] = useState(new Set())
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState("")
+
 
   useEffect(() => {
     const fetchVanishMode = async () => {
       if (!selectedUser?._id) return
       try {
+
         const res = await fetch(`/api/dmsmessages?userId=${selectedUser._id}&fetchVanishMode=true`, {
           method: 'GET',
           credentials: 'include'
         })
         const data = await res.json()
+
         if (res.ok) {
           setIsVanishOpen(data.vanishMode)
         }
       } catch (error) {
         console.error('Failed to fetch vanish mode:', error)
       }
-    }
 
-    fetchVanishMode()
-  }, [selectedUser])
+    };
+    fetchVanishMode();
+  }, [selectedUser]);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+
         const response = await fetch('/api/user', {
           method: 'GET',
-          credentials: 'include'
-        })
+          credentials: 'include',
+        });
         if (!response.ok) throw new Error('Failed to fetch user data')
 
         const data = await response.json()
@@ -85,20 +92,36 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
     if (selectedTag === tag) {
       setSelectedTag(null)
     } else {
-      setSelectedTag(tag)
+      setSelectedTag(tag);
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag '${tag}' selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     }
-    setIsSelectedTagOpen(true)
-  }
+    setIsTagsOpen(false);
+  };
 
   const handleSubmitNewTag = () => {
     if (newTagInput.trim()) {
       setTags((prevTags) => [
-        ...prevTags.filter((tag) => tag !== 'New'),
-        newTagInput
-      ])
-      setSelectedTag(newTagInput)
-      setNewTagInput('')
-      setIsNewTagOpen(false)
+
+        ...prevTags.filter((tag) => tag !== "New"),
+        newTagInput,
+      ]);
+      setIsNewTagOpen(false);
+      setSelectedTag(newTagInput);
+      setNewTagInput("");
+
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag "${newTagInput}" selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     } else {
       alert('Please enter a valid tag name.')
     }
@@ -188,6 +211,7 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
         credentials: 'include'
       })
       const vanishModeData = await vanishModeRes.json()
+
       const messageToSend = {
         userId,
         text: message,
@@ -253,6 +277,7 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
             !toDelete.includes(msg._id) || !msg.vanish
           )
         )
+
       } else {
         console.error('Error deleting message(s)')
       }
@@ -263,14 +288,17 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
 
   useEffect(() => {
     return () => {
-      console.log('Cleaning up vanish messages on DM switch:', Array.from(seenVanishMessages))
-      if (seenVanishMessages.size === 0) return
-      const seenIds = Array.from(seenVanishMessages)
-      console.log('Deleting seen vanish messages:', seenIds)
-      handleDelete(seenIds)
-      setSeenVanishMessages(new Set())
-    }
-  }, [selectedUser])
+      console.log(
+        "Cleaning up vanish messages on DM switch:",
+        Array.from(seenVanishMessages)
+      );
+      if (seenVanishMessages.size === 0) return;
+      const seenIds = Array.from(seenVanishMessages);
+      console.log("Deleting seen vanish messages:", seenIds);
+      handleDelete(seenIds);
+      setSeenVanishMessages(new Set());
+    };
+  }, [selectedUser]);
 
   const handleEmojiSelect = (emojiObject) => {
     setMessage((prevMessage) => prevMessage + emojiObject.emoji)
@@ -329,13 +357,17 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
       }
 
       // Re-fetch vanish mode from the server
-      const refreshRes = await fetch(`/api/dmsmessages?userId=${selectedUser._id}&fetchVanishMode=true`, {
-        method: 'GET',
-        credentials: 'include'
-      })
-      const refreshData = await refreshRes.json()
-      console.log('Fetched updated vanishMode:', refreshData.vanishMode)
-      setIsVanishOpen(refreshData.vanishMode)
+
+      const refreshRes = await fetch(
+        `/api/dmsmessages?userId=${selectedUser._id}&fetchVanishMode=true`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
+      const refreshData = await refreshRes.json();
+      console.log("Fetched updated vanishMode:", refreshData.vanishMode);
+      setIsVanishOpen(refreshData.vanishMode);
     } catch (error) {
       console.error('Error toggling vanish mode:', error)
       alert('Error toggling vanish mode.')
@@ -482,6 +514,7 @@ export default function DMsWindow ({ selectedUser, sidebarOpen }) {
           )}
         </div>
       )}
+      {showPopup && <AlertPopup message={popupMessage} />}
 
       {imgSrc && (
         <div className='imagePreview'>

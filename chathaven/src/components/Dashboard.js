@@ -3,22 +3,24 @@ import { FaPlus, FaUserCircle, FaUserPlus, FaModx, FaCheckSquare } from 'react-i
 import { RxCross2 } from 'react-icons/rx'
 import {
   MdKeyboardDoubleArrowLeft,
-  MdKeyboardDoubleArrowRight
-} from 'react-icons/md'
-import './styles/Dashboard.css'
-import LogoutButton from './LogoutButton'
-import DirectMessagesButton from './DirectMessagesButton'
-import CreateTeamMenu from './CreateTeamMenu'
-import CreateChannelMenu from './CreateChannelMenu'
-import CMsWindow from './CMsWindow'
-import AddUserToChannelMenu from './AddUserToChannelMenu'
-import { VscRequestChanges } from 'react-icons/vsc'
-import { FaSquareXmark } from 'react-icons/fa6'
-import EditProfileMenu from './EditProfileMenu'
-import SocketClient from './SocketClient'
-import { useSocket } from './SocketContext'
-import { useRouter } from 'next/router'
-export default function DashboardPage () {
+  MdKeyboardDoubleArrowRight,
+} from "react-icons/md"
+import { FaUserCircle, FaUserPlus, FaModx } from "react-icons/fa"
+import "./styles/Dashboard.css"
+import LogoutButton from "./LogoutButton"
+import DirectMessagesButton from "./DirectMessagesButton"
+import CreateTeamMenu from "./CreateTeamMenu"
+import CreateChannelMenu from "./CreateChannelMenu"
+import CMsWindow from "./CMsWindow"
+import AddUserToChannelMenu from "./AddUserToChannelMenu"
+import { VscRequestChanges } from "react-icons/vsc"
+import { FaCheckSquare } from "react-icons/fa"
+import { FaSquareXmark } from "react-icons/fa6"
+import EditProfileMenu from "./EditProfileMenu"
+import SocketClient from "./SocketClient"
+import { useSocket } from "./SocketContext"
+import { useRouter } from "next/router"
+export default function DashboardPage() {
   const [seeRequestsModal, setSeeRequestsModal] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [teams, setTeams] = useState([])
@@ -82,23 +84,29 @@ export default function DashboardPage () {
     }
   }, [selectedTeam, loadingUser])
 
+
   useEffect(() => {
     const fetchJoinRequests = async () => {
       try {
-        const res = await fetch('/api/channel-requests', {
-          method: 'GET',
-          credentials: 'include'
-        })
-        const requests = await res.json()
-        console.log('All Join Requests:', requests)
-        const adminChannelIds = user?.isChannelAdmin || []
+        const res = await fetch("/api/channel-requests", {
+          method: "GET",
+          credentials: "include",
+        });
+        const requests = await res.json();
+        console.log("All Join Requests:", requests);
+        const adminChannelIds = user?.isChannelAdmin || [];
 
-        const filteredRequests = requests.filter(req =>
-          adminChannelIds.some(adminId => adminId.toString() === req.channelId._id.toString())
-        )
+        const filteredRequests = requests.filter((req) =>
+          adminChannelIds.some(
+            (adminId) => adminId.toString() === req.channelId._id.toString()
+          )
+        );
 
-        console.log('Relevant Join Requests (User is Admin):', filteredRequests)
-        setRelevantRequests(filteredRequests)
+        console.log(
+          "Relevant Join Requests (User is Admin):",
+          filteredRequests
+        );
+        setRelevantRequests(filteredRequests);
       } catch (error) {
         console.error('Error fetching join requests:', error)
       }
@@ -144,35 +152,37 @@ export default function DashboardPage () {
         )
       )
     } catch (error) {
-      console.error('Failed to add user to channel:', error)
-      alert('An error occurred. Please try again.')
+      console.error("Failed to add user to channel:", error);
+      alert("An error occurred. Please try again.");
     }
-  }
+  };
 
   const handleApproveRequest = async (request) => {
     try {
-      const res = await fetch('/api/channel-requests', {
-        method: 'PATCH',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId: request._id })
-      })
+      const res = await fetch(`/api/channel-requests`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ requestId: request._id }),
+      });
 
-      const data = await res.json()
+      const data = await res.json();
       if (!res.ok) {
-        alert(`Error: ${data.error || 'Unknown error occurred'}`)
-        return
+        alert(`Error: ${data.error || "Unknown error occurred"}`);
+        return;
       }
 
       setTimeout(() => {
-        alert('User has been added to the channel.')
-        setRelevantRequests(prev => prev.filter(req => req._id !== request._id))
-      }, 0)
+        alert("User has been added to the channel.");
+        setRelevantRequests((prev) =>
+          prev.filter((req) => req._id !== request._id)
+        );
+      }, 0);
     } catch (error) {
-      console.error('Failed to approve request:', error)
-      alert('Something went wrong approving the request.')
+      console.error("Failed to approve request:", error);
+      alert("Something went wrong approving the request.");
     }
-  }
+  };
 
   const handleRejectRequest = async (request) => {
     try {
@@ -186,6 +196,7 @@ export default function DashboardPage () {
         alert('Request has been rejected.')
         setRelevantRequests(prevRequests => prevRequests.filter(req => req._id !== request._id))
       }, 0)
+
     } catch (error) {
       console.error('Failed to reject request:', error)
     }
@@ -242,13 +253,18 @@ export default function DashboardPage () {
   }
 
   // Logic for tracking the user's presence and changing their status accordingly
-  const { userId, updateStatus } = useSocket() // Access the userId and updateStatus from context
-  const [lastActiveTime, setLastActiveTime] = useState(Date.now()) // Track last activity time
-  const userStatusUpdated = {}
+
+  const { userId, updateStatus, currentStatus } = useSocket(); // Access the userId and updateStatus from context
+  const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Track last activity time
+  const userStatusUpdated = {};
+
 
   const handleUserPresence = (userId) => {
     const currentTime = Date.now()
     const userLastActiveTime = lastActiveTime[userId]
+
+    // If status is manually set to "unavailable", ignore activity
+    if (currentStatus == "unavailable") return;
 
     // If the user hasn't been active for more than 30 seconds, set them to away
     if (userLastActiveTime && currentTime - userLastActiveTime > 30000) {
@@ -348,33 +364,65 @@ export default function DashboardPage () {
     router.push('/login')
   }
 
+
   return (
     <div id='dashboardContainer'>
       {/* Sidebar with admin check for Create Team */}
-      <div id='logoutButtonArea'>
-        <div id='profileButton' onClick={() => { setIsProfileMenuOpen(true) }}>
-          <FaUserCircle title='Your profile' />
-        </div>
+
+      <div id="logoutButtonArea">
         <div
-          id='profileButton'
-          title='User Status'
-          data-testid='user-status-button'
+          id="profileButton"
           onClick={() => {
-            setSocketClientVisible(true)
+            setIsProfileMenuOpen(true);
           }}
         >
-          <FaModx />
+          <FaUserCircle title="Your profile" />
+        </div>
+        <div
+          id="profileButton"
+          title="User Status"
+          data-testid="user-status-button"
+          onClick={() => {
+            setSocketClientVisible(true);
+          }}
+        >
+          <FaModx title="User Status" />
         </div>
         <DirectMessagesButton />
         <LogoutButton handleLogout={handleLogout} />
-        {user?.isChannelAdmin?.length > 0 &&
-        (
-          <div style={{ position: 'relative' }}>
-            <button id='openModalButton' onClick={() => setSeeRequestsModal(true)}>
+        {user?.isChannelAdmin?.length > 0 && (
+          <div style={{ position: "relative" }}>
+            <button
+              id="openModalButton"
+              onClick={() => setSeeRequestsModal(true)}
+            >
               <VscRequestChanges />
-              {relevantRequests.length > 0 &&
-            (
-              <span className='notificationBadge'>{relevantRequests.length}</span>
+              {relevantRequests.length > 0 && (
+                <span className="notificationBadge">
+                  {relevantRequests.length}
+                </span>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div
+        id="sidebar"
+        className={sidebarOpen ? "open" : "closed"}
+        key={user?._id}
+      >
+        <ul id="teamList">
+          <li id="teamHeader">
+            TEAMS <br />
+            {loadingUser ? (
+              <p>Loading...</p>
+            ) : user?.isGlobalAdmin ? (
+              <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
+                <FaPlus /> Create Team
+              </div>
+            ) : (
+              <></>
             )}
             </button>
           </div>
@@ -400,25 +448,28 @@ export default function DashboardPage () {
                   )}
           </li>
 
-          {teams.length > 0
-            ? (
-                teams.map((team) =>
-                  (
-                    <li key={team._id} className='teamName' onClick={() => handleTeamSelect(team)}>
-                      {team.teamName}
-                    </li>
-                  )
-                )
-              )
-            : (
-              <li className='noTeams'>
-                No teams yet
+          {teams.length > 0 ? (
+            teams.map((team) => (
+              <li
+                key={team._id}
+                className="teamName"
+                onClick={() => handleTeamSelect(team)}
+              >
+                {team.teamName}
               </li>
-              )}
+            ))
+          ) : (
+            <li className="noTeams">No teams yet</li>
+          )}
         </ul>
       </div>
 
-      <CMsWindow selectedTeam={selectedTeam} selectedChannel={selectedChannel} messageAreaClass={getMessageAreaClass()} onLeaveChannel={handleChannelLeave} />
+      <CMsWindow
+        selectedTeam={selectedTeam}
+        selectedChannel={selectedChannel}
+        messageAreaClass={getMessageAreaClass()}
+        onLeaveChannel={handleChannelLeave}
+      />
 
       <AddUserToChannelMenu
         isOpen={isUserModalOpen}
@@ -427,8 +478,8 @@ export default function DashboardPage () {
         selectedTeam={selectedTeam}
         onAddUser={handleAddUserToChannel}
       />
-      {isProfileMenuOpen &&
-      (
+
+      {isProfileMenuOpen && (
         <EditProfileMenu
           user={user}
           setUser={setUser}
@@ -436,8 +487,9 @@ export default function DashboardPage () {
           onClose={() => setIsProfileMenuOpen(false)}
         />
       )}
-      {isSocketClientVisible &&
-      (
+
+      {isSocketClientVisible && (
+
         <>
           {/* Overlay to dim the background */}
           <div
@@ -567,45 +619,45 @@ export default function DashboardPage () {
         </div>
       )}
 
-      {
-        seeRequestsModal &&
-        (
-          <div className='menuOverlay'>
-            <div className='menuContent'>
-              <h3 id='createChannelHeader'>Join Requests</h3>
-              <ul className='requestList'>
-                {
-                relevantRequests.length === 0
-                  ? (
-                    <li>No join requests at this time.</li>
-                    )
-                  : (
-                      relevantRequests.map((req, index) =>
-                        (
-                          <li key={index}>
-                            {req.teamId.teamName} - {req.channelId.name} - {req.userId.firstname} {req.userId.lastname}
-                            <button className='approve' onClick={() => handleApproveRequest(req)}>
-                              <FaCheckSquare />
-                            </button>
-                            <button className='reject' onClick={() => handleRejectRequest(req)}>
-                              <FaSquareXmark />
-                            </button>
-                          </li>
-                        )
-                      )
-                    )
-              }
-              </ul>
-              <div className='buttonContainer'>
-                <button className='button' onClick={() => setSeeRequestsModal(false)}>
-                  Close
-                </button>
-              </div>
+      {seeRequestsModal && (
+        <div className="menuOverlay">
+          <div className="menuContent">
+            <h3 id="createChannelHeader">Join Requests</h3>
+            <ul className="requestList">
+              {relevantRequests.length === 0 ? (
+                <li>No join requests at this time.</li>
+              ) : (
+                relevantRequests.map((req, index) => (
+                  <li key={index}>
+                    {req.teamId.teamName} - {req.channelId.name} -{" "}
+                    {req.userId.firstname} {req.userId.lastname}
+                    <button
+                      className="approve"
+                      onClick={() => handleApproveRequest(req)}
+                    >
+                      <FaCheckSquare />
+                    </button>
+                    <button
+                      className="reject"
+                      onClick={() => handleRejectRequest(req)}
+                    >
+                      <FaSquareXmark />
+                    </button>
+                  </li>
+                ))
+              )}
+            </ul>
+            <div className="buttonContainer">
+              <button
+                className="button"
+                onClick={() => setSeeRequestsModal(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
-
-  )
+  );
 }
