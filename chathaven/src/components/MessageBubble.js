@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
-import { FaReply, FaTrash } from "react-icons/fa";
-import EmojiPicker from "emoji-picker-react";
+import { useEffect, useRef } from 'react'
+import { FaReply, FaTrash } from 'react-icons/fa'
+import EmojiPicker from 'emoji-picker-react'
 
-export default function MessageBubble({
+export default function MessageBubble ({
   msg,
   index,
   users,
@@ -17,38 +17,39 @@ export default function MessageBubble({
   handleDelete,
   seenVanishMessages,
   setSeenVanishMessages,
-  currentUserId,
+  currentUserId
 }) {
-  const msgRef = useRef(null);
+  const msgRef = useRef(null)
 
   useEffect(() => {
-    if (!msg.vanish) return;
-    console.log("SENDER: " + msg.sender +" CURRENT: " + currentUserId);
-    if(msg.sender !== currentUserId) {
-        const observer = new IntersectionObserver(
+    if (!msg.vanish) return
+    console.log('SENDER: ' + msg.sender + ' CURRENT: ' + currentUserId)
+    if (msg.sender !== currentUserId) {
+      const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            console.log("Seen vanish message:", msg._id);
-            setSeenVanishMessages((prev) => new Set(prev).add(msg._id));
+            console.log('Seen vanish message:', msg._id)
+            setSeenVanishMessages((prev) => new Set(prev).add(msg._id))
           }
         },
         { threshold: 0.5 }
-      );
-      if (msgRef.current) observer.observe(msgRef.current);
-      return () => observer.disconnect();}
-  }, [msg]);
+      )
+      if (msgRef.current) observer.observe(msgRef.current)
+      return () => observer.disconnect()
+    }
+  }, [msg])
 
-  const senderName = users[msg.sender] || "Unknown User";
-  const isHovered = hoveredMessageIndex === index;
-  const replyMessage = msg.reply;
+  const senderName = users[msg.sender] || 'Unknown User'
+  const isHovered = hoveredMessageIndex === index
+  const replyMessage = msg.reply
 
   const youtubeLinkRegex =
-    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
-  const youtubeLinks = [...msg.text.matchAll(youtubeLinkRegex)];
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/g
+  const youtubeLinks = [...msg.text.matchAll(youtubeLinkRegex)]
 
   return (
     <div
-      className="message"
+      className='message'
       ref={msgRef}
       onMouseEnter={() => setHoveredMessageIndex(index)}
       onMouseLeave={() => setHoveredMessageIndex(null)}
@@ -56,19 +57,19 @@ export default function MessageBubble({
       {replyMessage && (
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
             justifyContent:
-              msg.sender !== selectedUser._id ? "flex-end" : "flex-start",
+              msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start'
           }}
         >
           {msg.sender === selectedUser._id && (
-            <div className="replyMessageIndicatorReceived"></div>
+            <div className='replyMessageIndicatorReceived' />
           )}
           <div
             className={`replyMessage ${
-              msg.sender !== selectedUser._id ? "sent" : "received"
+              msg.sender !== selectedUser._id ? 'sent' : 'received'
             }`}
           >
             <p>
@@ -77,40 +78,40 @@ export default function MessageBubble({
             </p>
           </div>
           {msg.sender !== selectedUser._id && (
-            <div className="replyMessageIndicatorSent"></div>
+            <div className='replyMessageIndicatorSent' />
           )}
         </div>
       )}
 
       <div
-        className="messageContent"
+        className='messageContent'
         style={{
           justifyContent:
-            msg.sender !== selectedUser._id ? "flex-end" : "flex-start",
+            msg.sender !== selectedUser._id ? 'flex-end' : 'flex-start'
         }}
       >
         {isHovered && (
-          <div className="actionBox">
+          <div className='actionBox'>
             <FaReply
-              className="replyButton"
+              className='replyButton'
               onClick={() => {
-                setReply(msg);
-                inputRef.current?.focus();
+                setReply(msg)
+                inputRef.current?.focus()
               }}
-              title="Reply"
+              title='Reply'
             />
             <button
-              className="reactButton"
+              className='reactButton'
               onClick={() => toggleReactionPicker(index)}
-              title="Add reaction"
+              title='Add reaction'
             >
               😀
             </button>
             {msg.sender !== selectedUser._id && (
               <FaTrash
-                className="deleteButton"
+                className='deleteButton'
                 onClick={() => handleDelete(msg._id)}
-                title="Delete message"
+                title='Delete message'
               />
             )}
           </div>
@@ -119,10 +120,10 @@ export default function MessageBubble({
         <div
           className={
             msg.sender !== selectedUser._id
-              ? "sentMessage"
-              : "receivedMessage"
+              ? 'sentMessage'
+              : 'receivedMessage'
           }
-          style={{ marginTop: replyMessage ? "0px" : "10px" }}
+          style={{ marginTop: replyMessage ? '0px' : '10px' }}
         >
           <span>
             {msg.sender === selectedUser._id && (
@@ -130,13 +131,13 @@ export default function MessageBubble({
                 {senderName}: <br />
               </strong>
             )}
-            <div className="messageTagSpace">
+            <div className='messageTagSpace'>
               {msg.tag && (
                 <div
                   className={
                     msg.sender !== selectedUser._id
-                      ? "sentTag"
-                      : "receivedTag"
+                      ? 'sentTag'
+                      : 'receivedTag'
                   }
                 >
                   <span>{msg.tag}</span>
@@ -147,41 +148,41 @@ export default function MessageBubble({
           </span>
 
           {msg.imageData && (
-            <img src={msg.imageData} alt="Sent" className="sentImage" />
+            <img src={msg.imageData} alt='Sent' className='sentImage' />
           )}
 
           {youtubeLinks.length > 0 &&
             youtubeLinks.map((match, i) => {
-              const videoId = match[1];
+              const videoId = match[1]
               return (
                 <iframe
                   key={i}
-                  className="youtubeVideo"
+                  className='youtubeVideo'
                   src={`https://www.youtube.com/embed/${videoId}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                   allowFullScreen
-                ></iframe>
-              );
+                />
+              )
             })}
         </div>
 
         {showReactionPicker === index && (
-          <div className="reactionPicker">
+          <div className='reactionPicker'>
             <EmojiPicker
               onEmojiClick={(emoji) => addReaction(index, emoji.emoji)}
             />
           </div>
         )}
 
-        <div className={`reactions ${isHovered ? "visible" : ""}`}>
+        <div className={`reactions ${isHovered ? 'visible' : ''}`}>
           {msg.reactions &&
             Object.entries(msg.reactions).map(([emoji, count]) => (
-              <span key={emoji} className="reaction">
+              <span key={emoji} className='reaction'>
                 {emoji} {count}
               </span>
             ))}
         </div>
       </div>
     </div>
-  );
+  )
 }

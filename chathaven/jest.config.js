@@ -6,7 +6,7 @@ const nextJest = require('next/jest')
 
 /** @type {import('jest').Config} */
 const createJestConfig = nextJest({
-  dir: './',
+  dir: './'
 })
 
 const config = {
@@ -26,7 +26,7 @@ const config = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -34,7 +34,7 @@ const config = {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: "v8",
+  coverageProvider: 'v8',
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -64,7 +64,7 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/config/setup.jest.js'],
 
   // The test environment that will be used for testing
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jsdom'
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -73,6 +73,6 @@ const config = {
   // testPathIgnorePatterns: [
   //   "\\\\node_modules\\\\"
   // ],
-};
+}
 
 module.exports = createJestConfig(config)

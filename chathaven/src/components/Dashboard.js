@@ -1,88 +1,87 @@
-import { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
+import { useState, useEffect } from 'react'
+import { FaPlus, FaUserCircle, FaUserPlus, FaModx, FaCheckSquare } from 'react-icons/fa'
+import { RxCross2 } from 'react-icons/rx'
 import {
   MdKeyboardDoubleArrowLeft,
   MdKeyboardDoubleArrowRight,
-} from "react-icons/md";
-import { FaUserCircle, FaUserPlus, FaModx } from "react-icons/fa";
-import "./styles/Dashboard.css";
-import LogoutButton from "./LogoutButton";
-import DirectMessagesButton from "./DirectMessagesButton";
-import CreateTeamMenu from "./CreateTeamMenu";
-import CreateChannelMenu from "./CreateChannelMenu";
-import CMsWindow from "./CMsWindow";
-import AddUserToChannelMenu from "./AddUserToChannelMenu";
-import { VscRequestChanges } from "react-icons/vsc";
-import { FaCheckSquare } from "react-icons/fa";
-import { FaSquareXmark } from "react-icons/fa6";
-import EditProfileMenu from "./EditProfileMenu";
-import SocketClient from "./SocketClient";
-import { useSocket } from "./SocketContext";
-import { useRouter } from "next/router";
+} from "react-icons/md"
+import "./styles/Dashboard.css"
+import LogoutButton from "./LogoutButton"
+import DirectMessagesButton from "./DirectMessagesButton"
+import CreateTeamMenu from "./CreateTeamMenu"
+import CreateChannelMenu from "./CreateChannelMenu"
+import CMsWindow from "./CMsWindow"
+import AddUserToChannelMenu from "./AddUserToChannelMenu"
+import { VscRequestChanges } from "react-icons/vsc"
+import { FaSquareXmark } from "react-icons/fa6"
+import EditProfileMenu from "./EditProfileMenu"
+import SocketClient from "./SocketClient"
+import { useSocket } from "./SocketContext"
+import { useRouter } from "next/router"
 export default function DashboardPage() {
-  const [seeRequestsModal, setSeeRequestsModal] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [teams, setTeams] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [channelSidebarOpen, setChannelSidebarOpen] = useState(true);
-  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [seeRequestsModal, setSeeRequestsModal] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [teams, setTeams] = useState([])
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [channelSidebarOpen, setChannelSidebarOpen] = useState(true)
+  const [selectedTeam, setSelectedTeam] = useState(null)
   const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
-    useState(false);
-  const [channels, setChannels] = useState([]);
-  const [selectedChannel, setSelectedChannel] = useState(null);
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [channelToModify, setChannelToModify] = useState(null);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [relevantRequests, setRelevantRequests] = useState([]);
-  const router = useRouter();
-  const [isSocketClientVisible, setSocketClientVisible] = useState(false);
+    useState(false)
+  const [channels, setChannels] = useState([])
+  const [selectedChannel, setSelectedChannel] = useState(null)
+  const [user, setUser] = useState(null)
+  const [loadingUser, setLoadingUser] = useState(true)
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const [channelToModify, setChannelToModify] = useState(null)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const [relevantRequests, setRelevantRequests] = useState([])
+  const router = useRouter()
+  const [isSocketClientVisible, setSocketClientVisible] = useState(false)
 
   // Fetch user details (including role)
   useEffect(() => {
-    fetch("/api/user", { method: "GET", credentials: "include" })
+    fetch('/api/user', { method: 'GET', credentials: 'include' })
       .then((res) => res.json())
       .then((data) => {
-        console.log("User Data for Admin:", data); // Debugging log
-        if (data && typeof data.isGlobalAdmin !== "undefined") {
-          //Use isGlobalAdmin
-          setUser(data);
+        console.log('User Data for Admin:', data) // Debugging log
+        if (data && typeof data.isGlobalAdmin !== 'undefined') {
+          // Use isGlobalAdmin
+          setUser(data)
         } else {
-          console.warn("isGlobalAdmin field not found in user data!");
+          console.warn('isGlobalAdmin field not found in user data!')
         }
       })
-      .catch((error) => console.error("Error fetching user data:", error))
-      .finally(() => setLoadingUser(false));
-  }, []);
+      .catch((error) => console.error('Error fetching user data:', error))
+      .finally(() => setLoadingUser(false))
+  }, [])
 
   useEffect(() => {
     if (!loadingUser) {
-      fetch("/api/teams", { method: "GET", credentials: "include" })
+      fetch('/api/teams', { method: 'GET', credentials: 'include' })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Teams Fetched:", data);
-          setTeams(data);
+          console.log('Teams Fetched:', data)
+          setTeams(data)
         })
-        .catch((error) => console.error("Error fetching teams:", error));
+        .catch((error) => console.error('Error fetching teams:', error))
     }
-  }, [loadingUser]);
+  }, [loadingUser])
 
   useEffect(() => {
     if (selectedTeam && !loadingUser) {
       fetch(`/api/channels?teamId=${selectedTeam._id}`, {
-        method: "GET",
-        credentials: "include",
+        method: 'GET',
+        credentials: 'include'
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Fetched channels:", data);
-          setChannels(data);
+          console.log('Fetched channels:', data)
+          setChannels(data)
         })
-        .catch((error) => console.error("Error fetching channels:", error));
+        .catch((error) => console.error('Error fetching channels:', error))
     }
-  }, [selectedTeam, loadingUser]);
+  }, [selectedTeam, loadingUser])
+
 
   useEffect(() => {
     const fetchJoinRequests = async () => {
@@ -107,41 +106,41 @@ export default function DashboardPage() {
         );
         setRelevantRequests(filteredRequests);
       } catch (error) {
-        console.error("Error fetching join requests:", error);
+        console.error('Error fetching join requests:', error)
       }
-    };
+    }
 
     if (user?.isChannelAdmin?.length > 0) {
-      fetchJoinRequests();
+      fetchJoinRequests()
     }
-  }, [user]);
+  }, [user])
 
   const handleTeamSelect = (team) => {
-    console.log("Selected Team:", team);
-    setSelectedTeam(team);
-    setSelectedChannel(null);
-    console.log("Selected Team:", team);
-  };
+    console.log('Selected Team:', team)
+    setSelectedTeam(team)
+    setSelectedChannel(null)
+    console.log('Selected Team:', team)
+  }
 
   const handleAddUserToChannel = async (channelId, userIdToAdd) => {
     try {
-      console.log("Adding user:", userIdToAdd, "to channel:", channelId);
-      const response = await fetch("/api/channels", {
-        method: "PATCH",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ channelId, userIdToAdd }),
-      });
+      console.log('Adding user:', userIdToAdd, 'to channel:', channelId)
+      const response = await fetch('/api/channels', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId, userIdToAdd })
+      })
 
-      const result = await response.json();
+      const result = await response.json()
       if (!response.ok) {
-        console.error("Error adding user to channel:", result.error);
-        alert(`Error: ${result.error}`);
-        return;
+        console.error('Error adding user to channel:', result.error)
+        alert(`Error: ${result.error}`)
+        return
       }
 
-      console.log("User added successfully:", result.message);
-      alert("User added successfully!");
+      console.log('User added successfully:', result.message)
+      alert('User added successfully!')
 
       setChannels((prevChannels) =>
         prevChannels.map((channel) =>
@@ -149,7 +148,7 @@ export default function DashboardPage() {
             ? { ...channel, members: [...channel.members, userIdToAdd] }
             : channel
         )
-      );
+      )
     } catch (error) {
       console.error("Failed to add user to channel:", error);
       alert("An error occurred. Please try again.");
@@ -185,80 +184,82 @@ export default function DashboardPage() {
 
   const handleRejectRequest = async (request) => {
     try {
-      await fetch(`/api/channel-requests`, {
-        method: "DELETE",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requestId: request._id }),
-      });
+      await fetch('/api/channel-requests', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId: request._id })
+      })
       setTimeout(() => {
-        alert("Request has been rejected.");
-        setRelevantRequests((prevRequests) =>
-          prevRequests.filter((req) => req._id !== request._id)
-        );
-      }, 0);
+        alert('Request has been rejected.')
+        setRelevantRequests(prevRequests => prevRequests.filter(req => req._id !== request._id))
+      }, 0)
+
     } catch (error) {
-      console.error("Failed to reject request:", error);
+      console.error('Failed to reject request:', error)
     }
-  };
+  }
 
   const getMessageAreaClass = () => {
-    if (!sidebarOpen && !channelSidebarOpen) return "bothClosed";
-    if (!sidebarOpen) return "leftClosed";
-    if (!channelSidebarOpen) return "rightClosed";
-    return "";
-  };
+    if (!sidebarOpen && !channelSidebarOpen) return 'bothClosed'
+    if (!sidebarOpen) return 'leftClosed'
+    if (!channelSidebarOpen) return 'rightClosed'
+    return ''
+  }
 
   const handleToggleSidebar = () => {
-    setSidebarOpen((prev) => !prev);
-  };
+    setSidebarOpen((prev) => !prev)
+  }
 
   const handleToggleChannelSidebar = () => {
-    setChannelSidebarOpen((prev) => !prev);
-  };
+    setChannelSidebarOpen((prev) => !prev)
+  }
   const handleCreateChannel = (newChannel) => {
-    fetch("/api/channels", {
-      method: "POST",
+    fetch('/api/channels', {
+      method: 'POST',
       body: JSON.stringify({
         name: newChannel.channelName,
         teamId: newChannel.teamId,
-        members: newChannel.members,
+        members: newChannel.members
       }),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      credentials: "include",
+      credentials: 'include'
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          console.error("Error creating channel:", data.error);
+          console.error('Error creating channel:', data.error)
         } else {
-          setChannels((prevChannels) => [...prevChannels, data]);
+          setChannels((prevChannels) => [...prevChannels, data])
           setUser((prevUser) => ({
             ...prevUser,
-            isChannelAdmin: [...prevUser.isChannelAdmin, data._id],
-          }));
+            isChannelAdmin: [...prevUser.isChannelAdmin, data._id]
+          }))
         }
       })
-      .catch((error) => console.error("Error creating channel:", error));
-  };
+      .catch((error) => console.error('Error creating channel:', error))
+  }
 
   const handleChannelLeave = (channelId) => {
-    if (!user.isGlobalAdmin)
+    if (!user.isGlobalAdmin) {
       setChannels((prevChannels) =>
         prevChannels.filter((channel) => channel._id !== channelId)
-      );
-  };
+      )
+    }
+  }
 
   // Logic for tracking the user's presence and changing their status accordingly
+
   const { userId, updateStatus, currentStatus } = useSocket(); // Access the userId and updateStatus from context
   const [lastActiveTime, setLastActiveTime] = useState(Date.now()); // Track last activity time
   const userStatusUpdated = {};
 
+
   const handleUserPresence = (userId) => {
-    const currentTime = Date.now();
-    const userLastActiveTime = lastActiveTime[userId];
+    const currentTime = Date.now()
+    const userLastActiveTime = lastActiveTime[userId]
 
     // If status is manually set to "unavailable", ignore activity
     if (currentStatus == "unavailable") return;
@@ -268,102 +269,104 @@ export default function DashboardPage() {
       // Check if the user's status is already set to away
       if (!userStatusUpdated[userId]) {
         // 30 seconds of inactivity
-        updateStatus("away"); // Emit status update to server (status 'away')
+        updateStatus('away') // Emit status update to server (status 'away')
 
         // POST last active time to the API when status changes to away
-        postLastActiveTime(userId, currentTime); // POST to API
+        postLastActiveTime(userId, currentTime) // POST to API
 
         // Set the flag to true to prevent updating last active time again
-        userStatusUpdated[userId] = true;
+        userStatusUpdated[userId] = true
       }
     } else {
-      updateStatus("available"); // Emit status update to server (status 'available')
+      updateStatus('available') // Emit status update to server (status 'available')
       // Reset the flag to allow updates when they become inactive again
-      userStatusUpdated[userId] = false;
+      userStatusUpdated[userId] = false
     }
-  };
+  }
   // Function to POST the last active time to the API
   const postLastActiveTime = async (userId, lastActiveTime) => {
     try {
-      const response = await fetch("/api/lastactivetime", {
-        method: "POST",
+      const response = await fetch('/api/lastactivetime', {
+        method: 'POST',
         body: JSON.stringify({
           userId,
-          lastActiveTime,
+          lastActiveTime
         }),
         headers: {
-          "Content-Type": "application/json",
-        },
-      });
+          'Content-Type': 'application/json'
+        }
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update last active time");
+        throw new Error('Failed to update last active time')
       }
 
       // if necessary for debugging
-      const data = await response.json();
-      console.log("API response:", data);
+      const data = await response.json()
+      console.log('API response:', data)
 
       // Optionally handle the response here, such as updating the state or showing a success message
     } catch (error) {
-      console.error("Error updating last active time:", error);
+      console.error('Error updating last active time:', error)
     }
-  };
+  }
 
   const resetUserActivity = (userId) => {
-    const currentTime = Date.now();
+    const currentTime = Date.now()
     setLastActiveTime((prevState) => ({
       ...prevState,
-      [userId]: currentTime, // Reset the last active time for the user
-    }));
+      [userId]: currentTime // Reset the last active time for the user
+    }))
 
     // Call the function to update their presence status to available
-    handleUserPresence(userId);
-  };
+    handleUserPresence(userId)
+  }
 
   // Set up event listeners for mousemove and keypress to detect activity
   useEffect(() => {
     if (userId) {
-      const handleMouseMove = () => resetUserActivity(userId);
-      const handleKeyPress = () => resetUserActivity(userId);
+      const handleMouseMove = () => resetUserActivity(userId)
+      const handleKeyPress = () => resetUserActivity(userId)
 
-      document.addEventListener("mousemove", handleMouseMove); // Track mouse movement
-      document.addEventListener("keydown", handleKeyPress); // Track keyboard input
+      document.addEventListener('mousemove', handleMouseMove) // Track mouse movement
+      document.addEventListener('keydown', handleKeyPress) // Track keyboard input
 
       // Cleanup event listeners when component unmounts
       return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("keydown", handleKeyPress);
-      };
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('keydown', handleKeyPress)
+      }
     }
-  }, [userId, resetUserActivity]); // Ensure the event listeners are set up when userId is available
+  }, [userId, resetUserActivity]) // Ensure the event listeners are set up when userId is available
 
   // Check for inactivity every 5 seconds and update status accordingly
   useEffect(() => {
     const interval = setInterval(() => {
       if (userId) {
-        handleUserPresence(userId); // Check and update status based on inactivity
+        handleUserPresence(userId) // Check and update status based on inactivity
       }
-    }, 5000); // Check every 5 seconds
+    }, 5000) // Check every 5 seconds
 
-    return () => clearInterval(interval); // Clean up interval on component unmount
-  }, [lastActiveTime, userId, handleUserPresence]);
+    return () => clearInterval(interval) // Clean up interval on component unmount
+  }, [lastActiveTime, userId, handleUserPresence])
 
   const handleLogout = async () => {
     // Emit status change to "unavailable" before logging out
     if (userId) {
-      console.log("Setting status to 'unavailable' for user:", userId);
-      updateStatus("unavailable"); // Emit the status change to "unavailable"
+      console.log("Setting status to 'unavailable' for user:", userId)
+      updateStatus('unavailable') // Emit the status change to "unavailable"
     }
     // Call logout API
-    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
     // Redirect to login page after logout
-    router.push("/login");
-  };
+    router.push('/login')
+  }
+
 
   return (
-    <div id="dashboardContainer">
+    <div id='dashboardContainer'>
       {/* Sidebar with admin check for Create Team */}
+
       <div id="logoutButtonArea">
         <div
           id="profileButton"
@@ -401,13 +404,8 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
-
-      <div
-        id="sidebar"
-        className={sidebarOpen ? "open" : "closed"}
-        key={user?._id}
-      >
-        <ul id="teamList">
+      <div id='sidebar' className={sidebarOpen ? 'open' : 'closed'} key={user?._id}>
+        <ul id='teamList'>
           <li id="teamHeader">
             TEAMS <br />
             {loadingUser ? (
@@ -416,9 +414,7 @@ export default function DashboardPage() {
               <div id="createTeam" onClick={() => setIsMenuOpen(true)}>
                 <FaPlus /> Create Team
               </div>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </li>
 
           {teams.length > 0 ? (
@@ -451,6 +447,7 @@ export default function DashboardPage() {
         selectedTeam={selectedTeam}
         onAddUser={handleAddUserToChannel}
       />
+
       {isProfileMenuOpen && (
         <EditProfileMenu
           user={user}
@@ -459,20 +456,22 @@ export default function DashboardPage() {
           onClose={() => setIsProfileMenuOpen(false)}
         />
       )}
+
       {isSocketClientVisible && (
+
         <>
           {/* Overlay to dim the background */}
           <div
-            id="socketClientPopupOverlay"
+            id='socketClientPopupOverlay'
             onClick={() => setSocketClientVisible(false)}
-          ></div>
+          />
 
           {/* Pop-up container for SocketClient */}
-          <div id="socketClientPopup">
+          <div id='socketClientPopup'>
             <SocketClient />
             {/* Optional Close Button */}
             <div
-              id="closeButton"
+              id='closeButton'
               onClick={() => setSocketClientVisible(false)} // Hide SocketClient when clicked
             >
               <RxCross2 />
@@ -482,81 +481,87 @@ export default function DashboardPage() {
       )}
 
       <button
-        id="toggleSidebarButton"
-        data-testid="toggle-sidebar-button"
+        id='toggleSidebarButton'
+        data-testid='toggle-sidebar-button'
         onClick={handleToggleSidebar}
-        className={sidebarOpen ? "open" : "closed"}
+        className={sidebarOpen ? 'open' : 'closed'}
       >
-        {sidebarOpen ? (
-          <MdKeyboardDoubleArrowLeft />
-        ) : (
-          <MdKeyboardDoubleArrowRight />
-        )}
+        {sidebarOpen
+          ? (
+            <MdKeyboardDoubleArrowLeft />
+            )
+          : (
+            <MdKeyboardDoubleArrowRight />
+            )}
       </button>
 
       <button
-        id="toggleChannelSidebarButton"
-        data-testid="toggle-channel-sidebar-button"
+        id='toggleChannelSidebarButton'
+        data-testid='toggle-channel-sidebar-button'
         onClick={handleToggleChannelSidebar}
-        className={channelSidebarOpen ? "open" : "closed"}
+        className={channelSidebarOpen ? 'open' : 'closed'}
       >
-        {channelSidebarOpen ? (
-          <MdKeyboardDoubleArrowRight />
-        ) : (
-          <MdKeyboardDoubleArrowLeft />
-        )}
+        {channelSidebarOpen
+          ? (
+            <MdKeyboardDoubleArrowRight />
+            )
+          : (
+            <MdKeyboardDoubleArrowLeft />
+            )}
       </button>
 
       <div
-        id="channelSidebar"
-        className={channelSidebarOpen ? "open" : "closed"}
+        id='channelSidebar'
+        className={channelSidebarOpen ? 'open' : 'closed'}
       >
-        <ul id="channelList">
-          <li id="channelHeader">
-            {selectedTeam ? "Channels for:" : "Select a team to view channels"}
+        <ul id='channelList'>
+          <li id='channelHeader'>
+            {selectedTeam ? 'Channels for:' : 'Select a team to view channels'}
             <br />
-            <span id="selectedTeamText">
-              {selectedTeam ? selectedTeam.teamName : ""}
+            <span id='selectedTeamText'>
+              {selectedTeam ? selectedTeam.teamName : ''}
             </span>
             <br />
             <div
-              id="createChannel"
-              className={selectedTeam ? "" : "teamNotSelected"}
+              id='createChannel'
+              className={selectedTeam ? '' : 'teamNotSelected'}
               onClick={() => setIsCreateChannelModalOpen(true)}
             >
               <FaPlus /> Create Channel
             </div>
           </li>
-          {channels.length > 0 ? (
-            channels.map((channel) => (
-              <li
-                key={channel._id}
-                className={`channelName ${
-                  selectedChannel?._id === channel._id ? "active" : ""
+          {channels.length > 0
+            ? (
+                channels.map((channel) => (
+                  <li
+                    key={channel._id}
+                    className={`channelName ${
+                  selectedChannel?._id === channel._id ? 'active' : ''
                 }`}
-                onClick={() => {
-                  console.log("Selected Channel:", channel);
-                  setSelectedChannel(channel);
-                }}
-              >
-                {(user?.isGlobalAdmin ||
-                  user?.isChannelAdmin?.includes(channel._id)) && (
-                  <button
-                    id="addUser"
                     onClick={() => {
-                      setChannelToModify(channel);
-                      setIsUserModalOpen(true);
+                      console.log('Selected Channel:', channel)
+                      setSelectedChannel(channel)
                     }}
                   >
-                    <FaUserPlus />
-                  </button>
-                )}
-                {channel.name}
-              </li>
-            ))
-          ) : (
-            <li className="noChannels"> No channels yet</li>
-          )}
+                    {(user?.isGlobalAdmin ||
+                  user?.isChannelAdmin?.includes(channel._id)) && (
+                    <button
+                      id='addUser'
+                      onClick={() => {
+                        setChannelToModify(channel)
+                        setIsUserModalOpen(true)
+                      }}
+                    >
+                      <FaUserPlus />
+                    </button>
+                    )}
+                    {channel.name}
+                  </li>
+                ))
+              )
+            : (
+              <li className='noChannels'> No channels yet</li>
+              )}
         </ul>
       </div>
 
@@ -565,8 +570,7 @@ export default function DashboardPage() {
           isOpen={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
           onCreateTeam={(newTeam) =>
-            setTeams((prevTeams) => [...prevTeams, newTeam])
-          }
+            setTeams((prevTeams) => [...prevTeams, newTeam])}
         />
       )}
       {isCreateChannelModalOpen && (
@@ -575,12 +579,12 @@ export default function DashboardPage() {
           onClose={() => setIsCreateChannelModalOpen(false)}
           teamMembers={selectedTeam ? selectedTeam?.members : []}
           onCreateChannel={handleCreateChannel}
-          teamId={selectedTeam ? selectedTeam._id : ""}
+          teamId={selectedTeam ? selectedTeam._id : ''}
         />
       )}
       {loadingUser && teams && (
-        <div className="loadingScreen">
-          <div className="loader"></div>
+        <div className='loadingScreen'>
+          <div className='loader' />
         </div>
       )}
 
