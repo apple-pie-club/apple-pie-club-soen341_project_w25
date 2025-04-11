@@ -1,53 +1,53 @@
-import connectToDatabase from "../../../lib/mongodb";
-import User from "../../../models/User";
-import bcrypt from "bcryptjs";
+import connectToDatabase from '../../../lib/mongodb'
+import User from '../../../models/User'
+import bcrypt from 'bcryptjs'
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+export default async function handler (req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' })
   }
 
-  await connectToDatabase();
+  await connectToDatabase()
 
-  const { currentEmail, firstname, lastname, email, oldPassword, newPassword } = req.body;
+  const { currentEmail, firstname, lastname, email, oldPassword, newPassword } = req.body
 
   try {
-    const user = await User.findOne({ email: currentEmail });
+    const user = await User.findOne({ email: currentEmail })
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' })
     }
 
     if (email !== currentEmail) {
-      const existingUser = await User.findOne({ email: email });
+      const existingUser = await User.findOne({ email })
       if (existingUser) {
-        return res.status(400).json({ message: "Email is already in use" });
+        return res.status(400).json({ message: 'Email is already in use' })
       }
-      user.email = email;
+      user.email = email
     }
 
     if (oldPassword) {
-      const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+      const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password)
       if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Incorrect old password" });
+        return res.status(400).json({ message: 'Incorrect old password' })
       }
-    
+
       // Only update password if newPassword is provided
       if (newPassword) {
-        user.password = await bcrypt.hash(newPassword, 10);
+        user.password = await bcrypt.hash(newPassword, 10)
       } else {
-        return res.status(400).json({ message: "New password cannot be empty" });
+        return res.status(400).json({ message: 'New password cannot be empty' })
       }
     }
 
     // Update other fields
-    user.firstname = firstname;
-    user.lastname = lastname;
+    user.firstname = firstname
+    user.lastname = lastname
 
-    await user.save();
-    res.status(200).json({ message: "Profile updated successfully" });
+    await user.save()
+    res.status(200).json({ message: 'Profile updated successfully' })
   } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error updating profile:', error)
+    res.status(500).json({ message: 'Server error' })
   }
 };

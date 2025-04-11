@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 // Define the schema for a Direct Message (DM)
 const DMsSchema = new mongoose.Schema({
@@ -6,9 +6,9 @@ const DMsSchema = new mongoose.Schema({
   participants: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+      ref: 'User',
+      required: true
+    }
   ],
 
   // Array to store messages in the DM conversation
@@ -16,40 +16,40 @@ const DMsSchema = new mongoose.Schema({
     {
       sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+        ref: 'User',
+        required: true
       },
       text: {
         type: String, // Message text
-        default: "",
+        default: ''
       },
       imageData: {
         type: String, // Base64 encoded image
-        default: null,
+        default: null
       },
       timestamp: {
         type: Date, // Timestamp of when the message was sent
-        default: Date.now, // Defaults to the current time
+        default: Date.now // Defaults to the current time
       },
       reply: {
         type: mongoose.Schema.Types.Mixed,
-        default: null,
+        default: null
       },
       tag: {
         type: String, // Field to store the tag of the message
-        default: null,
+        default: null
       },
       vanish: {
         type: Boolean,
-        default: false,
-      },
-    },
+        default: false
+      }
+    }
   ],
   vanishMode: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 
-});
+})
 
-export default mongoose.models.DMs || mongoose.model("DMs", DMsSchema);
+export default mongoose.models.DMs || mongoose.model('DMs', DMsSchema)

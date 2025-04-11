@@ -1,39 +1,39 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const ChannelSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  teamId: { type: mongoose.Schema.Types.ObjectId, ref: "Team", required: true },
-  members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  teamId: { type: mongoose.Schema.Types.ObjectId, ref: 'Team', required: true },
+  members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   messages: [
     {
       sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
+        ref: 'User',
+        required: true
       },
       text: {
         type: String, // Message text
-        default: "",
+        default: ''
       },
       imageData: {
         type: String, // Base64 encoded image
-        default: null,
+        default: null
       },
       timestamp: {
         type: Date, // Timestamp of when the message was sent
-        default: Date.now, // Defaults to the current time
+        default: Date.now // Defaults to the current time
       },
       reply: {
         type: mongoose.Schema.Types.Mixed,
-        default: null,
+        default: null
       },
       tag: {
         type: String, // Field to store the tag of the message
-        default: null,
-      },
-    },
-  ],
-});
+        default: null
+      }
+    }
+  ]
+})
 
 export default mongoose.models.Channel ||
-  mongoose.model("Channel", ChannelSchema);
+  mongoose.model('Channel', ChannelSchema)
