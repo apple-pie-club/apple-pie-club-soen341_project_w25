@@ -8,6 +8,7 @@ import EmojiPicker from "emoji-picker-react";
 import Webcam from "react-webcam";
 import { FaArrowUp, FaCamera } from "react-icons/fa6";
 import { MdExitToApp, MdEmojiEmotions, MdCamera } from "react-icons/md";
+import AlertPopup from "./AlertPopup";
 
 export default function CMsWindow({
   selectedTeam,
@@ -46,7 +47,8 @@ export default function CMsWindow({
   const [newTagInput, setNewTagInput] = useState("");
   const [isNewTagOpen, setIsNewTagOpen] = useState(false);
   const [selectedTag, setSelectedTag] = useState(null);
-  const [isSelectedTagOpen, setIsSelectedTagOpen] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   const handleCreateNewTag = () => {
     setIsNewTagOpen(true);
@@ -57,8 +59,15 @@ export default function CMsWindow({
       setSelectedTag(null);
     } else {
       setSelectedTag(tag);
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag '${tag}' selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
     } // Add tag to selectedTags state
-    setIsSelectedTagOpen(true);
+    setIsTagsOpen(false);
   };
 
   const handleOpenTags = () => {
@@ -74,7 +83,14 @@ export default function CMsWindow({
       ]); // Remove "New" if it exists and add the new tag
       setSelectedTag(newTagInput);
       setNewTagInput("");
-      setIsNewTagOpen(false);
+      // Show popup and auto-hide after 3s
+      setPopupMessage(`Tag "${newTagInput}" selected!`);
+      setShowPopup(true);
+
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+      setIsTagsOpen(false);
     } else {
       alert("Please enter a valid tag name.");
     }
@@ -712,7 +728,11 @@ export default function CMsWindow({
             <RxCross2 className="closeReply" onClick={() => setReply(null)} />
           </div>
         )}
-        <FaCamera className="openCameraButton" onClick={handleOpenCamera} title="Open Camera"/>
+        <FaCamera
+          className="openCameraButton"
+          onClick={handleOpenCamera}
+          title="Open Camera"
+        />
 
         <MdEmojiEmotions
           className="openEmojiPicker"
@@ -779,6 +799,8 @@ export default function CMsWindow({
           </div>
         </div>
       )}
+      {showPopup && <AlertPopup message={popupMessage} />}
+
       {isTagsOpen && (
         <div className={`tagsMenu ${isTagsOpen ? "open" : ""}`}>
           {/* List of tags */}
