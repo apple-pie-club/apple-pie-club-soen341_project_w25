@@ -53,7 +53,6 @@ ChatHaven is a communication platform that solves these issues by implementing t
 ## Who's the power team behind ChatHaven?
 
 - Hugo Moslener – 40241091 - HugoMoslener
-- Mohamed Ahmed – 40229758 - Sobhys
 - Darcy McCoy – 40234556 - darcymccoy
 - Matthew Lucas Santiago – 40284787 - matthew-lucas-santiago
 - Marwa Hammani – 40289362 - rwatoun
